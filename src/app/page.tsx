@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { site, images, pillars, stats } from "@/data/site";
-import { courseCategories, customCourseNote } from "@/data/courses";
+import { customCourseNote } from "@/data/courses";
 import { teachers } from "@/data/teachers";
 import { BookingButton } from "@/components/booking";
 import TeacherCard from "@/components/TeacherCard";
+import CourseExplorer from "@/components/CourseExplorer";
 
 export default function Home() {
   const featured = teachers.filter((t) => t.featured).slice(0, 8);
@@ -78,32 +79,11 @@ export default function Home() {
             <span className="eyebrow">课程体系</span>
             <h2 className="section-title">覆盖留学全阶段的课程与服务</h2>
             <p className="section-sub">
-              从低龄国际课程到名校申请，菁仕的课程贯穿学生留学的每一个阶段——
-              四大板块，按需定制。
+              从低龄国际课程到名校申请，菁仕的课程贯穿学生留学的每一个阶段。
+              点击下方课程，了解它是什么、需要怎样的基础与知识体系。
             </p>
           </div>
-          <div className="course-grid">
-            {courseCategories.map((c) => (
-              <div className="course-card" key={c.id}>
-                <div className="ci">
-                  <i className={`ti ti-${c.icon}`} aria-hidden="true" />
-                </div>
-                <h3>{c.title}</h3>
-                <p className="summary">{c.summary}</p>
-                <div className="course-tags">
-                  {c.items.map((it) => (
-                    <span className="course-tag" key={it.name}>
-                      {it.name}
-                    </span>
-                  ))}
-                </div>
-                <div className="course-audience">
-                  <i className="ti ti-user-check" aria-hidden="true" />
-                  {c.audience}
-                </div>
-              </div>
-            ))}
-          </div>
+          <CourseExplorer />
           <p className="course-note">{customCourseNote}</p>
         </div>
       </section>
@@ -120,15 +100,17 @@ export default function Home() {
                 拥有丰富的留学教育经验。
               </p>
             </div>
-            <Link href="/faculty" className="btn btn-ghost">
-              了解更多名师
-              <i className="ti ti-arrow-right" aria-hidden="true" />
-            </Link>
           </div>
           <div className="fac-grid">
             {featured.map((t) => (
-              <TeacherCard key={t.name} teacher={t} clampBio />
+              <TeacherCard key={t.name} teacher={t} />
             ))}
+          </div>
+          <div className="fac-more">
+            <Link href="/faculty" className="btn btn-navy btn-lg">
+              查看全部 {teachers.length} 位名师
+              <i className="ti ti-arrow-right" aria-hidden="true" />
+            </Link>
           </div>
         </div>
       </section>
