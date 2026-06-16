@@ -16,32 +16,27 @@ export const site = {
   subSlogan: "精英式陪伴成长 · 一站式国际教育与留学规划",
   /** 备案/版权信息（占位，后续替换） */
   copyright: "上海菁仕教育科技有限公司",
-  /** 联系方式（占位，后续替换为真实信息） */
+  /** 联系方式 */
   contact: {
-    phone: "021-XXXX-XXXX",
-    wechat: "（请替换为菁仕官方微信号）",
-    email: "info@kings-academy.cn",
-    /** 微信二维码图片，放到 /public/images/wechat-qr.png 后取消注释使用 */
+    phone: "+86 158 0063 3202",
+    wechat: "KingsAcademySH",
     wechatQr: "/images/wechat-qr.png",
   },
 } as const;
 
 export const images = {
-  /** 首页 Hero 大图 */
-  hero:
-    "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1920&q=80",
-  /** 教育理念配图 */
+  /** 首页 Hero 大图（菁仕自有图） */
+  hero: "/bg.png",
+  /** 教育理念配图（暂未使用） */
   philosophy:
     "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?auto=format&fit=crop&w=1200&q=80",
-  /** 课程板块配图 */
+  /** 课程板块配图（暂未使用） */
   courses:
     "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&q=80",
   /** 预约区背景图 */
-  cta:
-    "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1920&q=80",
+  cta: "/bg.png",
   /** 名师页头图 */
-  facultyHero:
-    "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1920&q=80",
+  facultyHero: "/bg.png",
 } as const;
 
 /** 教育理念 —— 四个支柱 */

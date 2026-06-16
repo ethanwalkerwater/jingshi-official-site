@@ -1,8 +1,13 @@
 import Link from "next/link";
 import { avgScore, type Teacher } from "@/data/teachers";
 
-/** 名师卡片：平均分角标 + 姓名 + 学历 + 教学时长 + 所授课程，点击进入详情页 */
+/** 名师卡片：照片 + 评分 + 姓名 + 学历 + 所授课程，点击进入详情页 */
 export default function TeacherCard({ teacher }: { teacher: Teacher }) {
+  const courses = teacher.courses
+    .split(/\s*[·/]\s*/)
+    .map((course) => course.trim())
+    .filter(Boolean);
+
   return (
     <Link
       href={`/faculty/${encodeURIComponent(teacher.name)}`}
@@ -14,29 +19,21 @@ export default function TeacherCard({ teacher }: { teacher: Teacher }) {
         role="img"
         aria-label={`${teacher.name}老师`}
       >
-        <span className="teacher-subject">{teacher.subject}</span>
-        <span className="teacher-score" aria-label={`综合评分 ${avgScore(teacher)}`}>
+        <span className="teacher-score teacher-score-card" aria-label={`综合评分 ${avgScore(teacher)}`}>
+          <i className="ti ti-star-filled" aria-hidden="true" />
           <span className="s">{avgScore(teacher)}</span>
-          <span className="l">综合评分</span>
         </span>
       </div>
       <div className="teacher-body">
-        <h3 className="teacher-name">
-          {teacher.name}
-          <span className="more">查看详情 →</span>
-        </h3>
-        <p className="teacher-degree">
-          <i className="ti ti-school" aria-hidden="true" />
-          {teacher.degree}
-        </p>
+        <h3 className="teacher-name">{teacher.name}</h3>
+        <p className="teacher-degree">{teacher.degree}</p>
         <div className="teacher-meta">
-          <div>
-            <i className="ti ti-clock-hour-4" aria-hidden="true" />
-            {teacher.hours}
-          </div>
-          <div>
-            <i className="ti ti-book-2" aria-hidden="true" />
-            {teacher.courses}
+          <div className="teacher-courses" aria-label={`所授课程：${teacher.courses}`}>
+            {courses.map((course) => (
+              <span className="teacher-course-chip" key={course}>
+                {course}
+              </span>
+            ))}
           </div>
         </div>
       </div>

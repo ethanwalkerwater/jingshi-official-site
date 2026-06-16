@@ -1,14 +1,11 @@
 import Link from "next/link";
-import { site, images, pillars, stats } from "@/data/site";
+import { site, images, pillars } from "@/data/site";
 import { customCourseNote } from "@/data/courses";
-import { teachers } from "@/data/teachers";
 import { BookingButton } from "@/components/booking";
-import TeacherCard from "@/components/TeacherCard";
 import CourseExplorer from "@/components/CourseExplorer";
+import FacultyCarousel from "@/components/FacultyCarousel";
 
 export default function Home() {
-  const featured = teachers.filter((t) => t.featured).slice(0, 8);
-
   return (
     <>
       {/* ① Hero */}
@@ -19,7 +16,6 @@ export default function Home() {
         />
         <div className="wrap">
           <div className="hero-inner">
-            <p className="hero-eyebrow">{site.nameEn}</p>
             <h1>
               让最优秀的老师
               <br />
@@ -35,18 +31,31 @@ export default function Home() {
               </a>
             </div>
           </div>
-          <div className="hero-stats">
-            {stats.map((s) => (
-              <div className="hero-stat" key={s.label}>
-                <div className="num">{s.value}</div>
-                <div className="lab">{s.label}</div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
-      {/* ② 教育理念 */}
+      {/* ② 名师团队（全宽自动轮播） */}
+      <section className="section faculty-section" id="faculty">
+        <div className="wrap">
+          <div className="section-head">
+            <span className="eyebrow">名师团队</span>
+            <h2 className="section-title">精英中的精英</h2>
+            <p className="section-sub">
+              20+ 全职教师，均毕业于牛津、剑桥、帝国理工、UCL、清华、北大等世界顶级名校，
+              拥有丰富的留学教育经验。
+            </p>
+          </div>
+        </div>
+        <FacultyCarousel />
+        <div className="wrap fac-more">
+          <Link href="/faculty" className="btn btn-navy btn-lg">
+            查看更多老师
+            <i className="ti ti-arrow-right" aria-hidden="true" />
+          </Link>
+        </div>
+      </section>
+
+      {/* ③ 教育理念 */}
       <section className="section philosophy" id="philosophy">
         <div className="wrap">
           <div className="section-head center">
@@ -59,11 +68,11 @@ export default function Home() {
             </p>
           </div>
           <div className="pillars">
-            {pillars.map((p) => (
+            {pillars.map((p, i) => (
               <div className="pillar" key={p.title}>
-                <div className="pillar-icon">
-                  <i className={`ti ti-${p.icon}`} aria-hidden="true" />
-                </div>
+                <span className="pillar-no">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
                 <h3>{p.title}</h3>
                 <p>{p.desc}</p>
               </div>
@@ -72,7 +81,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ③ 课程体系 */}
+      {/* ④ 课程体系 */}
       <section className="section courses" id="courses">
         <div className="wrap">
           <div className="section-head">
@@ -80,38 +89,11 @@ export default function Home() {
             <h2 className="section-title">覆盖留学全阶段的课程与服务</h2>
             <p className="section-sub">
               从低龄国际课程到名校申请，菁仕的课程贯穿学生留学的每一个阶段。
-              点击下方课程，了解它是什么、需要怎样的基础与知识体系。
+              先选择学习方向，再查看具体考试或服务的级别、适合学生、学习基础与科目模块。
             </p>
           </div>
           <CourseExplorer />
           <p className="course-note">{customCourseNote}</p>
-        </div>
-      </section>
-
-      {/* ④ 名师精选 */}
-      <section className="section" id="faculty">
-        <div className="wrap">
-          <div className="section-head fac-head">
-            <div>
-              <span className="eyebrow">名师团队</span>
-              <h2 className="section-title">精英中的精英</h2>
-              <p className="section-sub">
-                20+ 全职教师，均毕业于牛津、剑桥、帝国理工、UCL、清华、北大等世界顶级名校，
-                拥有丰富的留学教育经验。
-              </p>
-            </div>
-          </div>
-          <div className="fac-grid">
-            {featured.map((t) => (
-              <TeacherCard key={t.name} teacher={t} />
-            ))}
-          </div>
-          <div className="fac-more">
-            <Link href="/faculty" className="btn btn-navy btn-lg">
-              查看全部 {teachers.length} 位名师
-              <i className="ti ti-arrow-right" aria-hidden="true" />
-            </Link>
-          </div>
         </div>
       </section>
 
