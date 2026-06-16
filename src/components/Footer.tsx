@@ -8,7 +8,19 @@ export default function Footer() {
         <div className="footer-grid">
           <div className="footer-brand">
             <span className="brand">
-              <span className="brand-mark">KA</span>
+              <span className="brand-mark">
+                <img
+                  className="logo-blue"
+                  src="/logo-blue.svg"
+                  alt={`${site.name} ${site.nameEn}`}
+                />
+                <img
+                  className="logo-white"
+                  src="/logo-white.svg"
+                  alt=""
+                  aria-hidden="true"
+                />
+              </span>
               <span className="brand-word">
                 <span className="zh">{site.name}</span>
                 <span className="en">{site.nameEn}</span>
@@ -44,13 +56,14 @@ export default function Footer() {
                 <i className="ti ti-brand-wechat" aria-hidden="true" /> 微信：
                 {site.contact.wechat}
               </li>
-              <li>
-                <i className="ti ti-mail" aria-hidden="true" /> {site.contact.email}
-              </li>
               <li style={{ marginTop: 14 }}>
                 <Link href="/faculty">名师团队 →</Link>
               </li>
             </ul>
+            <div className="footer-qr">
+              <img src={site.contact.wechatQr} alt="菁仕教育官方微信二维码" />
+              <span>扫码添加官方微信</span>
+            </div>
           </div>
         </div>
 

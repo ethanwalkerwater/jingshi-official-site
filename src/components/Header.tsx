@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { site } from "@/data/site";
 import { BookingButton } from "./booking";
 
@@ -15,13 +16,17 @@ const navLinks = [
 export default function Header() {
   const [solid, setSolid] = useState(false);
   const [drawer, setDrawer] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
-    const onScroll = () => setSolid(window.scrollY > 80);
+    // 顶部有深色 hero（首页 .hero / 内页 .page-hero）时才用透明白字态；
+    // 否则（如老师详情页这类浅色顶部页面）直接用实色态，避免白字看不见。
+    const hasDarkHero = !!document.querySelector(".hero, .page-hero");
+    const onScroll = () => setSolid(window.scrollY > 80 || !hasDarkHero);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     document.body.style.overflow = drawer ? "hidden" : "";
@@ -35,7 +40,19 @@ export default function Header() {
       <header className={`header ${solid ? "solid" : "over"}`}>
         <div className="wrap header-inner">
           <Link href="/" className="brand" aria-label={site.name}>
-            <span className="brand-mark">KA</span>
+            <span className="brand-mark">
+              <img
+                className="logo-blue"
+                src="/logo-blue.svg"
+                alt={`${site.name} ${site.nameEn}`}
+              />
+              <img
+                className="logo-white"
+                src="/logo-white.svg"
+                alt=""
+                aria-hidden="true"
+              />
+            </span>
             <span className="brand-word">
               <span className="zh">{site.name}</span>
               <span className="en">{site.nameEn}</span>
@@ -66,7 +83,19 @@ export default function Header() {
       <div className={`drawer ${drawer ? "open" : ""}`}>
         <div className="drawer-top">
           <span className="brand">
-            <span className="brand-mark">KA</span>
+            <span className="brand-mark">
+              <img
+                className="logo-blue"
+                src="/logo-blue.svg"
+                alt={`${site.name} ${site.nameEn}`}
+              />
+              <img
+                className="logo-white"
+                src="/logo-white.svg"
+                alt=""
+                aria-hidden="true"
+              />
+            </span>
             <span className="brand-word">
               <span className="zh" style={{ color: "#fff" }}>
                 {site.name}

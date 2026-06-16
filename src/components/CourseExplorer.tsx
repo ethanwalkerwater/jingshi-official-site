@@ -8,6 +8,7 @@ export default function CourseExplorer() {
   const [open, setOpen] = useState(0);
 
   const active = courseCategories[cat];
+  const activeItem = active.items[open];
 
   function selectCat(i: number) {
     setCat(i);
@@ -16,54 +17,81 @@ export default function CourseExplorer() {
 
   return (
     <>
-      <div className="cat-tabs" role="tablist">
+      <div className="program-tabs" role="tablist">
         {courseCategories.map((c, i) => (
           <button
             key={c.id}
             role="tab"
             aria-selected={i === cat}
-            className={`cat-tab${i === cat ? " active" : ""}`}
+            className={`program-tab${i === cat ? " active" : ""}`}
             onClick={() => selectCat(i)}
           >
-            <i className={`ti ti-${c.icon}`} aria-hidden="true" />
-            {c.title}
+            <span className="program-copy">
+              <span className="program-title">{c.title}</span>
+              <span className="program-summary">{c.summary}</span>
+            </span>
           </button>
         ))}
       </div>
 
-      <div className="course-layout">
-        <div className="course-aside">
-          <div className="ci">
-            <i className={`ti ti-${active.icon}`} aria-hidden="true" />
-          </div>
-          <h3>{active.title}</h3>
-          <p>{active.summary}</p>
-          <span className="audience">
-            <i className="ti ti-user-check" aria-hidden="true" />
-            {active.audience}
-          </span>
-        </div>
-
-        <div className="deck">
+      <div className="course-panel">
+        <aside className="course-menu" aria-label={`${active.title}项目列表`}>
           {active.items.map((item, i) => (
-            <article
+            <button
+              type="button"
               key={item.name}
-              className={`deck-card${i === open ? " active" : ""}`}
+              className={`course-menu-item${i === open ? " active" : ""}`}
               onClick={() => setOpen(i)}
             >
-              <div className="deck-row">
-                <span className="deck-no">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span className="deck-name">{item.name}</span>
-                {item.en && <span className="deck-en">{item.en}</span>}
-              </div>
-              <div className="deck-desc">
-                <p>{item.desc}</p>
-              </div>
-            </article>
+              <span className="course-menu-copy">
+                <span className="course-menu-name">{item.name}</span>
+                {item.en && <span className="course-menu-en">{item.en}</span>}
+              </span>
+            </button>
           ))}
-        </div>
+        </aside>
+
+        <article className="course-detail">
+          <span className="course-kicker">{active.title}</span>
+          <div className="course-detail-head">
+            <h3>{activeItem.name}</h3>
+            {activeItem.en && <span>{activeItem.en}</span>}
+          </div>
+          <div className="course-meta-row">
+            <div>
+              <span>考试级别</span>
+              <strong>{activeItem.level}</strong>
+            </div>
+            <div>
+              <span>面向学生</span>
+              <strong>{activeItem.audience}</strong>
+            </div>
+          </div>
+
+          <div className="course-info-grid">
+            <div className="course-info-card">
+              <h4>需要什么基础</h4>
+              <p>{activeItem.foundation}</p>
+            </div>
+            <div className="course-info-card">
+              <h4>核心价值</h4>
+              <p>{activeItem.value}</p>
+            </div>
+            <div className="course-info-card">
+              <h4>家长可以这样理解</h4>
+              <p>{activeItem.parentNote}</p>
+            </div>
+          </div>
+
+          <div className="course-subjects">
+            <h4>考试科目 / 课程模块</h4>
+            <div className="course-subject-list">
+              {activeItem.subjects.map((subject) => (
+                <span key={subject}>{subject}</span>
+              ))}
+            </div>
+          </div>
+        </article>
       </div>
     </>
   );
