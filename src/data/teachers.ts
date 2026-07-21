@@ -46,7 +46,7 @@ export const teachers: Teacher[] = [
   {
     name: "应雁心",
     subject: "数学",
-    photo: "/teachers/数学-应雁心.png",
+    photo: "/teachers/数学-应雁心.webp",
     degree: "伦敦大学学院（UCL）· 全 A* 录取",
     hours: "累计授课 10000+ 小时",
     courses: "IGCSE · A-Level · IB · AP 数学",
@@ -59,7 +59,7 @@ export const teachers: Teacher[] = [
   {
     name: "包天翊",
     subject: "数学",
-    photo: "/teachers/数学-包天翊.png",
+    photo: "/teachers/数学-包天翊.webp",
     degree: "香港中文大学金融数学硕士",
     hours: "累计教学 500+ 人",
     courses: "IGCSE · A-Level · IB 数学",
@@ -71,7 +71,7 @@ export const teachers: Teacher[] = [
   {
     name: "张文豪",
     subject: "数学",
-    photo: "/teachers/数学-张文豪.png",
+    photo: "/teachers/数学-张文豪.webp",
     degree: "帝国理工学院数学系本科",
     hours: "累计教学 800+ 人",
     courses: "IGCSE · A-Level 数学",
@@ -83,7 +83,7 @@ export const teachers: Teacher[] = [
   {
     name: "张劭景",
     subject: "数学",
-    photo: "/teachers/数学-张劭景.png",
+    photo: "/teachers/数学-张劭景.webp",
     degree: "帝国理工学院应用数学硕士",
     hours: "幽默互动式教学",
     courses: "IGCSE · A-Level · IB · AP 数学",
@@ -96,7 +96,7 @@ export const teachers: Teacher[] = [
   {
     name: "陈璐怡",
     subject: "数学",
-    photo: "/teachers/数学-陈璐怡.png",
+    photo: "/teachers/数学-陈璐怡.webp",
     degree: "牛津大学研究生 · 工程系本科",
     hours: "零基础 → G5 录取案例",
     courses: "IGCSE · A-Level · IB · AP 数学",
@@ -109,7 +109,7 @@ export const teachers: Teacher[] = [
   {
     name: "傅威程",
     subject: "数学",
-    photo: "/teachers/数学-傅威程.png",
+    photo: "/teachers/数学-傅威程.webp",
     degree: "香港科技大学金融科技硕士",
     hours: "尤擅 AMC8 / 13+ 方向",
     courses: "AMC8 · 13+ 数学思维",
@@ -121,7 +121,7 @@ export const teachers: Teacher[] = [
   {
     name: "郑唯梓",
     subject: "数学",
-    photo: "/teachers/数学-郑唯梓.png",
+    photo: "/teachers/数学-郑唯梓.webp",
     degree: "北京大学力学 + 经济双学位",
     hours: "竞赛与应试双经验",
     courses: "A-Level 数理 · 竞赛",
@@ -133,7 +133,7 @@ export const teachers: Teacher[] = [
   {
     name: "李品轩",
     subject: "物理",
-    photo: "/teachers/物理-李品轩.png",
+    photo: "/teachers/物理-李品轩.webp",
     degree: "西交利物浦大学国际教育硕士",
     hours: "累计授课 8000+ 小时",
     courses: "IGCSE · A-Level 物理 · 科学",
@@ -146,7 +146,7 @@ export const teachers: Teacher[] = [
   {
     name: "汤朔",
     subject: "物理",
-    photo: "/teachers/物理-汤朔.png",
+    photo: "/teachers/物理-汤朔.webp",
     degree: "UCL 理学硕士 · 东南大学学士",
     hours: "Physics Bowl 获奖率 +300%",
     courses: "IGCSE · A-Level · IB · AP 物理 · 竞赛",
@@ -159,7 +159,7 @@ export const teachers: Teacher[] = [
   {
     name: "王冰青",
     subject: "物理",
-    photo: "/teachers/物理-王冰青.png",
+    photo: "/teachers/物理-王冰青.webp",
     degree: "清华大学学士 · UC Davis 博士",
     hours: "物理 + 统计双背景",
     courses: "IGCSE · A-Level · IB · AP 物理",
@@ -171,7 +171,7 @@ export const teachers: Teacher[] = [
   {
     name: "李寅鑫",
     subject: "化学",
-    photo: "/teachers/化学-李寅鑫.png",
+    photo: "/teachers/化学-李寅鑫.webp",
     degree: "宾夕法尼亚大学化学硕士",
     hours: "UKChO / CCC 优秀竞赛教练",
     courses: "IGCSE · A-Level · IB · AP 化学",
@@ -184,7 +184,7 @@ export const teachers: Teacher[] = [
   {
     name: "朱毅博",
     subject: "化学",
-    photo: "/teachers/化学-朱毅博.png",
+    photo: "/teachers/化学-朱毅博.webp",
     degree: "西北大学硕士 · UC Davis 本科",
     hours: "授课 3000+ 小时",
     courses: "A-Level · IB 生化数 · 标化",
@@ -196,7 +196,7 @@ export const teachers: Teacher[] = [
   {
     name: "刘艳阳",
     subject: "经济",
-    photo: "/teachers/经济-刘艳阳.png",
+    photo: "/teachers/经济-刘艳阳.webp",
     degree: "堪培拉大学 MBA",
     hours: "A-Level 经济 A 率 90%+",
     courses: "A-Level · AP 经济",
@@ -209,7 +209,7 @@ export const teachers: Teacher[] = [
   {
     name: "马怡婷",
     subject: "经济",
-    photo: "/teachers/经济-马怡婷.png",
+    photo: "/teachers/经济-马怡婷.webp",
     degree: "威斯康星麦迪逊本科 · MBA",
     hours: "累计授课 3000+ 小时",
     courses: "IGCSE · A-Level · AP · IB 经济",
@@ -221,7 +221,7 @@ export const teachers: Teacher[] = [
   {
     name: "陈依依",
     subject: "英语",
-    photo: "/teachers/英语-陈依依.png",
+    photo: "/teachers/英语-陈依依.webp",
     degree: "伯明翰大学 TESOL 硕士",
     hours: "雅思阅读写作专精",
     courses: "雅思 · SAT / ACT 文法",
@@ -234,7 +234,7 @@ export const teachers: Teacher[] = [
   {
     name: "黄钢",
     subject: "英语",
-    photo: "/teachers/英语-黄钢.png",
+    photo: "/teachers/英语-黄钢.webp",
     degree: "香港中文大学翻译学硕士",
     hours: "英国私校申请成功率 100%",
     courses: "雅思托福 · A-Level 文学",
@@ -246,7 +246,7 @@ export const teachers: Teacher[] = [
   {
     name: "蓝浪",
     subject: "英语",
-    photo: "/teachers/英语-蓝浪.png",
+    photo: "/teachers/英语-蓝浪.webp",
     degree: "伦敦国王学院教育政策硕士",
     hours: "小分平均提升 1–1.5 分",
     courses: "雅思托福 · IGCSE 文学",
@@ -258,7 +258,7 @@ export const teachers: Teacher[] = [
   {
     name: "Valentina Lin",
     subject: "英语",
-    photo: "/teachers/英语-Valentina Lin.png",
+    photo: "/teachers/英语-Valentina Lin.webp",
     degree: "范德堡大学优等荣誉毕业",
     hours: "EPQ 项目 80% 获 A*",
     courses: "IGCSE · A-Level · IB 英语文学 · SAT",
@@ -271,7 +271,7 @@ export const teachers: Teacher[] = [
   {
     name: "王储君",
     subject: "英语",
-    photo: "/teachers/英语-王储君.png",
+    photo: "/teachers/英语-王储君.webp",
     degree: "曼彻斯特大学本科 · TESOL 认证",
     hours: "10 年以上教龄",
     courses: "雅思 · 剑桥英语 KET / PET / FCE",
@@ -283,7 +283,7 @@ export const teachers: Teacher[] = [
   {
     name: "罗健文",
     subject: "英语",
-    photo: "/teachers/英语-罗健文.png",
+    photo: "/teachers/英语-罗健文.webp",
     degree: "曼彻斯特大学全奖 · ICAEW 会员",
     hours: "ICAEW 全科一次通过",
     courses: "IGCSE · A-Level 会计 · 商科",
