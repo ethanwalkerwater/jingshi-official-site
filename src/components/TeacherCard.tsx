@@ -13,12 +13,15 @@ export default function TeacherCard({ teacher }: { teacher: Teacher }) {
       href={`/faculty/${encodeURIComponent(teacher.name)}`}
       className="teacher"
     >
-      <div
-        className="teacher-photo"
-        style={{ backgroundImage: `url("${teacher.photo}")` }}
-        role="img"
-        aria-label={`${teacher.name}老师`}
-      >
+      <div className="teacher-photo">
+        <img
+          src={teacher.photo}
+          alt={`${teacher.name}老师`}
+          loading="lazy"
+          decoding="async"
+          width={591}
+          height={827}
+        />
         <span className="teacher-score teacher-score-card" aria-label={`综合评分 ${avgScore(teacher)}`}>
           <i className="ti ti-star-filled" aria-hidden="true" />
           <span className="s">{avgScore(teacher)}</span>

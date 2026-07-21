@@ -781,6 +781,14 @@ img {
   overflow: hidden;
   box-shadow: none;
 }
+.teacher-photo > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
 .teacher-photo::after {
   content: "";
   position: absolute;

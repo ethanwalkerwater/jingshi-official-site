@@ -26,7 +26,7 @@ export const site = {
 
 export const images = {
   /** 首页 Hero 大图（菁仕自有图） */
-  hero: "/bg.png",
+  hero: "/bg.webp",
   /** 教育理念配图（暂未使用） */
   philosophy:
     "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?auto=format&fit=crop&w=1200&q=80",
@@ -34,9 +34,9 @@ export const images = {
   courses:
     "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&q=80",
   /** 预约区背景图 */
-  cta: "/bg.png",
+  cta: "/bg.webp",
   /** 名师页头图 */
-  facultyHero: "/bg.png",
+  facultyHero: "/bg.webp",
 } as const;
 
 /** 教育理念 —— 四个支柱 */
