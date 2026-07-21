@@ -68,10 +68,14 @@ export default function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <span>
-            © {new Date().getFullYear()} {site.copyright} · {site.nameEn}
-          </span>
-          <span>沪ICP备 XXXXXXXX 号（占位）</span>
+          <span>© {new Date().getFullYear()} {site.copyright} · {site.nameEn}</span>
+          <a
+            href="https://beian.miit.gov.cn/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            沪ICP备2026031554号-1
+          </a>
         </div>
       </div>
     </footer>
