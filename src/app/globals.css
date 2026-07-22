@@ -359,7 +359,8 @@ button {
   height: 100%;
 }
 .teacher-photo {
-  aspect-ratio: 591 / 827;
+  position: relative;
+  aspect-ratio: 1 / 0.95;
   background: var(--alt);
   overflow: hidden;
 }
@@ -369,6 +370,28 @@ button {
   object-fit: cover;
   object-position: center top;
 }
+/* 评分角标：照片右上角 */
+.teacher-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: var(--radius-pill);
+  padding: 4px 9px;
+  box-shadow: 0 6px 16px -8px rgba(24, 39, 65, 0.5);
+}
+.teacher-badge svg {
+  width: 12px;
+  height: 12px;
+  color: var(--gold);
+}
 .teacher-body {
   padding: 12px 12px 14px;
   display: flex;
@@ -376,29 +399,10 @@ button {
   gap: 6px;
   flex: 1;
 }
-.teacher-top {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 6px;
-}
 .teacher-name {
   font-size: 15px;
   font-weight: 800;
   line-height: 1.3;
-}
-.teacher-score {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--gold);
-  flex: none;
-}
-.teacher-score svg {
-  width: 12px;
-  height: 12px;
 }
 .teacher-degree {
   font-size: 12px;
@@ -408,6 +412,27 @@ button {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+/* 经验亮点行 */
+.teacher-highlight {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.teacher-highlight svg {
+  width: 12px;
+  height: 12px;
+  color: var(--gold);
+  flex: none;
+}
+.teacher-highlight span {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .teacher-tags {
   display: flex;
@@ -970,46 +995,107 @@ button {
   padding-top: 16px;
 }
 
-/* 筛选面板：学科 / 评分 / 性别 分组；移动端吸顶 */
-.filter-panel {
+/* 筛选栏：单行下拉（学科/评分/性别）；移动端吸顶 */
+.filter-bar {
   position: sticky;
   top: 64px;
   z-index: 40;
   background: var(--paper);
   margin-left: -20px;
   margin-right: -20px;
-  padding: 10px 20px 12px;
+  padding: 10px 20px;
   border-bottom: 1px solid var(--line);
-  display: grid;
-  gap: 8px;
-}
-.filter-group {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  margin-bottom: 20px;
 }
-.filter-label {
+.fdrop {
+  position: relative;
   flex: none;
-  width: 32px;
-  font-size: 12px;
-  font-weight: 700;
+}
+.fdrop-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink-soft);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.fdrop-btn svg {
+  width: 13px;
+  height: 13px;
+  opacity: 0.6;
+  transition: transform 0.15s ease;
+}
+.fdrop-btn.open svg {
+  transform: rotate(180deg);
+}
+.fdrop-btn .fdrop-label {
+  color: var(--ink-dim);
+  font-weight: 500;
+}
+.fdrop-btn.active {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+.fdrop-btn.active .fdrop-label {
   color: var(--ink-dim);
 }
-.filter-chips {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  flex-wrap: nowrap;
-  scrollbar-width: none;
-  padding: 2px 0;
+.fdrop-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 50;
+  min-width: 132px;
+  max-height: 52vh;
+  overflow-y: auto;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 16px 40px -20px rgba(24, 39, 65, 0.35);
+  padding: 5px;
+  display: grid;
 }
-.filter-chips::-webkit-scrollbar {
-  display: none;
+.fdrop-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  background: none;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  white-space: nowrap;
+}
+.fdrop-item:hover {
+  background: var(--alt);
+}
+.fdrop-item.active {
+  color: var(--ink);
+  font-weight: 700;
+  background: var(--alt);
+}
+.fdrop-item .n {
+  opacity: 0.55;
+  font-size: 12px;
 }
 .filter-count {
-  margin: 2px 0 0 42px;
+  margin: 0 0 0 auto;
   font-size: 12px;
   color: var(--ink-dim);
+  white-space: nowrap;
 }
 .fac-empty {
   padding: 60px 0;
@@ -1044,6 +1130,28 @@ button {
 /* ---------------- 教师详情页 ---------------- */
 .detail {
   padding: 32px 0 48px;
+}
+.detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  padding: 7px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--card);
+  margin-bottom: 14px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.detail-back:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+.detail-back svg {
+  width: 14px;
+  height: 14px;
 }
 .detail-grid {
   display: grid;
@@ -1196,10 +1304,6 @@ button {
   .fac-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
-  }
-  .filter-chips {
-    flex-wrap: wrap;
-    overflow: visible;
   }
 }
 
@@ -1364,8 +1468,8 @@ button {
   .sticky-bar {
     display: none;
   }
-  /* 筛选面板桌面端还原 */
-  .filter-panel {
+  /* 筛选栏桌面端还原 */
+  .filter-bar {
     position: static;
     margin-left: 0;
     margin-right: 0;
