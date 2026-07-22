@@ -27,7 +27,7 @@ export default function FacultyPage() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section faculty-list">
         <div className="wrap">
           <FacultyGrid />
         </div>
