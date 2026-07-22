@@ -26,3 +26,7 @@ next-env.d.ts
 
 # vercel
 .vercel
+
+# 历史探索目录（不进仓库）
+/kings-academy-redesign/
+/design-demos/

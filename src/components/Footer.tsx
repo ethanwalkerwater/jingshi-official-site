@@ -1,25 +1,17 @@
 import Link from "next/link";
 import { site, campuses } from "@/data/site";
+import { IconArrowRight, IconChat, IconPhone } from "./icons";
 
+/** 页脚：全站唯一保留深色的区域（ink 底） */
 export default function Footer() {
   return (
-    <footer className="footer" id="contact">
+    <footer className="footer">
       <div className="wrap">
         <div className="footer-grid">
           <div className="footer-brand">
             <span className="brand">
               <span className="brand-mark">
-                <img
-                  className="logo-blue"
-                  src="/logo-blue.svg"
-                  alt={`${site.name} ${site.nameEn}`}
-                />
-                <img
-                  className="logo-white"
-                  src="/logo-white.svg"
-                  alt=""
-                  aria-hidden="true"
-                />
+                <img src="/logo-white.svg" alt={`${site.name} ${site.nameEn}`} />
               </span>
               <span className="brand-word">
                 <span className="zh">{site.name}</span>
@@ -49,15 +41,17 @@ export default function Footer() {
             <h4>联系我们</h4>
             <ul>
               <li>
-                <i className="ti ti-phone" aria-hidden="true" />{" "}
+                <IconPhone width={13} height={13} />
                 <span className="ct">{site.contact.phone}</span>
               </li>
               <li>
-                <i className="ti ti-brand-wechat" aria-hidden="true" /> 微信：
+                <IconChat width={13} height={13} /> 微信：
                 {site.contact.wechat}
               </li>
               <li style={{ marginTop: 14 }}>
-                <Link href="/faculty">名师团队 →</Link>
+                <Link href="/faculty">
+                  名师团队 <IconArrowRight width={13} height={13} />
+                </Link>
               </li>
             </ul>
             <div className="footer-qr">
@@ -68,7 +62,9 @@ export default function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <span>© {new Date().getFullYear()} {site.copyright} · {site.nameEn}</span>
+          <span>
+            © {new Date().getFullYear()} {site.copyright} · {site.nameEn}
+          </span>
           <a
             href="https://beian.miit.gov.cn/"
             target="_blank"
