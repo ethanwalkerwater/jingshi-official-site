@@ -945,7 +945,6 @@ button {
 /* ---------------- 内页浅色页头（/faculty 等） ---------------- */
 .page-head {
   padding: 32px 0 24px;
-  border-bottom: 1px solid var(--line);
 }
 .breadcrumb {
   font-size: 12px;
@@ -966,26 +965,57 @@ button {
   margin-top: 6px;
   max-width: 560px;
 }
+/* 教师列表区：紧跟页头与筛选面板，压缩顶部留白 */
+.faculty-list {
+  padding-top: 16px;
+}
 
-/* 筛选条：移动端横向滑动 + 吸顶 */
-.filter-bar {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 24px;
-  overflow-x: auto;
-  flex-wrap: nowrap;
+/* 筛选面板：学科 / 评分 / 性别 分组；移动端吸顶 */
+.filter-panel {
   position: sticky;
   top: 64px;
   z-index: 40;
   background: var(--paper);
   margin-left: -20px;
   margin-right: -20px;
-  padding: 10px 20px;
+  padding: 10px 20px 12px;
   border-bottom: 1px solid var(--line);
-  scrollbar-width: none;
+  display: grid;
+  gap: 8px;
 }
-.filter-bar::-webkit-scrollbar {
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.filter-label {
+  flex: none;
+  width: 32px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-dim);
+}
+.filter-chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  scrollbar-width: none;
+  padding: 2px 0;
+}
+.filter-chips::-webkit-scrollbar {
   display: none;
+}
+.filter-count {
+  margin: 2px 0 0 42px;
+  font-size: 12px;
+  color: var(--ink-dim);
+}
+.fac-empty {
+  padding: 60px 0;
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 14px;
 }
 .filter-chip {
   font-size: 13px;
@@ -1167,7 +1197,7 @@ button {
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
   }
-  .filter-bar {
+  .filter-chips {
     flex-wrap: wrap;
     overflow: visible;
   }
@@ -1334,14 +1364,17 @@ button {
   .sticky-bar {
     display: none;
   }
-  /* 筛选条桌面端还原 */
-  .filter-bar {
+  /* 筛选面板桌面端还原 */
+  .filter-panel {
     position: static;
     margin-left: 0;
     margin-right: 0;
     padding: 0 0 4px;
     border-bottom: 0;
     background: transparent;
+  }
+  .faculty-list {
+    padding-top: 28px;
   }
   /* 详情页 */
   .detail {

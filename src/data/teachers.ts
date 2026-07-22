@@ -14,6 +14,8 @@ export interface Teacher {
   name: string;
   /** 学科 */
   subject: Subject;
+  /** 性别（用于名师页筛选） */
+  gender: "男" | "女";
   /** 头像路径，位于 /public/teachers 下 */
   photo: string;
   /** 学历（卡片用，简短，主要院校） */
@@ -45,6 +47,7 @@ export function avgScore(t: Teacher): string {
 export const teachers: Teacher[] = [
   {
     name: "应雁心",
+    gender: "女",
     subject: "数学",
     photo: "/teachers/数学-应雁心.webp",
     degree: "伦敦大学学院（UCL）· 全 A* 录取",
@@ -58,6 +61,7 @@ export const teachers: Teacher[] = [
   },
   {
     name: "包天翊",
+    gender: "男",
     subject: "数学",
     photo: "/teachers/数学-包天翊.webp",
     degree: "香港中文大学金融数学硕士",
@@ -70,6 +74,7 @@ export const teachers: Teacher[] = [
   },
   {
     name: "张文豪",
+    gender: "男",
     subject: "数学",
     photo: "/teachers/数学-张文豪.webp",
     degree: "帝国理工学院数学系本科",
@@ -82,6 +87,7 @@ export const teachers: Teacher[] = [
   },
   {
     name: "张劭景",
+    gender: "男",
     subject: "数学",
     photo: "/teachers/数学-张劭景.webp",
     degree: "帝国理工学院应用数学硕士",
@@ -95,6 +101,7 @@ export const teachers: Teacher[] = [
   },
   {
     name: "陈璐怡",
+    gender: "女",
     subject: "数学",
     photo: "/teachers/数学-陈璐怡.webp",
     degree: "牛津大学研究生 · 工程系本科",
@@ -108,6 +115,7 @@ export const teachers: Teacher[] = [
   },
   {
     name: "傅威程",
+    gender: "男",
     subject: "数学",
     photo: "/teachers/数学-傅威程.webp",
     degree: "香港科技大学金融科技硕士",
@@ -120,6 +128,7 @@ export const teachers: Teacher[] = [
   },
   {
     name: "郑唯梓",
+    gender: "男",
     subject: "数学",
     photo: "/teachers/数学-郑唯梓.webp",
     degree: "北京大学力学 + 经济双学位",
@@ -132,6 +141,7 @@ export const teachers: Teacher[] = [
   },
   {
     name: "李品轩",
+    gender: "女",
     subject: "物理",
     photo: "/teachers/物理-李品轩.webp",
     degree: "西交利物浦大学国际教育硕士",
@@ -145,6 +155,7 @@ export const teachers: Teacher[] = [
   },
   {
     name: "汤朔",
+    gender: "男",
     subject: "物理",
     photo: "/teachers/物理-汤朔.webp",
     degree: "UCL 理学硕士 · 东南大学学士",
@@ -158,6 +169,7 @@ export const teachers: Teacher[] = [
   },
   {
     name: "王冰青",
+    gender: "女",
     subject: "物理",
     photo: "/teachers/物理-王冰青.webp",
     degree: "清华大学学士 · UC Davis 博士",
@@ -170,6 +182,7 @@ export const teachers: Teacher[] = [
   },
   {
     name: "李寅鑫",
+    gender: "男",
     subject: "化学",
     photo: "/teachers/化学-李寅鑫.webp",
     degree: "宾夕法尼亚大学化学硕士",
@@ -183,6 +196,7 @@ export const teachers: Teacher[] = [
   },
   {
     name: "朱毅博",
+    gender: "男",
     subject: "化学",
     photo: "/teachers/化学-朱毅博.webp",
     degree: "西北大学硕士 · UC Davis 本科",
@@ -195,6 +209,7 @@ export const teachers: Teacher[] = [
   },
   {
     name: "刘艳阳",
+    gender: "女",
     subject: "经济",
     photo: "/teachers/经济-刘艳阳.webp",
     degree: "堪培拉大学 MBA",
@@ -208,6 +223,7 @@ export const teachers: Teacher[] = [
   },
   {
     name: "马怡婷",
+    gender: "女",
     subject: "经济",
     photo: "/teachers/经济-马怡婷.webp",
     degree: "威斯康星麦迪逊本科 · MBA",
@@ -220,6 +236,7 @@ export const teachers: Teacher[] = [
   },
   {
     name: "陈依依",
+    gender: "女",
     subject: "英语",
     photo: "/teachers/英语-陈依依.webp",
     degree: "伯明翰大学 TESOL 硕士",
@@ -233,6 +250,7 @@ export const teachers: Teacher[] = [
   },
   {
     name: "黄钢",
+    gender: "男",
     subject: "英语",
     photo: "/teachers/英语-黄钢.webp",
     degree: "香港中文大学翻译学硕士",
@@ -245,6 +263,7 @@ export const teachers: Teacher[] = [
   },
   {
     name: "蓝浪",
+    gender: "男",
     subject: "英语",
     photo: "/teachers/英语-蓝浪.webp",
     degree: "伦敦国王学院教育政策硕士",
@@ -257,6 +276,7 @@ export const teachers: Teacher[] = [
   },
   {
     name: "Valentina Lin",
+    gender: "女",
     subject: "英语",
     photo: "/teachers/英语-Valentina Lin.webp",
     degree: "范德堡大学优等荣誉毕业",
@@ -270,6 +290,7 @@ export const teachers: Teacher[] = [
   },
   {
     name: "王储君",
+    gender: "男",
     subject: "英语",
     photo: "/teachers/英语-王储君.webp",
     degree: "曼彻斯特大学本科 · TESOL 认证",
@@ -282,6 +303,7 @@ export const teachers: Teacher[] = [
   },
   {
     name: "罗健文",
+    gender: "男",
     subject: "英语",
     photo: "/teachers/英语-罗健文.webp",
     degree: "曼彻斯特大学全奖 · ICAEW 会员",
