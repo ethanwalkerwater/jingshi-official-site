@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { site } from "@/data/site";
 import { useBooking } from "./booking";
 import { IconChat, IconPhone } from "./icons";
@@ -12,15 +13,20 @@ import { IconChat, IconPhone } from "./icons";
 export default function StickyCta() {
   const { open, isOpen } = useBooking();
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+  const isTeacherDetail = pathname.startsWith("/faculty/");
 
   useEffect(() => {
+    if (isTeacherDetail) return;
     const onScroll = () => setScrolled(window.scrollY > window.innerHeight);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [isTeacherDetail]);
 
   const tel = site.contact.phone.replace(/\s/g, "");
+
+  if (isTeacherDetail) return null;
 
   return (
     <div className={`sticky-bar${scrolled && !isOpen ? " show" : ""}`}>

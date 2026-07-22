@@ -1,6 +1,5 @@
-import Link from "next/link";
 import { site, campuses } from "@/data/site";
-import { IconArrowRight, IconChat, IconPhone } from "./icons";
+import { IconChat, IconPhone } from "./icons";
 
 /** 页脚：全站唯一保留深色的区域（ink 底） */
 export default function Footer() {
@@ -47,11 +46,6 @@ export default function Footer() {
               <li>
                 <IconChat width={13} height={13} /> 微信：
                 {site.contact.wechat}
-              </li>
-              <li style={{ marginTop: 14 }}>
-                <Link href="/faculty">
-                  名师团队 <IconArrowRight width={13} height={13} />
-                </Link>
               </li>
             </ul>
             <div className="footer-qr">

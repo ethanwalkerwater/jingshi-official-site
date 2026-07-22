@@ -30,6 +30,10 @@ body {
 }
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 76px;
+}
+section[id] {
+  scroll-margin-top: 76px;
 }
 body {
   background: var(--paper);
@@ -360,7 +364,7 @@ button {
 }
 .teacher-photo {
   position: relative;
-  aspect-ratio: 1 / 0.95;
+  aspect-ratio: 1 / 1.05;
   background: var(--alt);
   overflow: hidden;
 }
@@ -408,9 +412,8 @@ button {
   font-size: 12px;
   color: var(--ink-soft);
   line-height: 1.6;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   overflow: hidden;
 }
 /* 经验亮点行 */
@@ -697,6 +700,9 @@ button {
   font-size: 12px;
   color: var(--ink-soft);
 }
+.qr-sub-mobile {
+  display: none;
+}
 .contact-rows {
   width: 100%;
   margin-top: 16px;
@@ -715,6 +721,9 @@ button {
   font-size: 13px;
   color: var(--ink-soft);
   text-align: left;
+  width: 100%;
+  cursor: pointer;
+  font-family: inherit;
 }
 .contact-row svg {
   color: var(--gold);
@@ -724,33 +733,20 @@ button {
   color: var(--ink);
   font-weight: 700;
 }
+.copy-feedback {
+  margin-left: auto;
+  flex: none;
+  font-size: 11px;
+  color: var(--ink-dim);
+  transition: color 0.15s ease;
+}
+.copy-feedback.copied {
+  color: var(--gold);
+  font-weight: 700;
+}
 .contact-card .btn {
   margin-top: 16px;
   width: 100%;
-}
-
-/* ---------------- 浅色 CTA 横条 ---------------- */
-.cta-bar {
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  background: var(--alt);
-  padding: 32px 0;
-}
-.cta-inner {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  align-items: flex-start;
-}
-.cta-inner h2 {
-  font-size: 20px;
-  font-weight: 800;
-  line-height: 1.35;
-}
-.cta-inner p {
-  font-size: 13px;
-  color: var(--ink-soft);
-  margin-top: 4px;
 }
 
 /* ---------------- 页脚（全站唯一深色区） ---------------- */
@@ -929,6 +925,10 @@ button {
   border-radius: var(--radius-card);
   padding: 12px 16px;
   font-size: 14px;
+  width: 100%;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
 }
 .modal-row svg {
   color: var(--gold);
@@ -940,6 +940,14 @@ button {
 .modal-row span {
   color: var(--ink-soft);
   font-size: 13px;
+}
+.modal-row .copy-feedback {
+  margin-left: auto;
+  color: var(--ink-dim);
+  white-space: nowrap;
+}
+.modal-row .copy-feedback.copied {
+  color: var(--gold);
 }
 
 /* ---------------- 移动端吸底转化条 ---------------- */
@@ -1198,6 +1206,9 @@ button {
 .detail-courses {
   margin-top: 20px;
 }
+.detail-courses-mobile {
+  display: none;
+}
 .detail-courses .lab {
   font-size: 12px;
   letter-spacing: 0.1em;
@@ -1297,6 +1308,9 @@ button {
   gap: 12px;
   flex-wrap: wrap;
   margin-top: 28px;
+}
+.detail-mobile-booking {
+  display: none;
 }
 
 /* ---------------- 响应式 ---------------- */
@@ -1438,15 +1452,6 @@ button {
     gap: 40px;
     align-items: start;
   }
-  /* CTA 横条 */
-  .cta-inner {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .cta-inner h2 {
-    font-size: 24px;
-  }
   /* 页脚 */
   .footer-grid {
     grid-template-columns: 1.3fr 1fr 1fr;
@@ -1502,6 +1507,9 @@ button {
   .detail-name {
     font-size: 36px;
   }
+  .detail-cta {
+    display: flex;
+  }
   .page-head h1 {
     font-size: 32px;
   }
@@ -1510,6 +1518,118 @@ button {
 /* 吸底条占位：移动端给 body 底部留白，避免遮挡页脚 */
 @media (max-width: 860px) {
   body {
-    padding-bottom: 68px;
+    padding-bottom: 82px;
+  }
+  .header.teacher-detail-header {
+    display: none;
+  }
+  .qr-sub-desktop {
+    display: none;
+  }
+  .qr-sub-mobile {
+    display: block;
+  }
+  .detail {
+    padding: 0 0 104px;
+  }
+  .detail > .wrap {
+    padding: 0;
+  }
+  .detail-back {
+    position: sticky;
+    top: 0;
+    z-index: 45;
+    width: 100%;
+    min-height: 58px;
+    margin: 0;
+    padding: 0 20px;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    background: rgba(251, 250, 247, 0.96);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--ink);
+    font-size: 14px;
+  }
+  .detail-back svg {
+    width: 20px;
+    height: 20px;
+  }
+  .detail-grid {
+    gap: 0;
+  }
+  .detail-photo {
+    width: 100%;
+    margin: 0;
+    aspect-ratio: 1 / 1.05;
+    border: 0;
+    border-radius: 0;
+  }
+  .detail-courses-desktop {
+    display: none;
+  }
+  .detail-content {
+    position: relative;
+    z-index: 2;
+    margin-top: -22px;
+    padding: 28px 20px 0;
+    border-radius: 24px 24px 0 0;
+    background: var(--paper);
+  }
+  .detail-courses-mobile {
+    display: block;
+    margin-top: 20px;
+  }
+  .detail-courses-mobile .detail-tags {
+    justify-content: flex-start;
+  }
+  .detail-cta {
+    display: none;
+  }
+  .detail-mobile-booking {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 75;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 76px;
+    padding: 10px 20px calc(10px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line);
+    background: rgba(251, 250, 247, 0.98);
+    box-shadow: 0 -12px 30px -24px rgba(24, 39, 65, 0.45);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .detail-mobile-booking > div {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    line-height: 1.35;
+  }
+  .detail-mobile-booking strong {
+    overflow: hidden;
+    color: var(--ink);
+    font-size: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .detail-mobile-booking span {
+    margin-top: 2px;
+    overflow: hidden;
+    color: var(--ink-soft);
+    font-size: 11px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .detail-mobile-booking .btn {
+    min-width: 126px;
+    min-height: 48px;
+    padding: 0 22px;
+    flex: none;
   }
 }

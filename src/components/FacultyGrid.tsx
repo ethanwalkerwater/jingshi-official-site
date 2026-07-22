@@ -131,7 +131,6 @@ export default function FacultyGrid() {
             )}
           </div>
         ))}
-        <p className="filter-count">共 {list.length} 位老师</p>
       </div>
 
       {list.length > 0 ? (

@@ -5,11 +5,10 @@ import { customCourseNote } from "@/data/courses";
 import { BookingButton } from "@/components/booking";
 import CourseExplorer from "@/components/CourseExplorer";
 import TeacherCard from "@/components/TeacherCard";
+import CopyContactRow from "@/components/CopyContactRow";
 import {
   IconArrowRight,
-  IconChat,
   IconMapPin,
-  IconPhone,
 } from "@/components/icons";
 
 /** 首页 featured 名师：取 8 位，按综合评分排序 */
@@ -131,23 +130,19 @@ export default function Home() {
                 alt="菁仕教育微信二维码"
               />
               <p className="qr-cap">扫码添加顾问</p>
-              <p className="qr-sub">备注学生年级与意向方向，顾问一对一回复</p>
+              <p className="qr-sub qr-sub-desktop">打开微信扫一扫，添加顾问</p>
+              <p className="qr-sub qr-sub-mobile">长按二维码识别并添加顾问</p>
               <div className="contact-rows">
-                <div className="contact-row">
-                  <IconChat />
-                  <span>
-                    微信号&nbsp;<b>{site.contact.wechat}</b>
-                  </span>
-                </div>
-                <a
-                  className="contact-row"
-                  href={`tel:${site.contact.phone.replace(/\s/g, "")}`}
-                >
-                  <IconPhone />
-                  <span>
-                    电话&nbsp;<b>{site.contact.phone}</b>
-                  </span>
-                </a>
+                <CopyContactRow
+                  kind="wechat"
+                  label="微信号"
+                  value={site.contact.wechat}
+                />
+                <CopyContactRow
+                  kind="phone"
+                  label="电话"
+                  value={site.contact.phone}
+                />
               </div>
               <BookingButton className="btn btn-gold" withIcon>
                 预约到访
@@ -157,18 +152,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ⑥ 浅色 CTA 横条 */}
-      <section className="cta-bar">
-        <div className="wrap cta-inner">
-          <div>
-            <h2>想聊聊孩子的升学规划？</h2>
-            <p>预约一次免费咨询，让专业老师帮你把路径排清楚。</p>
-          </div>
-          <BookingButton className="btn btn-gold btn-lg" withIcon>
-            预约免费咨询
-          </BookingButton>
-        </div>
-      </section>
     </>
   );
 }
