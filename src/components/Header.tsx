@@ -5,27 +5,23 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { site } from "@/data/site";
 import { BookingButton } from "./booking";
+import { IconMenu, IconX } from "./icons";
 
 const navLinks = [
-  { label: "教育理念", href: "/#philosophy" },
-  { label: "课程体系", href: "/#courses" },
   { label: "名师团队", href: "/faculty" },
+  { label: "教育理念", href: "/#pillars" },
+  { label: "课程体系", href: "/#courses" },
   { label: "校区联系", href: "/#contact" },
 ];
 
+/** 浅色常驻顶栏：KA 图形 + 菁仕教育字标（单张 logo-blue.svg，只设高度不变形） */
 export default function Header() {
-  const [solid, setSolid] = useState(false);
   const [drawer, setDrawer] = useState(false);
   const pathname = usePathname();
 
+  // 路由切换时收起抽屉
   useEffect(() => {
-    // 顶部有深色 hero（首页 .hero / 内页 .page-hero）时才用透明白字态；
-    // 否则（如老师详情页这类浅色顶部页面）直接用实色态，避免白字看不见。
-    const hasDarkHero = !!document.querySelector(".hero, .page-hero");
-    const onScroll = () => setSolid(window.scrollY > 80 || !hasDarkHero);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    setDrawer(false);
   }, [pathname]);
 
   useEffect(() => {
@@ -37,21 +33,11 @@ export default function Header() {
 
   return (
     <>
-      <header className={`header ${solid ? "solid" : "over"}`}>
+      <header className="header">
         <div className="wrap header-inner">
           <Link href="/" className="brand" aria-label={site.name}>
             <span className="brand-mark">
-              <img
-                className="logo-blue"
-                src="/logo-blue.svg"
-                alt={`${site.name} ${site.nameEn}`}
-              />
-              <img
-                className="logo-white"
-                src="/logo-white.svg"
-                alt=""
-                aria-hidden="true"
-              />
+              <img src="/logo-blue.svg" alt={`${site.name} ${site.nameEn}`} />
             </span>
             <span className="brand-word">
               <span className="zh">{site.name}</span>
@@ -68,55 +54,44 @@ export default function Header() {
           </nav>
 
           <div className="header-actions">
-            <BookingButton className="btn btn-gold">预约试听</BookingButton>
+            <BookingButton className="btn btn-gold header-cta">
+              预约咨询
+            </BookingButton>
             <button
               className="menu-toggle"
               onClick={() => setDrawer(true)}
               aria-label="打开菜单"
             >
-              <i className="ti ti-menu-2" aria-hidden="true" />
+              <IconMenu width={20} height={20} />
             </button>
           </div>
         </div>
       </header>
 
-      <div className={`drawer ${drawer ? "open" : ""}`}>
-        <div className="drawer-top">
-          <span className="brand">
-            <span className="brand-mark">
-              <img
-                className="logo-blue"
-                src="/logo-blue.svg"
-                alt={`${site.name} ${site.nameEn}`}
-              />
-              <img
-                className="logo-white"
-                src="/logo-white.svg"
-                alt=""
-                aria-hidden="true"
-              />
-            </span>
-            <span className="brand-word">
-              <span className="zh" style={{ color: "#fff" }}>
-                {site.name}
-              </span>
-              <span className="en">{site.nameEn}</span>
-            </span>
-          </span>
+      <div className={`drawer${drawer ? " open" : ""}`} aria-hidden={!drawer}>
+        <div className="drawer-mask" onClick={() => setDrawer(false)} />
+        <div className="drawer-panel">
           <button
-            className="close"
+            className="drawer-close"
             onClick={() => setDrawer(false)}
             aria-label="关闭菜单"
           >
-            <i className="ti ti-x" aria-hidden="true" />
+            <IconX width={20} height={20} />
           </button>
+          {navLinks.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              className="navlink"
+              onClick={() => setDrawer(false)}
+            >
+              {l.label}
+            </Link>
+          ))}
+          <BookingButton className="btn btn-gold" withIcon>
+            预约免费咨询
+          </BookingButton>
         </div>
-        {navLinks.map((l) => (
-          <Link key={l.href} href={l.href} onClick={() => setDrawer(false)}>
-            {l.label}
-          </Link>
-        ))}
-        <BookingButton className="btn btn-gold btn-lg">预约试听</BookingButton>
       </div>
     </>
   );

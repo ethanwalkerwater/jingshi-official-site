@@ -34,7 +34,7 @@ export default function FacultyGrid() {
               onClick={() => setFilter(f)}
             >
               {f}
-              <span style={{ opacity: 0.6, marginLeft: 6 }}>{count}</span>
+              <span className="n">{count}</span>
             </button>
           );
         })}

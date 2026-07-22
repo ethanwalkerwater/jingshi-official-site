@@ -47,7 +47,7 @@ export default async function TeacherDetail({
     <>
       <section className="detail">
         <div className="wrap">
-          <p className="breadcrumb" style={{ color: "var(--ink-dim)" }}>
+          <p className="breadcrumb">
             <Link href="/">首页</Link> / <Link href="/faculty">名师团队</Link> /{" "}
             {t.name}
           </p>
@@ -60,8 +60,7 @@ export default async function TeacherDetail({
                 role="img"
                 aria-label={`${t.name}老师`}
               >
-                <span className="teacher-subject">{t.subject}</span>
-                <span className="teacher-score">
+                <span className="detail-score">
                   <span className="s">{avgScore(t)}</span>
                   <span className="l">综合评分</span>
                 </span>
@@ -70,7 +69,7 @@ export default async function TeacherDetail({
                 <p className="lab">所授课程</p>
                 <div className="detail-tags">
                   {t.courses.split("·").map((c) => (
-                    <span className="detail-tag" key={c}>
+                    <span className="tag" key={c}>
                       {c.trim()}
                     </span>
                   ))}
@@ -124,15 +123,16 @@ export default async function TeacherDetail({
         </div>
       </section>
 
-      <section className="section cta" style={{ marginTop: "clamp(64px,9vw,110px)" }}>
-        <div className="wrap">
-          <div className="cta-inner">
+      {/* 浅色 CTA 横条 */}
+      <section className="cta-bar">
+        <div className="wrap cta-inner">
+          <div>
             <h2>找到最适合孩子的老师</h2>
-            <p>预约免费咨询，我们将根据孩子的学习阶段与目标匹配老师与课程方案。</p>
-            <BookingButton className="btn btn-gold btn-lg">
-              预约免费咨询
-            </BookingButton>
+            <p>预约免费咨询，根据学习阶段与目标匹配老师与课程方案。</p>
           </div>
+          <BookingButton className="btn btn-gold btn-lg">
+            预约免费咨询
+          </BookingButton>
         </div>
       </section>
     </>

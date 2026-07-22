@@ -9,9 +9,12 @@ import {
   type ReactNode,
 } from "react";
 import { site } from "@/data/site";
+import { IconCalendar, IconChat, IconPhone, IconX } from "./icons";
 
 interface BookingCtx {
   open: () => void;
+  /** 弹窗是否打开（供吸底条等组件联动隐藏） */
+  isOpen: boolean;
 }
 
 const Ctx = createContext<BookingCtx | null>(null);
@@ -24,7 +27,7 @@ export function useBooking() {
 
 /** 全站任意位置的预约触发按钮 */
 export function BookingButton({
-  children = "预约试听",
+  children = "预约免费咨询",
   className = "btn btn-gold",
   withIcon = false,
 }: {
@@ -35,7 +38,7 @@ export function BookingButton({
   const { open } = useBooking();
   return (
     <button type="button" className={className} onClick={open}>
-      {withIcon && <i className="ti ti-calendar-event" aria-hidden="true" />}
+      {withIcon && <IconCalendar />}
       {children}
     </button>
   );
@@ -44,9 +47,7 @@ export function BookingButton({
 export function BookingProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const open = useCallback(() => {
-    setIsOpen(true);
-  }, []);
+  const open = useCallback(() => setIsOpen(true), []);
   const close = useCallback(() => setIsOpen(false), []);
 
   useEffect(() => {
@@ -60,60 +61,40 @@ export function BookingProvider({ children }: { children: ReactNode }) {
     };
   }, [isOpen, close]);
 
+  const tel = site.contact.phone.replace(/\s/g, "");
+
   return (
-    <Ctx.Provider value={{ open }}>
+    <Ctx.Provider value={{ open, isOpen }}>
       {children}
       {isOpen && (
         <div
           className="modal-overlay"
           onClick={(e) => e.target === e.currentTarget && close()}
         >
-          <div className="modal" role="dialog" aria-modal="true">
-            <aside className="modal-aside">
-              <h3>预约试听</h3>
-              <p>
-                扫码添加菁仕官方微信，课程顾问将结合孩子现状，
-                协助安排试听与升学规划沟通。
-              </p>
-              <ul>
-                <li>名校师资 1v1 / 精品小班</li>
-                <li>专属升学规划路径</li>
-                <li>全天候响应 · 一站式服务</li>
-              </ul>
-            </aside>
-
-            <div className="modal-form">
-              <div className="modal-head">
-                <h3>扫码预约试听</h3>
-                <button
-                  className="modal-close"
-                  onClick={close}
-                  aria-label="关闭"
-                >
-                  <i className="ti ti-x" aria-hidden="true" />
-                </button>
+          <div className="modal-sheet" role="dialog" aria-modal="true" aria-label="预约咨询">
+            <div className="modal-grab" />
+            <button className="modal-close" onClick={close} aria-label="关闭">
+              <IconX width={18} height={18} />
+            </button>
+            <h3>预约免费咨询</h3>
+            <p className="modal-sub">扫码添加顾问微信，或直接电话联系我们</p>
+            <img
+              className="modal-qr"
+              src={site.contact.wechatQr}
+              alt="菁仕教育微信二维码"
+            />
+            <p className="modal-qr-cap">微信扫码 · 添加顾问</p>
+            <div className="modal-rows">
+              <div className="modal-row">
+                <IconChat />
+                <span>微信号</span>
+                <b>{site.contact.wechat}</b>
               </div>
-
-              <div className="booking-contact">
-                <div className="booking-qr">
-                  <img src={site.contact.wechatQr} alt="菁仕教育官方微信二维码" />
-                </div>
-                <p className="booking-qr-note">
-                  微信扫码添加顾问，备注学生年级与意向方向。
-                </p>
-                <div className="booking-lines">
-                  <div>
-                    <span>联系电话</span>
-                    <a href={`tel:${site.contact.phone.replace(/\s/g, "")}`}>
-                      {site.contact.phone}
-                    </a>
-                  </div>
-                  <div>
-                    <span>官方微信</span>
-                    <strong>{site.contact.wechat}</strong>
-                  </div>
-                </div>
-              </div>
+              <a className="modal-row" href={`tel:${tel}`}>
+                <IconPhone />
+                <span>咨询电话</span>
+                <b>{site.contact.phone}</b>
+              </a>
             </div>
           </div>
         </div>

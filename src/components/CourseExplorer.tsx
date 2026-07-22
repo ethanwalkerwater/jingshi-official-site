@@ -1,97 +1,106 @@
 "use client";
 
 import { useState } from "react";
-import { courseCategories } from "@/data/courses";
+import { courseCategories, type CourseCategory } from "@/data/courses";
+import { IconPlus } from "./icons";
 
-export default function CourseExplorer() {
-  const [cat, setCat] = useState(0);
-  const [open, setOpen] = useState(0);
-
-  const active = courseCategories[cat];
-  const activeItem = active.items[open];
-
-  function selectCat(i: number) {
-    setCat(i);
-    setOpen(0);
-  }
-
+/** 课程详情块（移动端手风琴与桌面 tab 共用） */
+function CategoryDetail({ c }: { c: CourseCategory }) {
   return (
     <>
-      <div className="program-tabs" role="tablist">
-        {courseCategories.map((c, i) => (
-          <button
-            key={c.id}
-            role="tab"
-            aria-selected={i === cat}
-            className={`program-tab${i === cat ? " active" : ""}`}
-            onClick={() => selectCat(i)}
-          >
-            <span className="program-copy">
-              <span className="program-title">{c.title}</span>
-              <span className="program-summary">{c.summary}</span>
-            </span>
-          </button>
-        ))}
-      </div>
-
-      <div className="course-panel">
-        <aside className="course-menu" aria-label={`${active.title}项目列表`}>
-          {active.items.map((item, i) => (
-            <button
-              type="button"
-              key={item.name}
-              className={`course-menu-item${i === open ? " active" : ""}`}
-              onClick={() => setOpen(i)}
-            >
-              <span className="course-menu-copy">
-                <span className="course-menu-name">{item.name}</span>
-                {item.en && <span className="course-menu-en">{item.en}</span>}
-              </span>
-            </button>
-          ))}
-        </aside>
-
-        <article className="course-detail">
-          <span className="course-kicker">{active.title}</span>
-          <div className="course-detail-head">
-            <h3>{activeItem.name}</h3>
-            {activeItem.en && <span>{activeItem.en}</span>}
-          </div>
-          <div className="course-meta-row">
-            <div>
-              <span>考试级别</span>
-              <strong>{activeItem.level}</strong>
+      <p className="course-audience">
+        <b>适合学生：</b>
+        {c.audience}
+      </p>
+      <div className="course-stack">
+        {c.items.map((it) => (
+          <div className="course-item" key={it.name}>
+            <div className="course-item-head">
+              <span className="name">{it.name}</span>
+              {it.en && <span className="en">{it.en}</span>}
             </div>
-            <div>
-              <span>面向学生</span>
-              <strong>{activeItem.audience}</strong>
-            </div>
-          </div>
-
-          <div className="course-info-grid">
-            <div className="course-info-card">
-              <h4>需要什么基础</h4>
-              <p>{activeItem.foundation}</p>
-            </div>
-            <div className="course-info-card">
-              <h4>核心价值</h4>
-              <p>{activeItem.value}</p>
-            </div>
-            <div className="course-info-card">
-              <h4>家长可以这样理解</h4>
-              <p>{activeItem.parentNote}</p>
-            </div>
-          </div>
-
-          <div className="course-subjects">
-            <h4>考试科目 / 课程模块</h4>
-            <div className="course-subject-list">
-              {activeItem.subjects.map((subject) => (
-                <span key={subject}>{subject}</span>
+            <p className="level">{it.level}</p>
+            <p className="parent">{it.parentNote}</p>
+            <div className="course-subjects">
+              {it.subjects.map((s) => (
+                <span className="tag" key={s}>
+                  {s}
+                </span>
               ))}
             </div>
           </div>
-        </article>
+        ))}
+      </div>
+    </>
+  );
+}
+
+/**
+ * 课程体系 explorer：
+ * ≤860px 手风琴（默认全部收起）；桌面左侧竖排 tab + 右侧详情。浅色底。
+ */
+export default function CourseExplorer() {
+  const [tab, setTab] = useState(0);
+  const [openAcc, setOpenAcc] = useState<number | null>(null);
+
+  return (
+    <>
+      {/* 移动端手风琴 */}
+      <div className="acc">
+        {courseCategories.map((c, i) => {
+          const open = openAcc === i;
+          return (
+            <div className={`acc-item${open ? " open" : ""}`} key={c.id}>
+              <button
+                type="button"
+                className="acc-head"
+                aria-expanded={open}
+                onClick={() => setOpenAcc(open ? null : i)}
+              >
+                <span>
+                  <span className="acc-title">{c.title}</span>
+                  <span className="acc-summary">{c.summary}</span>
+                </span>
+                <span className="acc-chevron">
+                  <IconPlus />
+                </span>
+              </button>
+              <div className="acc-body">
+                <CategoryDetail c={c} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* 桌面竖排 tab */}
+      <div className="course-tabs">
+        <div className="course-tab-list" role="tablist">
+          {courseCategories.map((c, i) => (
+            <button
+              type="button"
+              key={c.id}
+              role="tab"
+              aria-selected={i === tab}
+              className={`course-tab${i === tab ? " active" : ""}`}
+              onClick={() => setTab(i)}
+            >
+              <span className="t">{c.title}</span>
+              <span className="s">{c.summary}</span>
+            </button>
+          ))}
+        </div>
+        <div>
+          {courseCategories.map((c, i) => (
+            <div
+              key={c.id}
+              role="tabpanel"
+              className={`course-panel${i === tab ? " active" : ""}`}
+            >
+              <CategoryDetail c={c} />
+            </div>
+          ))}
+        </div>
       </div>
     </>
   );

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { images, site } from "@/data/site";
+import { site } from "@/data/site";
 import { teachers } from "@/data/teachers";
 import { BookingButton } from "@/components/booking";
 import FacultyGrid from "@/components/FacultyGrid";
@@ -14,23 +14,16 @@ export const metadata: Metadata = {
 export default function FacultyPage() {
   return (
     <>
-      <section className="page-hero">
-        <div
-          className="page-hero-bg"
-          style={{ backgroundImage: `url("${images.facultyHero}")` }}
-        />
+      {/* 浅色紧凑页头 */}
+      <section className="page-head">
         <div className="wrap">
-          <div className="page-hero-inner">
-            <p className="breadcrumb">
-              <Link href="/">首页</Link> / 名师团队
-            </p>
-            <h1>精英中的精英</h1>
-            <p>
-              菁仕的 {teachers.length} 位全职教师，均毕业于世界顶级名校，
-              拥有丰富的留学教育经验，并各自拥有金融、法律、计算机等行业背景。
-              因材施教，精英式陪伴每一位学生走向优秀。
-            </p>
-          </div>
+          <p className="breadcrumb">
+            <Link href="/">首页</Link> / 名师团队
+          </p>
+          <h1>名师团队</h1>
+          <p>
+            {teachers.length} 位全职教师，均毕业于牛津、剑桥、帝国理工、清华、北大等世界顶尖学府。
+          </p>
         </div>
       </section>
 
@@ -40,22 +33,16 @@ export default function FacultyPage() {
         </div>
       </section>
 
-      <section className="section cta">
-        <div
-          className="cta-bg"
-          style={{ backgroundImage: `url("${images.cta}")` }}
-        />
-        <div className="wrap">
-          <div className="cta-inner">
+      {/* 浅色 CTA 横条 */}
+      <section className="cta-bar">
+        <div className="wrap cta-inner">
+          <div>
             <h2>想了解哪位老师更适合孩子？</h2>
-            <p>
-              预约一次免费咨询，我们将根据孩子的学习阶段与目标，
-              为您匹配最合适的老师与课程方案。
-            </p>
-            <BookingButton className="btn btn-gold btn-lg">
-              预约免费咨询
-            </BookingButton>
+            <p>预约免费咨询，根据学习阶段与目标匹配最合适的老师。</p>
           </div>
+          <BookingButton className="btn btn-gold btn-lg">
+            预约免费咨询
+          </BookingButton>
         </div>
       </section>
     </>

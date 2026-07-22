@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>菁仕教育 KING'S ACADEMY — 官网重设计 Demo</title>
+<style>
+/* ============ 设计令牌（docs/重设计方案-v1.md） ============ */
+:root{
+  --paper:#FBFAF7;
+  --alt:#F3F1EA;
+  --ink:#182741;
+  --ink-soft:#4A5568;
+  --gold:#B08D46;
+  --card:#FFFFFF;
+  --line:rgba(24,39,65,.10);
+  --radius-card:12px;
+  --radius-pill:999px;
+  --font: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font);
+  background:var(--paper);
+  color:var(--ink);
+  font-size:16px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+section{padding:48px 0}
+.sec-head{margin-bottom:24px}
+.sec-head h2{font-size:24px;font-weight:800;line-height:1.3;letter-spacing:.01em}
+.sec-head p{font-size:13px;color:var(--ink-soft);margin-top:4px}
+.icon{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.icon-star{fill:currentColor;stroke:none}
+
+/* ============ 按钮 ============ */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  border-radius:var(--radius-pill);
+  font-weight:700;font-size:15px;line-height:1;
+  padding:13px 24px;cursor:pointer;border:0;
+  transition:opacity .15s ease;
+  font-family:var(--font);
+}
+.btn:active{opacity:.85}
+.btn-gold{background:var(--gold);color:#fff}
+.btn-outline{background:transparent;color:var(--ink);border:1px solid var(--line)}
+
+/* ============ 1. 顶栏 ============ */
+.site-header{
+  position:sticky;top:0;z-index:60;
+  background:rgba(251,250,247,.92);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.header-inner{display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand img{height:30px;width:auto}
+.brand-name{font-weight:800;font-size:16px;line-height:1.1}
+.brand-en{font-size:10px;letter-spacing:.14em;color:var(--ink-soft);font-weight:600}
+.nav-desktop{display:none;align-items:center;gap:28px;font-size:14px;font-weight:600}
+.nav-desktop a{color:var(--ink-soft)}
+.nav-desktop a:hover{color:var(--ink)}
+.header-cta{display:none}
+.menu-btn{
+  display:flex;align-items:center;justify-content:center;
+  width:40px;height:40px;border:1px solid var(--line);border-radius:10px;
+  background:#fff;cursor:pointer;
+}
+/* 移动端抽屉 */
+.drawer{
+  position:fixed;inset:0;z-index:80;display:none;
+}
+.drawer.open{display:block}
+.drawer-mask{position:absolute;inset:0;background:rgba(24,39,65,.32)}
+.drawer-panel{
+  position:absolute;top:0;right:0;bottom:0;width:min(300px,82vw);
+  background:var(--paper);padding:20px;
+  display:flex;flex-direction:column;gap:4px;
+  box-shadow:-8px 0 24px rgba(24,39,65,.08);
+}
+.drawer-close{align-self:flex-end;width:40px;height:40px;border:0;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.drawer-panel a.navlink{padding:14px 4px;font-weight:700;font-size:16px;border-bottom:1px solid var(--line)}
+.drawer-panel .btn{margin-top:20px;justify-content:center}
+
+/* ============ 2. Hero ============ */
+.hero{padding:40px 0 48px}
+.hero-grid{display:flex;flex-direction:column;gap:32px}
+.hero-eyebrow{
+  font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--gold);
+  margin-bottom:12px;
+}
+.hero h1{font-size:30px;font-weight:800;line-height:1.25;letter-spacing:.01em}
+.hero h1 .accent{color:var(--gold)}
+.hero-sub{margin-top:12px;font-size:15px;color:var(--ink-soft);max-width:480px}
+.hero-actions{margin-top:24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.hero-stats{
+  margin-top:20px;font-size:12px;color:var(--ink-soft);
+  display:flex;flex-wrap:wrap;gap:6px 0;align-items:center;
+}
+.hero-stats b{color:var(--ink);font-weight:700}
+.hero-stats .dot{width:3px;height:3px;border-radius:50%;background:var(--gold);margin:0 10px;flex:none}
+.hero-img{
+  border-radius:var(--radius-card);overflow:hidden;
+  border:1px solid var(--line);aspect-ratio:4/3;background:var(--alt);
+}
+.hero-img img{width:100%;height:100%;object-fit:cover}
+
+/* ============ 3. 名师团队 ============ */
+.sec-teachers{background:var(--alt)}
+.teacher-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:12px;
+}
+.teacher-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius-card);
+  overflow:hidden;display:flex;flex-direction:column;
+}
+.teacher-photo{aspect-ratio:591/827;background:var(--alt)}
+.teacher-photo img{width:100%;height:100%;object-fit:cover}
+.teacher-body{padding:12px 12px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.teacher-top{display:flex;align-items:baseline;justify-content:space-between;gap:6px}
+.teacher-name{font-size:15px;font-weight:800}
+.teacher-score{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:700;color:var(--gold);flex:none}
+.teacher-score svg{width:12px;height:12px}
+.teacher-degree{
+  font-size:12px;color:var(--ink-soft);line-height:1.6;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.teacher-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:2px}
+.tag{
+  font-size:11px;font-weight:600;color:var(--ink-soft);
+  border:1px solid var(--line);border-radius:var(--radius-pill);
+  padding:3px 10px;background:var(--paper);white-space:nowrap;
+}
+.teacher-more{margin-top:20px;text-align:center}
+.teacher-more a{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:14px;font-weight:700;color:var(--ink);
+  border-bottom:1px solid var(--gold);padding-bottom:2px;
+}
+
+/* ============ 4. 教育理念 ============ */
+.pillars{display:flex;flex-direction:column;gap:0}
+.pillar{
+  display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--line);
+}
+.pillar:first-child{padding-top:4px}
+.pillar:last-child{border-bottom:0;padding-bottom:4px}
+.pillar-num{
+  font-size:13px;font-weight:800;color:var(--gold);letter-spacing:.06em;
+  padding-top:3px;flex:none;width:32px;
+}
+.pillar h3{font-size:16px;font-weight:800;margin-bottom:4px}
+.pillar p{font-size:13px;color:var(--ink-soft);line-height:1.7}
+
+/* ============ 5. 课程体系 ============ */
+.sec-courses{background:var(--alt)}
+.course-tabs{display:none}
+/* 手风琴（移动端默认） */
+.acc{border-top:1px solid var(--line)}
+.acc-item{border-bottom:1px solid var(--line)}
+.acc-head{
+  width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:18px 4px;background:none;border:0;cursor:pointer;text-align:left;
+  font-family:var(--font);
+}
+.acc-head .acc-title{font-size:16px;font-weight:800;color:var(--ink)}
+.acc-head .acc-summary{font-size:12px;color:var(--ink-soft);margin-top:2px}
+.acc-chevron{
+  flex:none;width:32px;height:32px;border:1px solid var(--line);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;background:#fff;
+  transition:transform .25s ease;color:var(--ink);
+}
+.acc-item.open .acc-chevron{transform:rotate(45deg);color:var(--gold);border-color:var(--gold)}
+.acc-body{display:none;padding:0 4px 20px}
+.acc-item.open .acc-body{display:block}
+.course-detail{display:flex;flex-direction:column;gap:12px}
+.course-audience{font-size:13px;color:var(--ink-soft);margin-bottom:4px}
+.course-audience b{color:var(--ink);font-weight:700}
+.course-item{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius-card);
+  padding:16px;
+}
+.course-item-head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.course-item-head .name{font-size:15px;font-weight:800}
+.course-item-head .en{font-size:12px;color:var(--ink-soft)}
+.course-item .level{font-size:12px;color:var(--gold);font-weight:700;margin-top:2px}
+.course-item .parent{font-size:13px;color:var(--ink-soft);margin-top:8px;line-height:1.7}
+.course-subjects{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.course-note{margin-top:20px;font-size:12px;color:var(--ink-soft);text-align:center}
+
+/* ============ 6. 校区与联系 ============ */
+.contact-grid{display:flex;flex-direction:column;gap:24px}
+.campus-list{display:flex;flex-direction:column}
+.campus{
+  display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);
+  align-items:baseline;
+}
+.campus:last-child{border-bottom:0}
+.campus-name{font-size:14px;font-weight:800;flex:none;width:76px}
+.campus-addr{font-size:13px;color:var(--ink-soft);line-height:1.7}
+.campus-addr.placeholder{color:#9aa3b2}
+.contact-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius-card);
+  padding:20px;display:flex;gap:20px;align-items:center;
+}
+.contact-card .qr{width:104px;height:104px;border-radius:8px;border:1px solid var(--line);flex:none}
+.contact-info{display:flex;flex-direction:column;gap:8px;font-size:13px}
+.contact-info .row{display:flex;align-items:center;gap:8px;color:var(--ink-soft)}
+.contact-info .row b{color:var(--ink);font-weight:700}
+.contact-info .icon{color:var(--gold)}
+
+/* ============ 7. 底部 CTA 横条 ============ */
+.cta-bar{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--alt);padding:32px 0}
+.cta-inner{display:flex;flex-direction:column;gap:16px;align-items:flex-start}
+.cta-inner h2{font-size:20px;font-weight:800;line-height:1.35}
+.cta-inner p{font-size:13px;color:var(--ink-soft)}
+
+/* ============ 8. 页脚（唯一深色区） ============ */
+.site-footer{background:var(--ink);color:rgba(251,250,247,.72);padding:40px 0 32px;font-size:13px}
+.footer-inner{display:flex;flex-direction:column;gap:16px}
+.footer-brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:800;font-size:15px}
+.footer-brand img{height:26px;width:auto;filter:brightness(0) invert(1)}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap}
+.footer-links a{color:rgba(251,250,247,.72)}
+.footer-copy{border-top:1px solid rgba(251,250,247,.14);padding-top:16px;display:flex;flex-direction:column;gap:4px;font-size:12px;color:rgba(251,250,247,.5)}
+
+/* ============ 9. 移动端吸底条 ============ */
+.sticky-bar{
+  position:fixed;left:0;right:0;bottom:0;z-index:70;
+  display:flex;gap:10px;padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+  background:rgba(251,250,247,.96);backdrop-filter:blur(8px);
+  border-top:1px solid var(--line);
+  transform:translateY(110%);transition:transform .25s ease;
+}
+.sticky-bar.show{transform:translateY(0)}
+.sticky-bar .btn{flex:1;justify-content:center;padding:13px 8px}
+body.modal-open .sticky-bar{transform:translateY(110%)}
+
+/* ============ 10. 预约弹窗 ============ */
+.modal{position:fixed;inset:0;z-index:90;display:none}
+.modal.open{display:block}
+.modal-mask{position:absolute;inset:0;background:rgba(24,39,65,.4)}
+.modal-sheet{
+  position:absolute;left:0;right:0;bottom:0;
+  background:var(--paper);border-radius:20px 20px 0 0;
+  padding:24px 24px calc(28px + env(safe-area-inset-bottom));
+  max-height:88vh;overflow:auto;
+}
+.modal-grab{width:40px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 16px}
+.modal-close{
+  position:absolute;top:16px;right:16px;width:36px;height:36px;border:0;
+  background:var(--alt);border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;color:var(--ink);
+}
+.modal h3{font-size:18px;font-weight:800;text-align:center}
+.modal .modal-sub{font-size:13px;color:var(--ink-soft);text-align:center;margin-top:6px}
+.modal-qr{
+  width:180px;height:180px;margin:20px auto 8px;border-radius:12px;
+  border:1px solid var(--line);
+}
+.modal-qr-cap{text-align:center;font-size:12px;color:var(--ink-soft)}
+.modal-rows{margin-top:20px;display:flex;flex-direction:column;gap:10px}
+.modal-row{
+  display:flex;align-items:center;gap:12px;
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius-card);
+  padding:12px 16px;font-size:14px;
+}
+.modal-row .icon{color:var(--gold)}
+.modal-row b{font-weight:800}
+.modal-row span{color:var(--ink-soft);font-size:13px}
+
+/* ============ 桌面适配 ============ */
+@media (min-width:640px){
+  .teacher-grid{grid-template-columns:repeat(3,1fr);gap:16px}
+}
+@media (min-width:861px){
+  section{padding:80px 0}
+  .sec-head{margin-bottom:36px}
+  .sec-head h2{font-size:32px}
+  .nav-desktop{display:flex}
+  .header-cta{display:inline-flex}
+  .menu-btn{display:none}
+  .hero{padding:0;display:flex;align-items:center;min-height:600px}
+  .hero-grid{
+    display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;
+    width:100%;padding:64px 0;
+  }
+  .hero h1{font-size:44px}
+  .hero-sub{font-size:16px}
+  .teacher-grid{grid-template-columns:repeat(4,1fr);gap:20px}
+  .teacher-body{padding:14px 16px 16px}
+  .pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+  .pillar{flex-direction:column;gap:10px;border-bottom:0;border-left:1px solid var(--line);padding:4px 0 4px 20px}
+  .pillar:first-child{border-left:0;padding-left:0}
+  /* 课程体系：桌面 tab */
+  .acc{display:none}
+  .course-tabs{
+    display:grid;grid-template-columns:280px 1fr;gap:32px;align-items:start;
+  }
+  .course-tab-list{display:flex;flex-direction:column;border-left:1px solid var(--line)}
+  .course-tab{
+    background:none;border:0;cursor:pointer;text-align:left;font-family:var(--font);
+    padding:16px 20px;position:relative;
+  }
+  .course-tab .t{font-size:16px;font-weight:700;color:var(--ink-soft)}
+  .course-tab .s{font-size:12px;color:var(--ink-soft);margin-top:2px}
+  .course-tab.active .t{color:var(--ink);font-weight:800}
+  .course-tab.active::before{
+    content:"";position:absolute;left:-1px;top:16px;bottom:16px;width:2px;background:var(--gold);
+  }
+  .course-panel{display:none}
+  .course-panel.active{display:flex;flex-direction:column;gap:12px}
+  .contact-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:start}
+  .cta-inner{flex-direction:row;align-items:center;justify-content:space-between}
+  .cta-inner h2{font-size:24px}
+  .modal-sheet{
+    left:50%;right:auto;bottom:auto;top:50%;
+    transform:translate(-50%,-50%);
+    width:440px;border-radius:20px;padding:32px;
+  }
+  .modal-grab{display:none}
+  .sticky-bar{display:none}
+}
+@media (min-width:861px){
+  body{padding-bottom:0}
+}
+@media (max-width:860px){
+  body{padding-bottom:0}
+}
+</style>
+</head>
+<body>
+
+<!-- SVG 图标符号定义 -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.5l2.9 5.9 6.5.95-4.7 4.58 1.1 6.47L12 17.35l-5.8 3.05 1.1-6.47L2.6 9.35l6.5-.95z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.34 1.78.65 2.62a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.46-1.22a2 2 0 0 1 2.11-.45c.84.31 1.72.53 2.62.65A2 2 0 0 1 22 16.92z"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-wechat" viewBox="0 0 24 24"><path d="M8.5 4C4.9 4 2 6.46 2 9.5c0 1.74.94 3.3 2.44 4.34L3.8 16l2.44-1.22c.7.2 1.45.3 2.26.3h.24A6.5 6.5 0 0 1 8.5 14c0-3.04 2.9-5.5 6.5-5.5h.28C14.7 6 11.9 4 8.5 4zM6.5 7.6a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8zm4 0a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8zM15.5 9.5c-3.04 0-5.5 2.02-5.5 4.5s2.46 4.5 5.5 4.5c.66 0 1.3-.09 1.88-.26L19.4 19l-.52-1.79A4.44 4.44 0 0 0 21 14c0-2.48-2.46-4.5-5.5-4.5zm-1.75 2.2a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5zm3.5 0a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5z"/></symbol>
+  </defs>
+</svg>
+
+<!-- ============ 1. 顶栏 ============ -->
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top">
+      <img src="../public/logo-blue.svg" alt="菁仕教育 logo">
+      <span>
+        <span class="brand-name">菁仕教育</span><br>
+        <span class="brand-en">KING'S ACADEMY</span>
+      </span>
+    </a>
+    <nav class="nav-desktop">
+      <a href="#teachers">名师团队</a>
+      <a href="#pillars">教育理念</a>
+      <a href="#courses">课程体系</a>
+      <a href="#contact">校区联系</a>
+    </nav>
+    <button class="btn btn-gold header-cta js-book">
+      <svg class="icon"><use href="#i-calendar"/></svg>预约咨询
+    </button>
+    <button class="menu-btn" id="menuBtn" aria-label="打开菜单">
+      <svg class="icon" style="width:20px;height:20px"><use href="#i-menu"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- 移动端抽屉菜单 -->
+<div class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-mask" id="drawerMask"></div>
+  <div class="drawer-panel">
+    <button class="drawer-close" id="drawerClose" aria-label="关闭菜单">
+      <svg class="icon" style="width:20px;height:20px"><use href="#i-close"/></svg>
+    </button>
+    <a class="navlink" href="#teachers">名师团队</a>
+    <a class="navlink" href="#pillars">教育理念</a>
+    <a class="navlink" href="#courses">课程体系</a>
+    <a class="navlink" href="#contact">校区联系</a>
+    <button class="btn btn-gold js-book">
+      <svg class="icon"><use href="#i-calendar"/></svg>预约免费咨询
+    </button>
+  </div>
+</div>
+
+<main id="top">
+
+<!-- ============ 2. Hero ============ -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="hero-eyebrow">KING'S ACADEMY · 上海</p>
+      <h1>让最优秀的老师<br>带学生<span class="accent">走向优秀</span></h1>
+      <p class="hero-sub">精英式陪伴成长 · 一站式国际教育与留学规划。来自牛津、剑桥、帝国理工、清华、北大的全职名师，陪你走好升学每一步。</p>
+      <div class="hero-actions">
+        <button class="btn btn-gold js-book">
+          <svg class="icon"><use href="#i-calendar"/></svg>预约免费咨询
+        </button>
+      </div>
+      <p class="hero-stats">
+        <b>20+</b> 全职名校师资<span class="dot"></span>
+        <b>5</b> 个上海校区<span class="dot"></span>
+        <b>一站式</b> 留学规划服务
+      </p>
+    </div>
+    <div class="hero-img">
+      <img src="../public/bg.webp" alt="菁仕教育课堂场景" loading="eager">
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. 名师团队 ============ -->
+<section class="sec-teachers" id="teachers">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>名师团队</h2>
+      <p>全职师资，均毕业于世界顶尖学府</p>
+    </div>
+    <div class="teacher-grid" id="teacherGrid"><!-- JS 渲染 --></div>
+    <p class="teacher-more">
+      <a href="#" onclick="return false">查看全部 20 位老师 <svg class="icon" style="width:14px;height:14px"><use href="#i-arrow"/></svg></a>
+    </p>
+  </div>
+</section>
+
+<!-- ============ 4. 教育理念 ============ -->
+<section id="pillars">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>教育理念</h2>
+    </div>
+    <div class="pillars">
+      <div class="pillar">
+        <span class="pillar-num">01</span>
+        <div>
+          <h3>名校师资</h3>
+          <p>20+ 全职教师均毕业于牛津、剑桥、帝国理工、UCL、清华、北大等世界顶尖学府，平均教龄丰富、成功案例众多。</p>
+        </div>
+      </div>
+      <div class="pillar">
+        <span class="pillar-num">02</span>
+        <div>
+          <h3>行业背景</h3>
+          <p>老师们各自拥有金融、法律、计算机等行业背景，不只教知识，更能言传身教、启迪心灵，传递真实的学术与职业视野。</p>
+        </div>
+      </div>
+      <div class="pillar">
+        <span class="pillar-num">03</span>
+        <div>
+          <h3>精品小班 · 1v1</h3>
+          <p>专注精品小班与一对一定制课程，因材施教，深度陪伴每一位学生，直到送他们进入最心仪的高等学府。</p>
+        </div>
+      </div>
+      <div class="pillar">
+        <span class="pillar-num">04</span>
+        <div>
+          <h3>一站式资源</h3>
+          <p>与英美顶尖私立高中、海外名校及上海各国际学校保持良好合作，为家庭提供一站式信息同步与全天候响应，对接稀缺资源。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. 课程体系 ============ -->
+<section class="sec-courses" id="courses">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>课程体系</h2>
+      <p>四大方向，覆盖国际课程、语言考试、学术竞赛与升学规划</p>
+    </div>
+    <!-- 移动端手风琴 -->
+    <div class="acc" id="courseAcc"></div>
+    <!-- 桌面 tab -->
+    <div class="course-tabs">
+      <div class="course-tab-list" id="courseTabList" role="tablist"></div>
+      <div id="coursePanels"></div>
+    </div>
+    <p class="course-note">针对欧美留学的主流考试，菁仕均可按学生需求定制组建课程。未在上方列出的科目或考试，欢迎咨询。</p>
+  </div>
+</section>
+
+<!-- ============ 6. 校区与联系 ============ -->
+<section id="contact">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>校区与联系</h2>
+      <p>五个校区覆盖上海，欢迎就近到访或线上咨询</p>
+    </div>
+    <div class="contact-grid">
+      <div class="campus-list">
+        <div class="campus"><span class="campus-name">杨浦校区</span><span class="campus-addr">上海市杨浦区国霞路 60 号君庭广场 A 座 3N</span></div>
+        <div class="campus"><span class="campus-name">文定校区</span><span class="campus-addr">上海市徐汇区文定路 218 号徐家汇德 B 座 4 楼 408</span></div>
+        <div class="campus"><span class="campus-name">松江校区</span><span class="campus-addr">上海市松江区荣北路 551 弄 1 号楼 102 室</span></div>
+        <div class="campus"><span class="campus-name">滨江校区</span><span class="campus-addr placeholder">地址待补充</span></div>
+        <div class="campus"><span class="campus-name">徐滨校区</span><span class="campus-addr placeholder">地址待补充</span></div>
+      </div>
+      <div class="contact-card">
+        <img class="qr" src="../public/images/wechat-qr.png" alt="菁仕教育微信二维码">
+        <div class="contact-info">
+          <div class="row"><svg class="icon"><use href="#i-wechat"/></svg><span>微信 <b>KingsAcademySH</b></span></div>
+          <div class="row"><svg class="icon"><use href="#i-phone"/></svg><span>电话 <b>+86 158 0063 3202</b></span></div>
+          <div class="row"><svg class="icon"><use href="#i-calendar"/></svg><button class="btn btn-gold js-book" style="padding:10px 18px;font-size:13px">预约到访</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. 底部 CTA 横条 ============ -->
+<section class="cta-bar" style="padding-top:32px;padding-bottom:32px">
+  <div class="wrap cta-inner">
+    <div>
+      <h2>想聊聊孩子的升学规划？</h2>
+      <p>预约一次免费咨询，让专业老师帮你把路径排清楚。</p>
+    </div>
+    <button class="btn btn-gold js-book">
+      <svg class="icon"><use href="#i-calendar"/></svg>预约免费咨询
+    </button>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ 8. 页脚 ============ -->
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <img src="../public/logo-blue.svg" alt="菁仕教育 logo">
+      <span>菁仕教育 KING'S ACADEMY</span>
+    </div>
+    <nav class="footer-links">
+      <a href="#teachers">名师团队</a>
+      <a href="#pillars">教育理念</a>
+      <a href="#courses">课程体系</a>
+      <a href="#contact">校区联系</a>
+    </nav>
+    <div class="footer-copy">
+      <span>© 2026 上海菁仕教育科技有限公司 版权所有</span>
+      <span>沪ICP备2026031554号-1</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ 9. 移动端吸底条 ============ -->
+<div class="sticky-bar" id="stickyBar">
+  <a class="btn btn-outline" href="tel:+8615800633202">
+    <svg class="icon"><use href="#i-phone"/></svg>电话咨询
+  </a>
+  <button class="btn btn-gold js-book">
+    <svg class="icon"><use href="#i-wechat"/></svg>微信预约
+  </button>
+</div>
+
+<!-- ============ 10. 预约弹窗 ============ -->
+<div class="modal" id="bookModal" aria-hidden="true" role="dialog" aria-label="预约咨询">
+  <div class="modal-mask" id="modalMask"></div>
+  <div class="modal-sheet">
+    <div class="modal-grab"></div>
+    <button class="modal-close" id="modalClose" aria-label="关闭">
+      <svg class="icon" style="width:18px;height:18px"><use href="#i-close"/></svg>
+    </button>
+    <h3>预约免费咨询</h3>
+    <p class="modal-sub">扫码添加顾问微信，或直接电话联系我们</p>
+    <img class="modal-qr" src="../public/images/wechat-qr.png" alt="菁仕教育微信二维码">
+    <p class="modal-qr-cap">微信扫码 · 添加顾问</p>
+    <div class="modal-rows">
+      <div class="modal-row">
+        <svg class="icon"><use href="#i-wechat"/></svg>
+        <span>微信号</span><b>KingsAcademySH</b>
+      </div>
+      <a class="modal-row" href="tel:+8615800633202">
+        <svg class="icon"><use href="#i-phone"/></svg>
+        <span>咨询电话</span><b>+86 158 0063 3202</b>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============ 数据（源自 src/data/teachers.ts 与 courses.ts） ============ */
+var TEACHERS = [
+  { name:"应雁心", photo:"../public/teachers/数学-应雁心.webp", degree:"伦敦大学学院（UCL）· 全 A* 录取", score:"4.9", tags:["IGCSE","A-Level"] },
+  { name:"陈璐怡", photo:"../public/teachers/数学-陈璐怡.webp", degree:"牛津大学研究生 · 工程系本科", score:"4.9", tags:["IGCSE","A-Level"] },
+  { name:"李品轩", photo:"../public/teachers/物理-李品轩.webp", degree:"西交利物浦大学国际教育硕士", score:"4.9", tags:["IGCSE","A-Level"] },
+  { name:"汤朔", photo:"../public/teachers/物理-汤朔.webp", degree:"UCL 理学硕士 · 东南大学学士", score:"4.9", tags:["IGCSE","A-Level"] },
+  { name:"刘艳阳", photo:"../public/teachers/经济-刘艳阳.webp", degree:"堪培拉大学 MBA", score:"4.9", tags:["A-Level","AP 经济"] },
+  { name:"陈依依", photo:"../public/teachers/英语-陈依依.webp", degree:"伯明翰大学 TESOL 硕士", score:"4.9", tags:["雅思","SAT / ACT 文法"] },
+  { name:"张劭景", photo:"../public/teachers/数学-张劭景.webp", degree:"帝国理工学院应用数学硕士", score:"4.8", tags:["IGCSE","A-Level"] },
+  { name:"李寅鑫", photo:"../public/teachers/化学-李寅鑫.webp", degree:"宾夕法尼亚大学化学硕士", score:"4.8", tags:["IGCSE","A-Level"] }
+];
+
+var COURSES = [
+  {
+    id:"curriculum", title:"国际课程体系", summary:"校内课程先稳住，后续选择才从容。",
+    audience:"国际 / 双语学校在读，或准备转轨国际课程的学生",
+    items:[
+      { name:"IGCSE", en:"International GCSE", level:"英国国际中学课程 · 通常对应 14-16 岁", parent:"可以理解为国际高中前的地基课。地基稳，后面选 A-Level、IB 或 AP 都会更从容。", subjects:["数学","英语语言","物理","化学","生物","经济","历史","地理"] },
+      { name:"A-Level", en:"GCE Advanced Level", level:"英国高中课程 · 通常选择 3-4 门深度学习", parent:"A-Level 更像把几门强项做专做深，适合目标清晰、愿意在优势学科上拉开差距的学生。", subjects:["数学","进阶数学","物理","化学","生物","经济","商务","心理学"] },
+      { name:"IB", en:"International Baccalaureate", level:"国际文凭大学预科 · 六大学科组 + TOK / EE / CAS", parent:"IB 不是只拼考试分数，更考验长期规划和综合能力，适合均衡型、抗压强的孩子。", subjects:["语言与文学","第二语言","个人与社会","科学","数学","艺术","TOK","EE"] },
+      { name:"AP", en:"Advanced Placement", level:"美国大学先修课程 · 单科考试制", parent:"AP 像是高中阶段提前修大学单科，适合用具体科目证明孩子的学术上限。", subjects:["微积分 AB/BC","统计","物理","化学","生物","经济","心理学","计算机"] },
+      { name:"Pre-A", en:"Pre-Advanced", level:"国际课程预备段 · 转轨衔接课程", parent:"Pre-A 是缓冲带，先把学习方式切过来，再进入 IGCSE、A-Level 或 AP 会稳很多。", subjects:["学术英语","数学基础","科学基础","阅读写作","学习方法","选课规划"] },
+      { name:"OSSD", en:"Ontario Secondary School Diploma", level:"加拿大安省高中课程 · 学分制", parent:"OSSD 不只看一次大考，更看长期表现，适合需要用过程管理稳住申请结果的家庭。", subjects:["英语","函数","微积分","物理","化学","生物","经济","商业"] }
+    ]
+  },
+  {
+    id:"standardized", title:"语言考试", summary:"语言成绩关系到申请，也关系到能否听懂课。",
+    audience:"准备海外升学、国际学校入学或本科 / 研究生申请的学生",
+    items:[
+      { name:"IELTS", en:"雅思", level:"国际英语水平考试 · 学术类 / 培训类", parent:"雅思不是单纯背单词，关键是把英文输入、输出和考试评分标准对齐。", subjects:["听力","阅读","写作","口语","词汇","语法","学术表达"] },
+      { name:"TOEFL", en:"托福", level:"北美学术英语考试 · 机考综合能力", parent:"托福更像模拟大学课堂，考的是能不能听懂、读懂并用英文整合表达。", subjects:["阅读","听力","口语","写作","学术词汇","笔记能力"] },
+      { name:"SAT", en:"US College Entrance Exam", level:"美国本科入学标化 · 阅读写作 + 数学", parent:"SAT 不是语言考试那么简单，它更像英文环境下的综合学术能力测试。", subjects:["阅读与写作","数学","代数","高阶数学","数据分析","语法"] },
+      { name:"ACT", en:"American College Testing", level:"美国本科入学标化 · 多模块限时测试", parent:"ACT 节奏更快，适合反应速度和学科综合能力都不错的学生。", subjects:["英语","数学","阅读","科学推理","写作选考"] },
+      { name:"KET / PET / FCE", en:"Cambridge English", level:"剑桥英语等级考试 · A2-B2", parent:"剑桥英语更适合做长期地基，不急着冲高分，而是把语言能力一级级垫起来。", subjects:["阅读","写作","听力","口语","语法","词汇"] }
+    ]
+  },
+  {
+    id:"competition", title:"国际学术竞赛", summary:"有余力时，再把学科兴趣做深。",
+    audience:"学有余力、冲刺顶尖名校或需要学术亮点的学生",
+    items:[
+      { name:"AMC", en:"American Mathematics Competitions", level:"美国数学竞赛 · AMC 8 / 10 / 12", parent:"AMC 适合先试水数学竞赛，再根据成绩决定是否冲 AIME 或更高阶竞赛。", subjects:["代数","几何","数论","组合","概率","逻辑推理"] },
+      { name:"Euclid", en:"Waterloo Euclid Contest", level:"加拿大滑铁卢数学竞赛 · 高中高阶", parent:"Euclid 更看重完整推理过程，不只是算出答案，适合数学表达能力强的学生。", subjects:["函数","几何","数列","组合","证明","概率"] },
+      { name:"UKMT", en:"UK Mathematics Trust", level:"英国数学竞赛体系 · Junior / Intermediate / Senior", parent:"UKMT 可以从低龄一路往上走，适合长期培养数学兴趣和竞赛感觉。", subjects:["数感","代数","几何","组合","逻辑","问题解决"] },
+      { name:"BPhO", en:"British Physics Olympiad", level:"英国物理奥赛 · 高中高阶", parent:"BPhO 难度高，适合真正愿意钻物理的孩子，不建议只为了凑活动参加。", subjects:["力学","电磁学","热学","波动","近代物理","实验分析"] },
+      { name:"Physics Bowl", en:"美国物理碗", level:"美国物理竞赛 · Division 1 / Division 2", parent:"物理碗更考速度和覆盖面，适合基础面广、刷题效率高的学生。", subjects:["力学","电磁学","热学","光学","近代物理","天体物理"] },
+      { name:"UKChO", en:"UK Chemistry Olympiad", level:"英国化学奥赛 · 高中高阶", parent:"UKChO 不只是背知识点，更看化学逻辑和陌生题推理。", subjects:["无机化学","有机化学","物理化学","化学计算","实验分析"] },
+      { name:"BBO", en:"British Biology Olympiad", level:"英国生物奥赛 · 高中高阶", parent:"BBO 适合已经对生命科学有兴趣的学生，用竞赛把兴趣变成申请证据。", subjects:["细胞生物","遗传","生理","生态","进化","实验数据"] },
+      { name:"John Locke 写作", en:"Essay Competition", level:"国际学术论文竞赛 · 中学生写作", parent:"这类论文竞赛不是套模板，关键是孩子有没有清楚观点和严谨论证。", subjects:["哲学","政治","经济","历史","心理","神学","法律"] }
+    ]
+  },
+  {
+    id:"counseling", title:"升学与规划服务", summary:"把要做的事排清楚，家庭会更从容。",
+    audience:"准备国际学校、海外本科或研究生申请的家庭",
+    items:[
+      { name:"名校 / 私校申请", en:"School & University Application", level:"申请规划服务 · 国际学校 / 私校 / 本科 / 研究生", parent:"申请不是最后一年才开始，越早把路径排清楚，家庭越少临时补救。", subjects:["择校定位","申请时间线","文书规划","面试辅导","材料审核","录取决策"] },
+      { name:"学术规划", en:"Academic Planning", level:"长期学术路径 · 选课 / 考试 / 背景提升", parent:"学术规划的价值是少走弯路，不让孩子在不重要的事情上消耗太多时间。", subjects:["课程选择","标化安排","竞赛路径","背景提升","时间管理","阶段复盘"] },
+      { name:"职业咨询", en:"Major & Career Direction", level:"专业方向探索 · 升学与职业联动", parent:"职业咨询不是替孩子决定未来，而是让选择更有依据。", subjects:["兴趣测评","专业探索","职业路径","项目建议","申请叙事"] },
+      { name:"一站式信息同步", en:"Family Coordination", level:"家庭陪伴服务 · 信息同步 / 资源对接 / 节点提醒", parent:"很多焦虑来自信息不对称，我们把事情拆清楚、同步好，家庭会稳很多。", subjects:["学习档案","节点提醒","家校沟通","资源对接","进度复盘","风险预警"] }
+    ]
+  }
+];
+
+/* ============ 渲染：名师网格 ============ */
+(function(){
+  var grid = document.getElementById('teacherGrid');
+  grid.innerHTML = TEACHERS.map(function(t){
+    return '<article class="teacher-card">'
+      + '<div class="teacher-photo"><img src="' + t.photo + '" alt="' + t.name + ' 老师" loading="lazy"></div>'
+      + '<div class="teacher-body">'
+      +   '<div class="teacher-top"><span class="teacher-name">' + t.name + '</span>'
+      +   '<span class="teacher-score"><svg class="icon-star"><use href="#i-star"/></svg>' + t.score + '</span></div>'
+      +   '<p class="teacher-degree">' + t.degree + '</p>'
+      +   '<div class="teacher-tags">' + t.tags.map(function(x){ return '<span class="tag">' + x + '</span>'; }).join('') + '</div>'
+      + '</div></article>';
+  }).join('');
+})();
+
+/* ============ 渲染：课程详情块（手风琴与 tab 共用） ============ */
+function courseDetailHTML(c){
+  var items = c.items.map(function(it){
+    return '<div class="course-item">'
+      + '<div class="course-item-head"><span class="name">' + it.name + '</span><span class="en">' + it.en + '</span></div>'
+      + '<p class="level">' + it.level + '</p>'
+      + '<p class="parent">' + it.parent + '</p>'
+      + '<div class="course-subjects">' + it.subjects.map(function(s){ return '<span class="tag">' + s + '</span>'; }).join('') + '</div>'
+      + '</div>';
+  }).join('');
+  return '<p class="course-audience"><b>适合学生：</b>' + c.audience + '</p><div class="course-detail">' + items + '</div>';
+}
+
+/* 移动端手风琴 */
+(function(){
+  var acc = document.getElementById('courseAcc');
+  acc.innerHTML = COURSES.map(function(c, i){
+    return '<div class="acc-item" data-i="' + i + '">'
+      + '<button class="acc-head" aria-expanded="false">'
+      +   '<span><span class="acc-title">' + c.title + '</span><br><span class="acc-summary">' + c.summary + '</span></span>'
+      +   '<span class="acc-chevron"><svg class="icon" style="width:14px;height:14px"><use href="#i-plus"/></svg></span>'
+      + '</button>'
+      + '<div class="acc-body">' + courseDetailHTML(c) + '</div>'
+      + '</div>';
+  }).join('');
+  acc.addEventListener('click', function(e){
+    var head = e.target.closest('.acc-head');
+    if(!head) return;
+    var item = head.parentElement;
+    var open = item.classList.toggle('open');
+    head.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+})();
+
+/* 桌面 tab */
+(function(){
+  var list = document.getElementById('courseTabList');
+  var panels = document.getElementById('coursePanels');
+  list.innerHTML = COURSES.map(function(c, i){
+    return '<button class="course-tab' + (i===0 ? ' active' : '') + '" data-i="' + i + '" role="tab">'
+      + '<div class="t">' + c.title + '</div><div class="s">' + c.summary + '</div></button>';
+  }).join('');
+  panels.innerHTML = COURSES.map(function(c, i){
+    return '<div class="course-panel' + (i===0 ? ' active' : '') + '" data-i="' + i + '" role="tabpanel">' + courseDetailHTML(c) + '</div>';
+  }).join('');
+  list.addEventListener('click', function(e){
+    var tab = e.target.closest('.course-tab');
+    if(!tab) return;
+    var i = tab.getAttribute('data-i');
+    list.querySelectorAll('.course-tab').forEach(function(t){ t.classList.toggle('active', t === tab); });
+    panels.querySelectorAll('.course-panel').forEach(function(p){ p.classList.toggle('active', p.getAttribute('data-i') === i); });
+  });
+})();
+
+/* ============ 抽屉菜单 ============ */
+(function(){
+  var drawer = document.getElementById('drawer');
+  function set(open){
+    drawer.classList.toggle('open', open);
+    drawer.setAttribute('aria-hidden', open ? 'false' : 'true');
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+  document.getElementById('menuBtn').addEventListener('click', function(){ set(true); });
+  document.getElementById('drawerClose').addEventListener('click', function(){ set(false); });
+  document.getElementById('drawerMask').addEventListener('click', function(){ set(false); });
+  drawer.querySelectorAll('a.navlink').forEach(function(a){
+    a.addEventListener('click', function(){ set(false); });
+  });
+})();
+
+/* ============ 预约弹窗 ============ */
+(function(){
+  var modal = document.getElementById('bookModal');
+  function set(open){
+    modal.classList.toggle('open', open);
+    modal.setAttribute('aria-hidden', open ? 'false' : 'true');
+    document.body.classList.toggle('modal-open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+  document.querySelectorAll('.js-book').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.getElementById('drawer').classList.remove('open');
+      set(true);
+    });
+  });
+  document.getElementById('modalClose').addEventListener('click', function(){ set(false); });
+  document.getElementById('modalMask').addEventListener('click', function(){ set(false); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') set(false); });
+})();
+
+/* ============ 移动端吸底条：滚动超过一屏后出现 ============ */
+(function(){
+  var bar = document.getElementById('stickyBar');
+  function onScroll(){
+    bar.classList.toggle('show', window.scrollY > window.innerHeight);
+  }
+  window.addEventListener('scroll', onScroll, { passive:true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

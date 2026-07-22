@@ -9,7 +9,6 @@
 export const site = {
   name: "菁仕教育",
   nameEn: "KING'S ACADEMY",
-  logo: "/logo.png",
   /** 主标语 */
   slogan: "让最优秀的老师，带学生走向优秀",
   /** 副标语 */
@@ -25,18 +24,8 @@ export const site = {
 } as const;
 
 export const images = {
-  /** 首页 Hero 大图（菁仕自有图） */
+  /** 首页 Hero 大图（菁仕自有图，全站仅此处使用一次） */
   hero: "/bg.webp",
-  /** 教育理念配图（暂未使用） */
-  philosophy:
-    "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?auto=format&fit=crop&w=1200&q=80",
-  /** 课程板块配图（暂未使用） */
-  courses:
-    "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&q=80",
-  /** 预约区背景图 */
-  cta: "/bg.webp",
-  /** 名师页头图 */
-  facultyHero: "/bg.webp",
 } as const;
 
 /** 教育理念 —— 四个支柱 */
@@ -66,7 +55,7 @@ export const pillars = [
 /** 关键数字（占位，可按真实数据调整） */
 export const stats = [
   { value: "20+", label: "全职名校师资" },
-  { value: "5", label: "上海校区" },
+  { value: "4", label: "上海校区" },
   { value: "10+", label: "国际课程 & 竞赛体系" },
   { value: "一站式", label: "留学规划服务" },
 ] as const;
@@ -76,11 +65,10 @@ export interface Campus {
   address: string;
 }
 
-/** 校区信息（已知 3 个，另 2 个待补充） */
+/** 校区信息 */
 export const campuses: Campus[] = [
   { name: "杨浦校区", address: "上海市杨浦区国霞路 60 号君庭广场 A 座 3N" },
   { name: "文定校区", address: "上海市徐汇区文定路 218 号徐家汇德 B 座 4 楼 408" },
   { name: "松江校区", address: "上海市松江区荣北路 551 弄 1 号楼 102 室" },
-  { name: "滨江校区", address: "地址待补充" },
-  { name: "徐滨校区", address: "地址待补充" },
+  { name: "徐汇校区", address: "上海市徐汇区龙兰路 277 号东航·滨江中心 T2 座 703/704 室" },
 ];
