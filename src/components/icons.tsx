@@ -50,6 +50,14 @@ export function IconArrowRight(props: IconProps) {
   );
 }
 
+export function IconArrowLeft(props: IconProps) {
+  return (
+    <Stroke {...props}>
+      <path d="M19 12H5M11 18l-6-6 6-6" />
+    </Stroke>
+  );
+}
+
 export function IconMenu(props: IconProps) {
   return (
     <Stroke {...props}>
@@ -106,5 +114,29 @@ export function IconPlus(props: IconProps) {
     <Stroke {...props}>
       <path d="M12 5v14M5 12h14" />
     </Stroke>
+  );
+}
+
+export function IconChevronDown(props: IconProps) {
+  return (
+    <Stroke {...props}>
+      <path d="M6 9l6 6 6-6" />
+    </Stroke>
+  );
+}
+
+/** 闪电图标（教师经验亮点行） */
+export function IconBolt(props: IconProps) {
+  return (
+    <svg
+      width={16}
+      height={16}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M13 2L4.9 13.2c-.3.4 0 .9.5.9H11l-1.8 7.4c-.13.55.6.83.93.38L19.1 10c.3-.4 0-.9-.5-.9H13l1.8-6.4c.13-.55-.6-.83-.93-.38z" />
+    </svg>
   );
 }

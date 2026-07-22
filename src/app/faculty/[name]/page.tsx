@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { teachers, avgScore, type Teacher } from "@/data/teachers";
 import { site } from "@/data/site";
 import { BookingButton } from "@/components/booking";
+import { IconArrowLeft } from "@/components/icons";
 
 export function generateStaticParams() {
   return teachers.map((t) => ({ name: t.name }));
@@ -47,6 +48,10 @@ export default async function TeacherDetail({
     <>
       <section className="detail">
         <div className="wrap">
+          <Link href="/faculty" className="detail-back">
+            <IconArrowLeft />
+            返回名师团队
+          </Link>
           <p className="breadcrumb">
             <Link href="/">首页</Link> / <Link href="/faculty">名师团队</Link> /{" "}
             {t.name}
