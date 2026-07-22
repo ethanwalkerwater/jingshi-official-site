@@ -9,7 +9,8 @@ import {
   type ReactNode,
 } from "react";
 import { site } from "@/data/site";
-import { IconCalendar, IconChat, IconPhone, IconX } from "./icons";
+import { IconCalendar, IconX } from "./icons";
+import CopyContactRow from "./CopyContactRow";
 
 interface BookingCtx {
   open: () => void;
@@ -61,8 +62,6 @@ export function BookingProvider({ children }: { children: ReactNode }) {
     };
   }, [isOpen, close]);
 
-  const tel = site.contact.phone.replace(/\s/g, "");
-
   return (
     <Ctx.Provider value={{ open, isOpen }}>
       {children}
@@ -77,7 +76,7 @@ export function BookingProvider({ children }: { children: ReactNode }) {
               <IconX width={18} height={18} />
             </button>
             <h3>预约免费咨询</h3>
-            <p className="modal-sub">扫码添加顾问微信，或直接电话联系我们</p>
+            <p className="modal-sub">长按识别二维码，或点击下方复制联系方式</p>
             <img
               className="modal-qr"
               src={site.contact.wechatQr}
@@ -85,16 +84,18 @@ export function BookingProvider({ children }: { children: ReactNode }) {
             />
             <p className="modal-qr-cap">微信扫码 · 添加顾问</p>
             <div className="modal-rows">
-              <div className="modal-row">
-                <IconChat />
-                <span>微信号</span>
-                <b>{site.contact.wechat}</b>
-              </div>
-              <a className="modal-row" href={`tel:${tel}`}>
-                <IconPhone />
-                <span>咨询电话</span>
-                <b>{site.contact.phone}</b>
-              </a>
+              <CopyContactRow
+                kind="wechat"
+                label="微信号"
+                value={site.contact.wechat}
+                variant="modal"
+              />
+              <CopyContactRow
+                kind="phone"
+                label="咨询电话"
+                value={site.contact.phone}
+                variant="modal"
+              />
             </div>
           </div>
         </div>

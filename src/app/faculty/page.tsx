@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/data/site";
 import { teachers } from "@/data/teachers";
-import { BookingButton } from "@/components/booking";
 import FacultyGrid from "@/components/FacultyGrid";
 
 export const metadata: Metadata = {
@@ -33,18 +32,6 @@ export default function FacultyPage() {
         </div>
       </section>
 
-      {/* 浅色 CTA 横条 */}
-      <section className="cta-bar">
-        <div className="wrap cta-inner">
-          <div>
-            <h2>想了解哪位老师更适合孩子？</h2>
-            <p>预约免费咨询，根据学习阶段与目标匹配最合适的老师。</p>
-          </div>
-          <BookingButton className="btn btn-gold btn-lg">
-            预约免费咨询
-          </BookingButton>
-        </div>
-      </section>
     </>
   );
 }

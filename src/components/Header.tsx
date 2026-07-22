@@ -18,6 +18,7 @@ const navLinks = [
 export default function Header() {
   const [drawer, setDrawer] = useState(false);
   const pathname = usePathname();
+  const isTeacherDetail = pathname.startsWith("/faculty/");
 
   // 路由切换时收起抽屉
   useEffect(() => {
@@ -33,7 +34,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="header">
+      <header className={`header${isTeacherDetail ? " teacher-detail-header" : ""}`}>
         <div className="wrap header-inner">
           <Link href="/" className="brand" aria-label={site.name}>
             <span className="brand-mark">
