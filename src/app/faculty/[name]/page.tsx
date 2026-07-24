@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { teachers, avgScore, type Teacher } from "@/data/teachers";
+import {
+  teachers,
+  avgScore,
+  ratingScore,
+  type Teacher,
+} from "@/data/teachers";
 import { site } from "@/data/site";
 import { BookingButton } from "@/components/booking";
 import { IconArrowLeft } from "@/components/icons";
@@ -111,7 +116,7 @@ export default async function TeacherDetail({
                     return (
                       <div className="rating-row" key={d.key}>
                         <span className="rl">{d.label}</span>
-                        <span className="rv">{v.toFixed(1)}</span>
+                        <span className="rv">{ratingScore(v)}</span>
                         <div className="rating-bar">
                           <span style={{ width: `${(v / 5) * 100}%` }} />
                         </div>

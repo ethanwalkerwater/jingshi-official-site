@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { site, images, pillars, campuses, stats } from "@/data/site";
-import { teachers, avgScore } from "@/data/teachers";
+import { teachers } from "@/data/teachers";
 import { customCourseNote } from "@/data/courses";
 import { BookingButton } from "@/components/booking";
 import CourseExplorer from "@/components/CourseExplorer";
@@ -11,11 +11,8 @@ import {
   IconMapPin,
 } from "@/components/icons";
 
-/** 首页 featured 名师：取 8 位，按综合评分排序 */
-const featured = teachers
-  .filter((t) => t.featured)
-  .sort((a, b) => Number(avgScore(b)) - Number(avgScore(a)))
-  .slice(0, 8);
+/** 首页 featured 名师：教师数据已按精确总分排序。 */
+const featured = teachers.filter((t) => t.featured).slice(0, 8);
 
 export default function Home() {
   return (
