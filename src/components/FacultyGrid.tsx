@@ -15,9 +15,8 @@ const ratingThreshold: Record<Exclude<RatingFilter, "全部">, number> = {
   "4.6+": 4.6,
 };
 
-function avg(t: (typeof teachers)[number]) {
-  const { improvement, responsibility, charisma } = t.ratings;
-  return (improvement + responsibility + charisma) / 3;
+function overallScore(t: (typeof teachers)[number]) {
+  return t.overall;
 }
 
 interface Group {
@@ -56,7 +55,8 @@ export default function FacultyGrid() {
         (t) =>
           (subject === "全部" || t.subject === subject) &&
           (gender === "全部" || t.gender === gender) &&
-          (rating === "全部" || avg(t) >= ratingThreshold[rating])
+          (rating === "全部" ||
+            overallScore(t) >= ratingThreshold[rating])
       ),
     [subject, rating, gender]
   );
