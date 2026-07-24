@@ -36,9 +36,9 @@ export interface Teacher {
   featured?: boolean;
 }
 
-/** 网站角标使用一位小数展示，排序仍使用精确总分。 */
+/** 网站角标四舍五入至两位小数，排序仍使用精确总分。 */
 export function avgScore(t: Teacher): string {
-  return (Math.floor(t.overall * 10) / 10).toFixed(1);
+  return t.overall.toFixed(2);
 }
 
 /** 指标保留两位小数，避免抹去累计反馈中的有效差异。 */
