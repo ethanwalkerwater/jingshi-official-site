@@ -1,35 +1,60 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { teachers, subjectOrder, type Subject } from "@/data/teachers";
+import {
+  compareTeachers,
+  teachers,
+  subjectOrder,
+  type Subject,
+} from "@/data/teachers";
 import { IconChevronDown } from "./icons";
 import TeacherCard from "./TeacherCard";
 
 type SubjectFilter = "全部" | Subject;
 type GenderFilter = "全部" | "男" | "女";
-type RatingFilter = "全部" | "4.9+" | "4.8+" | "4.6+";
+type SortKey = "overall" | "improvement" | "responsibility" | "charisma";
 
-const ratingThreshold: Record<Exclude<RatingFilter, "全部">, number> = {
-  "4.9+": 4.9,
-  "4.8+": 4.8,
-  "4.6+": 4.6,
+const sortKeys: SortKey[] = [
+  "overall",
+  "improvement",
+  "responsibility",
+  "charisma",
+];
+
+const sortLabels: Record<
+  SortKey,
+  { button: string; menu: string }
+> = {
+  overall: { button: "综合评分", menu: "按综合评分排序" },
+  improvement: { button: "学习提分", menu: "按学习提分效果排序" },
+  responsibility: {
+    button: "责任服务",
+    menu: "按责任心与服务态度排序",
+  },
+  charisma: { button: "个人魅力", menu: "按教师个人魅力排序" },
 };
 
-function overallScore(t: (typeof teachers)[number]) {
-  return t.overall;
+function sortScore(
+  teacher: (typeof teachers)[number],
+  sortBy: SortKey
+): number {
+  return sortBy === "overall" ? teacher.overall : teacher.ratings[sortBy];
 }
 
 interface Group {
   label: string;
   options: string[];
   value: string;
+  valueLabel?: string;
+  optionLabel?: (v: string) => string;
+  active?: boolean;
   onPick: (v: string) => void;
   count?: (v: string) => number;
 }
 
 export default function FacultyGrid() {
   const [subject, setSubject] = useState<SubjectFilter>("全部");
-  const [rating, setRating] = useState<RatingFilter>("全部");
+  const [sortBy, setSortBy] = useState<SortKey>("overall");
   const [gender, setGender] = useState<GenderFilter>("全部");
   const [openLabel, setOpenLabel] = useState<string | null>(null);
   const barRef = useRef<HTMLDivElement>(null);
@@ -49,19 +74,30 @@ export default function FacultyGrid() {
     };
   }, [openLabel]);
 
-  const list = useMemo(
-    () =>
-      teachers.filter(
-        (t) =>
-          (subject === "全部" || t.subject === subject) &&
-          (gender === "全部" || t.gender === gender) &&
-          (rating === "全部" ||
-            overallScore(t) >= ratingThreshold[rating])
-      ),
-    [subject, rating, gender]
-  );
+  const list = useMemo(() => {
+    const filtered = teachers.filter(
+      (teacher) =>
+        (subject === "全部" || teacher.subject === subject) &&
+        (gender === "全部" || teacher.gender === gender)
+    );
+
+    return [...filtered].sort(
+      (a, b) =>
+        sortScore(b, sortBy) - sortScore(a, sortBy) ||
+        compareTeachers(a, b)
+    );
+  }, [subject, sortBy, gender]);
 
   const groups: Group[] = [
+    {
+      label: "排序",
+      options: sortKeys,
+      value: sortBy,
+      valueLabel: sortLabels[sortBy].button,
+      optionLabel: (v) => sortLabels[v as SortKey].menu,
+      active: sortBy !== "overall",
+      onPick: (v) => setSortBy(v as SortKey),
+    },
     {
       label: "学科",
       options: ["全部", ...subjectOrder],
@@ -71,12 +107,6 @@ export default function FacultyGrid() {
         v === "全部"
           ? teachers.length
           : teachers.filter((t) => t.subject === v).length,
-    },
-    {
-      label: "评分",
-      options: ["全部", "4.9+", "4.8+", "4.6+"],
-      value: rating,
-      onPick: (v) => setRating(v as RatingFilter),
     },
     {
       label: "性别",
@@ -98,7 +128,7 @@ export default function FacultyGrid() {
             <button
               type="button"
               className={`fdrop-btn${openLabel === g.label ? " open" : ""}${
-                g.value !== "全部" ? " active" : ""
+                (g.active ?? g.value !== "全部") ? " active" : ""
               }`}
               aria-expanded={openLabel === g.label}
               onClick={() =>
@@ -106,7 +136,7 @@ export default function FacultyGrid() {
               }
             >
               <span className="fdrop-label">{g.label}</span>
-              <span className="fdrop-value">{g.value}</span>
+              <span className="fdrop-value">{g.valueLabel ?? g.value}</span>
               <IconChevronDown />
             </button>
             {openLabel === g.label && (
@@ -123,7 +153,7 @@ export default function FacultyGrid() {
                       setOpenLabel(null);
                     }}
                   >
-                    {o}
+                    {g.optionLabel?.(o) ?? o}
                     {g.count && <span className="n">{g.count(o)}</span>}
                   </button>
                 ))}
