@@ -36,9 +36,9 @@ export interface Teacher {
   featured?: boolean;
 }
 
-/** 网站角标四舍五入至两位小数，排序仍使用精确总分。 */
+/** 网站角标四舍五入至一位小数，排序仍使用精确总分。 */
 export function avgScore(t: Teacher): string {
-  return t.overall.toFixed(2);
+  return t.overall.toFixed(1);
 }
 
 /** 指标保留两位小数，避免抹去累计反馈中的有效差异。 */
@@ -117,20 +117,6 @@ export const teachers: Teacher[] = ([
     ratings: { improvement: 4.9, responsibility: 5.0, charisma: 4.99 },
     overall: 4.963,
     featured: true,
-  },
-  {
-    name: "傅威程",
-    gender: "男",
-    subject: "数学",
-    photo: "/teachers/数学-傅威程.webp",
-    degree: "香港科技大学金融科技硕士",
-    hours: "尤擅 AMC8 / 13+ 方向",
-    courses: "AMC8 · 13+ 数学思维",
-    education: "香港科技大学金融科技硕士、曼彻斯特大学一等数学金融荣誉学士。",
-    style:
-      "深入研究代数、几何、概率统计等领域，理论基础扎实；善于清晰讲解、循序渐进帮助学生建立数学理解与逻辑思维；能针对学生特点提供实用学习策略与解题方法，注重问题分析能力与长期学习习惯培养。尤擅低龄数学能力与思维训练。",
-    ratings: { improvement: 4.98, responsibility: 5.0, charisma: 4.99 },
-    overall: 4.99,
   },
   {
     name: "郑唯梓",
@@ -247,6 +233,22 @@ export const teachers: Teacher[] = ([
       "长期担任 A-Level、AP 与 IB 经济及商务课程导师，累计教学 300+ 人；擅长整理历年高频考点，帮助学生高效建立知识框架与答题逻辑；熟悉 CIE、Edexcel 评分标准，风格务实清晰，注重提分路径规划。多名学生 U→A 提升并录取 LSE、UCL。",
     ratings: { improvement: 4.88, responsibility: 4.98, charisma: 4.92 },
     overall: 4.927,
+  },
+  {
+    name: "唐择运",
+    gender: "男",
+    subject: "英语",
+    photo: "/teachers/英语-唐择运.webp",
+    degree: "宾夕法尼亚大学 TESOL 硕士",
+    hours: "语块输入—输出闭环",
+    courses:
+      "雅思全科 · 托福口语 & 写作 · IGCSE ESL · A-Level English · 原版教材 · 学术英语 EAP · 英语口语表达 · 词汇与语块专项",
+    education:
+      "美国宾夕法尼亚大学（University of Pennsylvania）TESOL 硕士。研究聚焦英语词汇习得与口语表达发展，持续将前沿研究转化为教学实践。",
+    style:
+      "独创「语块输入—输出闭环」教学体系，帮助学生快速建立英语表达自动化能力；深入研究雅思口语高分考生与母语者语言特征，帮助学生摆脱中式英语表达；兼具国际课程教学经验与学术研究背景，系统提升英语综合能力；重视长期英语竞争力而非短期应试技巧，善于激发兴趣，让英语真正成为沟通工具。",
+    ratings: { improvement: 4.98, responsibility: 5.0, charisma: 4.99 },
+    overall: 4.99,
   },
   {
     name: "陈依依",

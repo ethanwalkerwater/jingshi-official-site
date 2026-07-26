@@ -1003,7 +1003,7 @@ button {
   padding-top: 16px;
 }
 
-/* 筛选栏：单行下拉（学科/评分/性别）；移动端吸顶 */
+/* 筛选栏：单行下拉（排序/学科/性别）；移动端吸顶 */
 .filter-bar {
   position: sticky;
   top: 64px;
