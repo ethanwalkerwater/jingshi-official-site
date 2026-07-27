@@ -7,9 +7,20 @@ import { BookingProvider } from "@/components/booking";
 import { site } from "@/data/site";
 
 export const metadata: Metadata = {
+  // 所有 og:image 等相对地址都基于线上域名解析为绝对地址，微信/QQ 爬虫才能取到图
+  metadataBase: new URL("https://jsjy.asia"),
   title: `${site.name} · ${site.nameEn}｜国际教育与留学规划`,
   description:
     "菁仕教育（KING'S ACADEMY）——上海高端国际教育机构。20+ 名校师资，覆盖 IGCSE、A-Level、IB、AP 国际课程，雅思托福 SAT/ACT 标化，国际学术竞赛与一站式留学规划。精品小班 1v1，精英式陪伴成长。",
+  openGraph: {
+    type: "website",
+    locale: "zh_CN",
+    siteName: `${site.name} · ${site.nameEn}`,
+    title: `${site.name} · ${site.nameEn}｜国际教育与留学规划`,
+    description:
+      "上海高端国际教育机构。20+ 名校全职师资，覆盖 IGCSE、A-Level、IB、AP、雅思托福、国际竞赛与一站式留学规划。",
+    images: [{ url: "/og/cover.png", width: 800, height: 800, alt: site.name }],
+  },
 };
 
 export default function RootLayout({

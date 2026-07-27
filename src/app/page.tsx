@@ -61,7 +61,7 @@ export default function Home() {
             ))}
           </div>
           <p className="fac-more">
-            <Link href="/faculty">
+            <Link href="/teachers">
               查看全部 {teachers.length} 位老师
               <IconArrowRight width={14} height={14} />
             </Link>

@@ -14,7 +14,7 @@ export default function StickyCta() {
   const { open, isOpen } = useBooking();
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-  const isTeacherDetail = pathname.startsWith("/faculty/");
+  const isTeacherDetail = pathname.startsWith("/teachers/");
 
   useEffect(() => {
     if (isTeacherDetail) return;
