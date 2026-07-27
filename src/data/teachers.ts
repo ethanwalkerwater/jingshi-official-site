@@ -1,3 +1,6 @@
+import { teacherFeedbackByName } from "./teacher-feedback.generated";
+import type { TeacherPreferenceSignal } from "./teacher-feedback";
+
 export type Subject = "数学" | "物理" | "化学" | "经济" | "英语";
 
 export interface TeacherRatings {
@@ -32,9 +35,20 @@ export interface Teacher {
   ratings: TeacherRatings;
   /** 累计反馈总评分，保留 CSV 中的三位小数精度 */
   overall: number;
+  /** 上课风格：0 偏风趣幽默，100 偏严肃认真。 */
+  classStyle: TeacherPreferenceSignal | null;
+  /** 教学节奏：0 偏高效紧凑，100 偏稳扎稳打。 */
+  teachingPace: TeacherPreferenceSignal | null;
+  /** 课堂互动：0 偏讲授主导，100 偏互动引导。 */
+  classroomInteraction: TeacherPreferenceSignal | null;
   /** 是否在首页「名师精选」中展示 */
   featured?: boolean;
 }
+
+type TeacherProfile = Omit<
+  Teacher,
+  "classStyle" | "teachingPace" | "classroomInteraction"
+>;
 
 /** 网站角标四舍五入至一位小数，排序仍使用精确总分。 */
 export function avgScore(t: Teacher): string {
@@ -58,7 +72,7 @@ export function compareTeachers(a: Teacher, b: Teacher): number {
  * 菁仕名师团队。数据来源于教研整理的「老师卡片」。
  * 评分来源：teacher_scores.csv 累计学员与家长反馈。
  */
-export const teachers: Teacher[] = ([
+const teacherProfiles = [
   {
     name: "应雁心",
     gender: "女",
@@ -228,7 +242,7 @@ export const teachers: Teacher[] = ([
     degree: "威斯康星麦迪逊本科 · MBA",
     hours: "累计授课 3000+ 小时",
     courses: "IGCSE · A-Level · AP · IB 经济",
-    education: "University of Wisconsin–Madison 本科、University of Canberra 工商管理硕士（MBA）。",
+    education: "University of Wisconsin-Madison 本科、University of Canberra 工商管理硕士（MBA）。",
     style:
       "长期担任 A-Level、AP 与 IB 经济及商务课程导师，累计教学 300+ 人；擅长整理历年高频考点，帮助学生高效建立知识框架与答题逻辑；熟悉 CIE、Edexcel 评分标准，风格务实清晰，注重提分路径规划。多名学生 U→A 提升并录取 LSE、UCL。",
     ratings: { improvement: 4.88, responsibility: 4.98, charisma: 4.92 },
@@ -240,13 +254,13 @@ export const teachers: Teacher[] = ([
     subject: "英语",
     photo: "/teachers/英语-唐择运.webp",
     degree: "宾夕法尼亚大学 TESOL 硕士",
-    hours: "语块输入—输出闭环",
+    hours: "语块输入-输出闭环",
     courses:
       "雅思全科 · 托福口语 & 写作 · IGCSE ESL · A-Level English · 原版教材 · 学术英语 EAP · 英语口语表达 · 词汇与语块专项",
     education:
       "美国宾夕法尼亚大学（University of Pennsylvania）TESOL 硕士。研究聚焦英语词汇习得与口语表达发展，持续将前沿研究转化为教学实践。",
     style:
-      "独创「语块输入—输出闭环」教学体系，帮助学生快速建立英语表达自动化能力；深入研究雅思口语高分考生与母语者语言特征，帮助学生摆脱中式英语表达；兼具国际课程教学经验与学术研究背景，系统提升英语综合能力；重视长期英语竞争力而非短期应试技巧，善于激发兴趣，让英语真正成为沟通工具。",
+      "独创「语块输入-输出闭环」教学体系，帮助学生快速建立英语表达自动化能力；深入研究雅思口语高分考生与母语者语言特征，帮助学生摆脱中式英语表达；兼具国际课程教学经验与学术研究背景，系统提升英语综合能力；重视长期英语竞争力而非短期应试技巧，善于激发兴趣，让英语真正成为沟通工具。",
     ratings: { improvement: 4.98, responsibility: 5.0, charisma: 4.99 },
     overall: 4.99,
   },
@@ -285,7 +299,7 @@ export const teachers: Teacher[] = ([
     subject: "英语",
     photo: "/teachers/英语-蓝浪.webp",
     degree: "伦敦国王学院教育政策硕士",
-    hours: "小分平均提升 1–1.5 分",
+    hours: "小分平均提升 1-1.5 分",
     courses: "雅思托福 · IGCSE 文学",
     education: "伦敦国王学院教育政策硕士、四川大学英语语言文学本科。",
     style:
@@ -318,7 +332,7 @@ export const teachers: Teacher[] = ([
     courses: "雅思 · 剑桥英语 KET / PET / FCE",
     education: "曼彻斯特大学本科，持高中英语教师资格证、TESOL 国际高级英语教师资格证、初级心理咨询师证书。",
     style:
-      "专注青少年英语，覆盖 0–20 岁全阶段；具备丰富「体制内转国际」辅导经验，学生多来自上海顶尖学校；强调「系统性语言输入构建」，从语言学、教育学、心理学多维出发，注重学习习惯与语言环境，而非短期刷题。",
+      "专注青少年英语，覆盖 0-20 岁全阶段；具备丰富「体制内转国际」辅导经验，学生多来自上海顶尖学校；强调「系统性语言输入构建」，从语言学、教育学、心理学多维出发，注重学习习惯与语言环境，而非短期刷题。",
     ratings: { improvement: 4.93, responsibility: 4.99, charisma: 4.95 },
     overall: 4.957,
   },
@@ -336,7 +350,19 @@ export const teachers: Teacher[] = ([
     ratings: { improvement: 4.97, responsibility: 4.99, charisma: 4.97 },
     overall: 4.977,
   },
-] satisfies Teacher[]).sort(compareTeachers);
+] satisfies TeacherProfile[];
+
+export const teachers: Teacher[] = teacherProfiles
+  .map((teacher) => {
+    const feedback = teacherFeedbackByName[teacher.name];
+    return {
+      ...teacher,
+      classStyle: feedback?.classStyle ?? null,
+      teachingPace: feedback?.teachingPace ?? null,
+      classroomInteraction: feedback?.classroomInteraction ?? null,
+    };
+  })
+  .sort(compareTeachers);
 
 /** 学科顺序（用于名师页筛选与分组展示） */
 export const subjectOrder: Subject[] = ["数学", "物理", "化学", "经济", "英语"];

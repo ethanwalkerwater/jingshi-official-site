@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "data:feedback": "node scripts/generate-teacher-feedback.mjs",
+    "data:avatars": "node scripts/download-review-avatars.mjs"
   },
   "dependencies": {
     "next": "^15.5.19",
