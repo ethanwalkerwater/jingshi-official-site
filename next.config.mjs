@@ -10,6 +10,13 @@ const nextConfig = {
   outputFileTracingRoot: __dirname,
   // public 静态资源默认只有 max-age=60，服务器带宽仅 4Mbps，
   // 必须为图片配置长缓存，否则每次访问都重新下载全部图片
+  // 旧链接 /faculty 永久重定向到 /teachers，避免已分享的链接失效
+  async redirects() {
+    return [
+      { source: "/faculty", destination: "/teachers", permanent: true },
+      { source: "/faculty/:path*", destination: "/teachers/:path*", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

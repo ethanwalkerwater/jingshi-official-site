@@ -30,9 +30,17 @@ export async function generateMetadata({
   const { name } = await params;
   const t = findTeacher(name);
   if (!t) return { title: `名师 · ${site.name}` };
+  const title = `${t.name}老师 · ${t.subject} · ${site.name}`;
+  const description = `${t.name}，${t.degree}。${t.style.slice(0, 60)}`;
+  // 分享老师详情页时，微信卡片缩略图使用老师照片
+  // （photo 为 webp，微信缩略图对 webp 支持不可靠，构建时已生成同名 jpg 副本）
+  const ogImage = t.photo
+    .replace("/teachers/", "/og/teachers/")
+    .replace(/\.webp$/, ".jpg");
   return {
-    title: `${t.name}老师 · ${t.subject} · ${site.name}`,
-    description: `${t.name}，${t.degree}。${t.style.slice(0, 60)}`,
+    title,
+    description,
+    openGraph: { title, description, images: [{ url: ogImage }] },
   };
 }
 
@@ -110,7 +118,7 @@ export default async function TeacherDetail({
     <>
       <section className="detail">
         <div className="wrap">
-          <Link href="/faculty" className="detail-back">
+          <Link href="/teachers" className="detail-back">
             <IconArrowLeft />
             返回名师团队
           </Link>

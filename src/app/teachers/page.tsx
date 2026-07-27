@@ -8,6 +8,11 @@ export const metadata: Metadata = {
   title: `名师团队 · ${site.name}`,
   description:
     "菁仕教育 20+ 全职名师团队，均毕业于牛津、剑桥、帝国理工、UCL、清华、北大等世界顶级名校，覆盖数学、物理、化学、经济、英语，拥有丰富的国际课程与留学教育经验。",
+  openGraph: {
+    title: `名师团队 · ${site.name}`,
+    description:
+      "20+ 全职名师，均毕业于牛津、剑桥、帝国理工、清华、北大等世界顶尖学府，覆盖数学、物理、化学、经济、英语。",
+  },
 };
 
 export default function FacultyPage() {

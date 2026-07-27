@@ -9,7 +9,7 @@ import { IconStar, IconBolt } from "./icons";
  * 桌面端点击新标签页打开详情，移动端当前页跳转（详情页有返回按钮）。
  */
 export default function TeacherCard({ teacher }: { teacher: Teacher }) {
-  const href = `/faculty/${encodeURIComponent(teacher.name)}`;
+  const href = `/teachers/${encodeURIComponent(teacher.name)}`;
   const courses = teacher.courses
     .split(/\s*[·/]\s*/)
     .map((course) => course.trim())

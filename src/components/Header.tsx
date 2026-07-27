@@ -8,7 +8,7 @@ import { BookingButton } from "./booking";
 import { IconMenu, IconX } from "./icons";
 
 const navLinks = [
-  { label: "名师团队", href: "/faculty" },
+  { label: "名师团队", href: "/teachers" },
   { label: "教育理念", href: "/#pillars" },
   { label: "课程体系", href: "/#courses" },
   { label: "校区联系", href: "/#contact" },
@@ -18,7 +18,7 @@ const navLinks = [
 export default function Header() {
   const [drawer, setDrawer] = useState(false);
   const pathname = usePathname();
-  const isTeacherDetail = pathname.startsWith("/faculty/");
+  const isTeacherDetail = pathname.startsWith("/teachers/");
 
   // 路由切换时收起抽屉
   useEffect(() => {
