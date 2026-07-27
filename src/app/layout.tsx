@@ -16,9 +16,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: "zh_CN",
     siteName: `${site.name} · ${site.nameEn}`,
-    title: `${site.name} · ${site.nameEn}｜国际教育与留学规划`,
-    description:
-      "上海高端国际教育机构。20+ 名校全职师资，覆盖 IGCSE、A-Level、IB、AP、雅思托福、国际竞赛与一站式留学规划。",
+    // 微信卡片字数规则：标题 ≤16 字，描述 ≤36 字且为完整句子
+    title: `${site.name}｜国际课程与留学规划`,
+    description: "让最优秀的老师，带学生走向优秀。",
     images: [{ url: "/og/cover.png", width: 800, height: 800, alt: site.name }],
   },
 };

@@ -37,10 +37,21 @@ export async function generateMetadata({
   const ogImage = t.photo
     .replace("/teachers/", "/og/teachers/")
     .replace(/\.webp$/, ".jpg");
+  // 微信卡片：标题 ≤16 字不带学科；描述 = 学位句 + 教学特点首句，≤36 字，
+  // 超长时只保留学位句，保证完整句子、句号结尾、绝不半截截断
+  const ogTitle = `${t.name}｜${site.name}`;
+  const firstClause = t.style.split(/[。；]/)[0].trim();
+  const fullDesc = `${t.degree}。${firstClause}。`;
+  const ogDescription =
+    fullDesc.length <= 36 ? fullDesc : `${t.degree}。`;
   return {
     title,
     description,
-    openGraph: { title, description, images: [{ url: ogImage }] },
+    openGraph: {
+      title: ogTitle,
+      description: ogDescription,
+      images: [{ url: ogImage }],
+    },
   };
 }
 
