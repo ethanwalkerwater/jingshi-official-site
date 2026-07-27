@@ -7,9 +7,11 @@ import {
   ratingScore,
   type Teacher,
 } from "@/data/teachers";
+import { teacherFeedbackByName } from "@/data/teacher-feedback.generated";
 import { site } from "@/data/site";
 import { BookingButton } from "@/components/booking";
 import { IconArrowLeft } from "@/components/icons";
+import { TeacherReviews } from "@/components/TeacherReviews";
 
 export function generateStaticParams() {
   return teachers.map((t) => ({ name: t.name }));
@@ -40,6 +42,55 @@ const ratingDims = [
   { key: "charisma", label: "个人魅力" },
 ] as const;
 
+const preferenceAxes = [
+  {
+    key: "classStyle",
+    label: "上课风格",
+    left: "风趣幽默",
+    right: "严肃认真",
+    description:
+      "左侧更常通过例子、比喻、幽默或故事引入内容；右侧更强调清晰逻辑、框架与严谨表达。",
+  },
+  {
+    key: "teachingPace",
+    label: "教学节奏",
+    left: "高效紧凑",
+    right: "稳扎稳打",
+    description:
+      "左侧内容密度更高、节奏更快；右侧节奏更平稳，重视每一步的消化。",
+  },
+  {
+    key: "classroomInteraction",
+    label: "课堂互动",
+    left: "讲授主导型",
+    right: "互动引导型",
+    description:
+      "左侧以老师系统讲解为主；右侧更常通过提问和讨论，引导学生参与思考与表达。",
+  },
+] as const;
+
+function preferenceDisplay(position: number, left: string, right: string) {
+  if (position <= 40) {
+    return {
+      label: `偏${left}`,
+      tone: "left",
+      activeStep: Math.round((position / 100) * 4),
+    };
+  }
+  if (position >= 60) {
+    return {
+      label: `偏${right}`,
+      tone: "right",
+      activeStep: Math.round((position / 100) * 4),
+    };
+  }
+  return {
+    label: "相对均衡",
+    tone: "center",
+    activeStep: 2,
+  };
+}
+
 export default async function TeacherDetail({
   params,
 }: {
@@ -48,6 +99,12 @@ export default async function TeacherDetail({
   const { name } = await params;
   const t = findTeacher(name);
   if (!t) notFound();
+  const feedback = teacherFeedbackByName[t.name];
+  const reviews = feedback?.reviews ?? [];
+  const reviewCount = feedback?.reviewCount ?? 0;
+  const preferenceCount = preferenceAxes.filter(
+    (axis) => t[axis.key] !== null,
+  ).length;
 
   return (
     <>
@@ -60,16 +117,21 @@ export default async function TeacherDetail({
 
           <div className="detail-grid">
             <aside className="detail-aside">
-              <div
-                className="detail-photo"
-                style={{ backgroundImage: `url("${t.photo}")` }}
-                role="img"
-                aria-label={`${t.name}老师`}
-              >
-                <span className="detail-score">
-                  <span className="s">{avgScore(t)}</span>
-                  <span className="l">综合评分</span>
-                </span>
+              <div className="detail-photo-shell">
+                <div
+                  className="detail-photo"
+                  style={{ backgroundImage: `url("${t.photo}")` }}
+                  role="img"
+                  aria-label={`${t.name}老师`}
+                >
+                  <span className="detail-score">
+                    <span className="s">{avgScore(t)}</span>
+                    <span className="l">综合评分</span>
+                  </span>
+                </div>
+                <BookingButton className="detail-photo-booking">
+                  预约试听
+                </BookingButton>
               </div>
               <div className="detail-courses detail-courses-desktop">
                 <p className="lab">所授课程</p>
@@ -109,6 +171,68 @@ export default async function TeacherDetail({
               </div>
 
               <div className="detail-block">
+                <h2>课堂体验</h2>
+                {preferenceCount > 0 ? (
+                  <>
+                    <div className="preference-panel">
+                      {preferenceAxes.map((axis) => {
+                        const signal = t[axis.key];
+                        if (!signal) return null;
+                        const display = preferenceDisplay(
+                          signal.position,
+                          axis.left,
+                          axis.right,
+                        );
+                        return (
+                          <div
+                            className="preference-row"
+                            key={axis.key}
+                            aria-label={`${axis.label}：${axis.description}`}
+                          >
+                            <div className="preference-meta">
+                              <strong>{axis.label}</strong>
+                              <span>{signal.responseCount} 份反馈</span>
+                            </div>
+                            <div className="preference-spectrum">
+                              <span>{axis.left}</span>
+                              <div
+                                className="preference-steps"
+                                aria-hidden="true"
+                              >
+                                {[0, 1, 2, 3, 4].map((step) => (
+                                  <span
+                                    className={`preference-step${
+                                      step === display.activeStep
+                                        ? ` active ${display.tone}`
+                                        : ""
+                                    }`}
+                                    key={step}
+                                  />
+                                ))}
+                              </div>
+                              <span>{axis.right}</span>
+                            </div>
+                            <span
+                              className={`preference-result ${display.tone}`}
+                            >
+                              {display.label}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <p className="preference-note">
+                      位置来自学员问卷中的有效选择，表示整体倾向，不代表每节课采用固定模式。
+                    </p>
+                  </>
+                ) : (
+                  <p className="detail-empty">
+                    当前有效样本不足，积累更多学员反馈后展示。
+                  </p>
+                )}
+              </div>
+
+              <div className="detail-block">
                 <h2>学员评分</h2>
                 <div className="ratings">
                   {ratingDims.map((d) => {
@@ -124,13 +248,15 @@ export default async function TeacherDetail({
                     );
                   })}
                 </div>
-                <p className="rating-note">评分为 1–5 分制，综合自学员与家长反馈。</p>
+                <p className="rating-note">评分为 1-5 分制，综合自学员与家长反馈。</p>
               </div>
 
-              <div className="detail-cta">
-                <BookingButton className="btn btn-gold btn-lg">
-                  预约 {t.name} 老师试听
-                </BookingButton>
+              <div className="detail-block">
+                <div className="detail-section-heading">
+                  <h2>学生真实评价</h2>
+                  {reviewCount > 0 && <span>共 {reviewCount} 条</span>}
+                </div>
+                <TeacherReviews teacherName={t.name} reviews={reviews} />
               </div>
             </div>
           </div>
