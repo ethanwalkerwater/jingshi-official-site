@@ -8,16 +8,24 @@ import {
   useRef,
   useState,
 } from "react";
-import type { StudentReview } from "@/data/teacher-feedback";
+import type {
+  ReviewerType,
+  TeacherReview,
+} from "@/data/teacher-feedback";
 import { IconX } from "./icons";
 
 const PREVIEW_COUNT = 4;
+const reviewerTypeLabels: Record<ReviewerType, string> = {
+  student: "学生评价",
+  parent: "家长评价",
+  anonymous: "匿名评价",
+};
 
 function ReviewItem({
   review,
   modal = false,
 }: {
-  review: StudentReview;
+  review: TeacherReview;
   modal?: boolean;
 }) {
   return (
@@ -25,7 +33,10 @@ function ReviewItem({
       <header>
         <Image src={review.avatar} width={42} height={42} alt="" />
         <div>
-          <strong>{review.author}</strong>
+          <div className="review-author">
+            <strong>{review.author}</strong>
+            <span>{reviewerTypeLabels[review.reviewerType]}</span>
+          </div>
           <time>{review.date}</time>
         </div>
       </header>
@@ -39,7 +50,7 @@ export function TeacherReviews({
   reviews,
 }: {
   teacherName: string;
-  reviews: StudentReview[];
+  reviews: TeacherReview[];
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const titleId = useId();
@@ -128,8 +139,8 @@ export function TeacherReviews({
             >
               <header className="reviews-modal-header">
                 <div>
-                  <h3 id={titleId}>{teacherName}老师的学生评价</h3>
-                  <p>共 {reviews.length} 条匿名评价</p>
+                  <h3 id={titleId}>{teacherName}老师的真实评价</h3>
+                  <p>共 {reviews.length} 条学生与家长匿名评价</p>
                 </div>
                 <button
                   ref={closeRef}

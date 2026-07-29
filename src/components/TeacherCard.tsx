@@ -4,12 +4,46 @@ import Link from "next/link";
 import { avgScore, type Teacher } from "@/data/teachers";
 import { IconStar, IconBolt } from "./icons";
 
+export type TeacherCardScoreMetric =
+  | "overall"
+  | "improvement"
+  | "responsibility"
+  | "charisma";
+
+const scoreLabels: Record<TeacherCardScoreMetric, string> = {
+  overall: "综合评分",
+  improvement: "学习提分效果",
+  responsibility: "责任心与服务态度",
+  charisma: "教师个人魅力",
+};
+
+const metricBadgeLabels: Record<
+  Exclude<TeacherCardScoreMetric, "overall">,
+  string
+> = {
+  improvement: "学习提分",
+  responsibility: "责任服务",
+  charisma: "个人魅力",
+};
+
 /**
- * 名师卡片：照片（右上角评分角标）→ 姓名 → 学历（2 行截断）→ 经验亮点（1 行）→ 课程标签（≤2 个）。
+ * 名师卡片：综合评分显示在照片右上角；其他排序指标显示在照片左下角。
  * 桌面端点击新标签页打开详情，移动端当前页跳转（详情页有返回按钮）。
  */
-export default function TeacherCard({ teacher }: { teacher: Teacher }) {
+export default function TeacherCard({
+  teacher,
+  scoreMetric = "overall",
+}: {
+  teacher: Teacher;
+  scoreMetric?: TeacherCardScoreMetric;
+}) {
   const href = `/teachers/${encodeURIComponent(teacher.name)}`;
+  const isOverallScore = scoreMetric === "overall";
+  const score =
+    isOverallScore
+      ? avgScore(teacher)
+      : teacher.ratings[scoreMetric].toFixed(1);
+  const scoreLabel = scoreLabels[scoreMetric];
   const courses = teacher.courses
     .split(/\s*[·/]\s*/)
     .map((course) => course.trim())
@@ -34,13 +68,24 @@ export default function TeacherCard({ teacher }: { teacher: Teacher }) {
           width={591}
           height={827}
         />
-        <span
-          className="teacher-badge"
-          aria-label={`综合评分 ${avgScore(teacher)}`}
-        >
-          <IconStar />
-          {avgScore(teacher)}
-        </span>
+        {isOverallScore ? (
+          <span
+            className="teacher-badge"
+            aria-label={`${scoreLabel} ${score}`}
+            title={`${scoreLabel} ${score}`}
+          >
+            <IconStar />
+            {score}
+          </span>
+        ) : (
+          <span
+            className="teacher-metric-badge"
+            aria-label={`${scoreLabel} ${score}`}
+            title={`${scoreLabel} ${score}`}
+          >
+            {metricBadgeLabels[scoreMetric]}：{score}
+          </span>
+        )}
       </div>
       <div className="teacher-body">
         <h3 className="teacher-name">{teacher.name}</h3>

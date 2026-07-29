@@ -131,9 +131,10 @@ const compoundSurnames = [
   "夏侯",
 ];
 
-function anonymizeStudent(value) {
+function anonymizeReviewer(value, reviewerType) {
   const raw = String(value ?? "").trim();
-  if (!raw) return "匿名同学";
+  const isParent = reviewerType === "parent";
+  if (!raw) return isParent ? "学生家长" : "匿名同学";
   if (/家长|妈妈|爸爸|母亲|父亲/.test(raw)) return "学生家长";
 
   const chinese = raw.match(/[\u3400-\u9fff]+/)?.[0];
@@ -141,11 +142,13 @@ function anonymizeStudent(value) {
     const compound = compoundSurnames.find((surname) =>
       chinese.startsWith(surname),
     );
-    return `${compound ?? chinese[0]}同学`;
+    const anonymizedName = `${compound ?? chinese[0]}同学`;
+    return isParent ? `${anonymizedName}家长` : anonymizedName;
   }
 
   const initial = raw.match(/[A-Za-z]/)?.[0]?.toUpperCase();
-  return initial ? `${initial} 同学` : "匿名同学";
+  if (!initial) return isParent ? "学生家长" : "匿名同学";
+  return isParent ? `${initial} 同学家长` : `${initial} 同学`;
 }
 
 function formatMonth(value) {
@@ -199,6 +202,35 @@ const columns = {
   ),
 };
 
+const reviewerTypeColumn = columnIndex.get("你的身份");
+const reviewerSignalColumns = {
+  student: headers.flatMap((header, index) =>
+    /^【(?:学生|学员)】/.test(header) ? [index] : [],
+  ),
+  parent: headers.flatMap((header, index) =>
+    /^【家长】/.test(header) ? [index] : [],
+  ),
+};
+
+function detectReviewerType(row) {
+  const explicitType =
+    reviewerTypeColumn === undefined
+      ? ""
+      : String(row[reviewerTypeColumn] ?? "").trim();
+  if (/家长|妈妈|爸爸|母亲|父亲/.test(explicitType)) return "parent";
+  if (/学生|学员/.test(explicitType)) return "student";
+
+  const hasStudentSignal = reviewerSignalColumns.student.some((index) =>
+    String(row[index] ?? "").trim(),
+  );
+  const hasParentSignal = reviewerSignalColumns.parent.some((index) =>
+    String(row[index] ?? "").trim(),
+  );
+  if (hasParentSignal && !hasStudentSignal) return "parent";
+  if (hasStudentSignal && !hasParentSignal) return "student";
+  return "anonymous";
+}
+
 const rawByTeacher = new Map(
   publicTeacherNames.map((teacher) => [
     teacher,
@@ -230,11 +262,13 @@ for (const row of rows) {
 
   const studentName = String(row[columns.student] ?? "").trim();
   const submittedAt = String(row[columns.submittedAt] ?? "").trim();
+  const reviewerType = detectReviewerType(row);
   teacherData.reviews.push({
     id: stableHash(
       `${teacher}|${row[columns.id] ?? ""}|${submittedAt}|${content}`,
     ).slice(0, 12),
-    author: anonymizeStudent(studentName),
+    author: anonymizeReviewer(studentName, reviewerType),
+    reviewerType,
     date: formatMonth(submittedAt),
     content,
     avatar: avatarPath(studentName),

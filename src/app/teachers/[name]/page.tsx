@@ -272,7 +272,7 @@ export default async function TeacherDetail({
 
               <div className="detail-block">
                 <div className="detail-section-heading">
-                  <h2>学生真实评价</h2>
+                  <h2>学生与家长真实评价</h2>
                   {reviewCount > 0 && <span>共 {reviewCount} 条</span>}
                 </div>
                 <TeacherReviews teacherName={t.name} reviews={reviews} />
