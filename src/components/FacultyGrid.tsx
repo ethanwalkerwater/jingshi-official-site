@@ -8,11 +8,13 @@ import {
   type Subject,
 } from "@/data/teachers";
 import { IconChevronDown } from "./icons";
-import TeacherCard from "./TeacherCard";
+import TeacherCard, {
+  type TeacherCardScoreMetric,
+} from "./TeacherCard";
 
 type SubjectFilter = "全部" | Subject;
 type GenderFilter = "全部" | "男" | "女";
-type SortKey = "overall" | "improvement" | "responsibility" | "charisma";
+type SortKey = TeacherCardScoreMetric;
 
 const sortKeys: SortKey[] = [
   "overall",
@@ -166,7 +168,7 @@ export default function FacultyGrid() {
       {list.length > 0 ? (
         <div className="fac-grid">
           {list.map((t) => (
-            <TeacherCard key={t.name} teacher={t} />
+            <TeacherCard key={t.name} teacher={t} scoreMetric={sortBy} />
           ))}
         </div>
       ) : (

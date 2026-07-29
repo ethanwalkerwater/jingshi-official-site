@@ -5,9 +5,12 @@ export interface TeacherPreferenceSignal {
   responseCount: number;
 }
 
-export interface StudentReview {
+export type ReviewerType = "student" | "parent" | "anonymous";
+
+export interface TeacherReview {
   id: string;
   author: string;
+  reviewerType: ReviewerType;
   date: string;
   content: string;
   avatar: string;
@@ -18,5 +21,5 @@ export interface TeacherFeedbackProfile {
   teachingPace: TeacherPreferenceSignal | null;
   classroomInteraction: TeacherPreferenceSignal | null;
   reviewCount: number;
-  reviews: StudentReview[];
+  reviews: TeacherReview[];
 }

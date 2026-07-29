@@ -178,7 +178,7 @@ const teacherProfiles = [
   },
   {
     name: "王冰青",
-    gender: "女",
+    gender: "男",
     subject: "物理",
     photo: "/teachers/物理-王冰青.webp",
     degree: "清华大学学士 · UC Davis 博士",
@@ -239,10 +239,11 @@ const teacherProfiles = [
     gender: "女",
     subject: "经济",
     photo: "/teachers/经济-马怡婷.webp",
-    degree: "威斯康星麦迪逊本科 · MBA",
+    degree: "圣路易斯华盛顿大学硕士",
     hours: "累计授课 3000+ 小时",
     courses: "IGCSE · A-Level · AP · IB 经济",
-    education: "University of Wisconsin-Madison 本科、University of Canberra 工商管理硕士（MBA）。",
+    education:
+      "University of Wisconsin-Madison 本科、华盛顿大学圣路易斯分校（Washington University in St. Louis）商业分析（Business Analytics）硕士。",
     style:
       "长期担任 A-Level、AP 与 IB 经济及商务课程导师，累计教学 300+ 人；擅长整理历年高频考点，帮助学生高效建立知识框架与答题逻辑；熟悉 CIE、Edexcel 评分标准，风格务实清晰，注重提分路径规划。多名学生 U→A 提升并录取 LSE、UCL。",
     ratings: { improvement: 4.88, responsibility: 4.98, charisma: 4.92 },

@@ -393,6 +393,25 @@ button {
   height: 12px;
   color: var(--gold);
 }
+.teacher-metric-badge {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 2;
+  padding: 6px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-pill);
+  background: rgba(24, 39, 65, 0.58);
+  box-shadow: 0 8px 24px -12px rgba(10, 18, 32, 0.8);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  -webkit-backdrop-filter: blur(10px) saturate(130%);
+  backdrop-filter: blur(10px) saturate(130%);
+}
 .teacher-body {
   padding: 12px 12px 14px;
   display: flex;
@@ -1443,11 +1462,28 @@ button {
   border-radius: 50%;
   background: var(--alt);
 }
-.student-review header div {
+.student-review header > div {
   display: flex;
   min-width: 0;
   flex-direction: column;
   line-height: 1.4;
+}
+.review-author {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+}
+.review-author span {
+  flex: none;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--alt);
+  color: var(--ink-dim);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
 }
 .student-review strong {
   overflow: hidden;
