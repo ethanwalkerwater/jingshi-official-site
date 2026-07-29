@@ -10,8 +10,10 @@ export type TeacherCardScoreMetric =
   | "responsibility"
   | "charisma";
 
-const scoreLabels: Record<TeacherCardScoreMetric, string> = {
-  overall: "综合评分",
+const metricScoreLabels: Record<
+  Exclude<TeacherCardScoreMetric, "overall">,
+  string
+> = {
   improvement: "学习提分效果",
   responsibility: "责任心与服务态度",
   charisma: "教师个人魅力",
@@ -38,12 +40,11 @@ export default function TeacherCard({
   scoreMetric?: TeacherCardScoreMetric;
 }) {
   const href = `/teachers/${encodeURIComponent(teacher.name)}`;
-  const isOverallScore = scoreMetric === "overall";
-  const score =
-    isOverallScore
-      ? avgScore(teacher)
+  const overallScore = avgScore(teacher);
+  const metricScore =
+    scoreMetric === "overall"
+      ? null
       : teacher.ratings[scoreMetric].toFixed(1);
-  const scoreLabel = scoreLabels[scoreMetric];
   const courses = teacher.courses
     .split(/\s*[·/]\s*/)
     .map((course) => course.trim())
@@ -68,22 +69,21 @@ export default function TeacherCard({
           width={591}
           height={827}
         />
-        {isOverallScore ? (
-          <span
-            className="teacher-badge"
-            aria-label={`${scoreLabel} ${score}`}
-            title={`${scoreLabel} ${score}`}
-          >
-            <IconStar />
-            {score}
-          </span>
-        ) : (
+        <span
+          className="teacher-badge"
+          aria-label={`综合评分 ${overallScore}`}
+          title={`综合评分 ${overallScore}`}
+        >
+          <IconStar />
+          {overallScore}
+        </span>
+        {scoreMetric !== "overall" && metricScore && (
           <span
             className="teacher-metric-badge"
-            aria-label={`${scoreLabel} ${score}`}
-            title={`${scoreLabel} ${score}`}
+            aria-label={`${metricScoreLabels[scoreMetric]} ${metricScore}`}
+            title={`${metricScoreLabels[scoreMetric]} ${metricScore}`}
           >
-            {metricBadgeLabels[scoreMetric]}：{score}
+            {metricBadgeLabels[scoreMetric]}：{metricScore}
           </span>
         )}
       </div>
