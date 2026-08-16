@@ -5,10 +5,11 @@ import { fileURLToPath } from "node:url";
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const sourcePath = path.resolve(process.argv[2] ?? process.env.FEEDBACK_CSV ?? "");
+const supplementalSourcePaths = process.argv.slice(3).map((value) => path.resolve(value));
 
 if (!process.argv[2] && !process.env.FEEDBACK_CSV) {
   console.error(
-    '用法：node scripts/generate-teacher-feedback.mjs "/absolute/path/to/feedback.csv"',
+    '用法：node scripts/generate-teacher-feedback.mjs "/absolute/path/to/feedback.csv" ["/absolute/path/to/respondent_detail.csv" ...]',
   );
   process.exit(1);
 }
@@ -16,6 +17,13 @@ if (!process.argv[2] && !process.env.FEEDBACK_CSV) {
 if (!fs.existsSync(sourcePath)) {
   console.error(`找不到问卷文件：${sourcePath}`);
   process.exit(1);
+}
+
+for (const supplementalSourcePath of supplementalSourcePaths) {
+  if (!fs.existsSync(supplementalSourcePath)) {
+    console.error(`找不到补充反馈文件：${supplementalSourcePath}`);
+    process.exit(1);
+  }
 }
 
 const teacherSource = fs.readFileSync(
@@ -30,6 +38,7 @@ const publicTeacherSet = new Set(publicTeacherNames);
 const teacherAliases = new Map([
   ["Valentina 林", "Valentina Lin"],
   ["Valentina林", "Valentina Lin"],
+  ["ValentinaLin", "Valentina Lin"],
 ]);
 
 const axisDefinitions = {
@@ -114,6 +123,67 @@ function redactReview(value) {
       /(微信|WeChat|vx|wx)\s*[:：号]?\s*[A-Za-z0-9_-]{5,}/gi,
       "$1：[联系方式已隐藏]",
     );
+}
+
+function replaceLiteral(value, search, replacement) {
+  const target = String(search ?? "").trim();
+  if (target.length < 2) return value;
+  return value.replaceAll(target, replacement);
+}
+
+function redactStudentName(value, studentName, normalizedStudentName, reviewerType) {
+  const replacement =
+    reviewerType === "parent"
+      ? "孩子"
+      : reviewerType === "student"
+        ? "我"
+        : "学员";
+  const candidates = new Set(
+    [studentName, normalizedStudentName]
+      .flatMap((name) => {
+        const raw = String(name ?? "").trim();
+        return [raw, raw.replace(/\s+/g, "")];
+      })
+      .filter((name) => name.length >= 2),
+  );
+  let redacted = value;
+  for (const candidate of candidates) {
+    redacted = replaceLiteral(redacted, candidate, replacement);
+  }
+  return redacted;
+}
+
+const emptyFeedbackPattern =
+  /^(?:无|暂无|没有|不知道|没啥|无建议|暂无建议|没有建议|none|n\/?a)[\s。！!？?]*$/i;
+
+function normalizeSupplementalReview(value) {
+  return String(value ?? "")
+    .split(/\s*\|\s*/)
+    .map(redactReview)
+    .filter((part) => part && !emptyFeedbackPattern.test(part))
+    .join("；");
+}
+
+/**
+ * 月度问卷的自由文本是「改进建议」，不是全部都适合公开。
+ * 只收录有实质教学信息的文本，排除空答、测试文本、辱骂、刷屏和与教学无关内容。
+ */
+function isPublishableSupplementalReview(content) {
+  if (content.length < 6 || content.length > 280) return false;
+  if (emptyFeedbackPattern.test(content)) return false;
+  if (
+    /(?:1111|nigger|bitch|cnm|nbkls|sigma|CASN|生日快乐|橙汁|毯子|空调太冷|请我吃饭|维尼the pooh|夸爆|夸完|累死了|少给他排点课)/i.test(
+      content,
+    )
+  ) {
+    return false;
+  }
+  const emojiCount = [...content].filter((char) => /\p{Extended_Pictographic}/u.test(char))
+    .length;
+  if (emojiCount > 4) return false;
+  return /(?:老师|教学|课程|课后|备课|课件|学习|提升|提高|成绩|规划|节奏|主动性|督促|考试|满意|讲得|挺好)/.test(
+    content,
+  );
 }
 
 const compoundSurnames = [
@@ -231,6 +301,15 @@ function detectReviewerType(row) {
   return "anonymous";
 }
 
+function detectSupplementalReviewerType(value) {
+  const sourceIdentities = String(value ?? "");
+  const isParent = /家长|监护人/.test(sourceIdentities);
+  const isStudent = /学生|学员/.test(sourceIdentities);
+  if (isParent && !isStudent) return "parent";
+  if (isStudent && !isParent) return "student";
+  return "anonymous";
+}
+
 const rawByTeacher = new Map(
   publicTeacherNames.map((teacher) => [
     teacher,
@@ -274,6 +353,91 @@ for (const row of rows) {
     avatar: avatarPath(studentName),
     sortTime: timestamp(submittedAt),
   });
+}
+
+let supplementalPublishedCount = 0;
+let supplementalRejectedCount = 0;
+
+for (const supplementalSourcePath of supplementalSourcePaths) {
+  const supplementalRows = parseCsv(
+    fs.readFileSync(supplementalSourcePath, "utf8"),
+  );
+  const supplementalHeaders = supplementalRows.shift().map((value) =>
+    String(value ?? "").replace(/^\uFEFF/, "").trim(),
+  );
+  const supplementalColumnIndex = new Map(
+    supplementalHeaders.map((header, index) => [header, index]),
+  );
+  const supplementalColumn = (header) => {
+    const index = supplementalColumnIndex.get(header);
+    if (index === undefined) {
+      throw new Error(
+        `补充反馈文件 ${supplementalSourcePath} 缺少字段：${header}`,
+      );
+    }
+    return index;
+  };
+  const supplementalColumns = {
+    teacher: supplementalColumn("teacher"),
+    student: supplementalColumn("student"),
+    studentRawName: supplementalColumn("student_raw_name"),
+    sourceIdentities: supplementalColumn("source_identities"),
+    submittedAt: supplementalColumn("submitted_at"),
+    matched: supplementalColumn("matched"),
+    suggestion: supplementalColumn("text_suggestion"),
+  };
+
+  for (const row of supplementalRows) {
+    const teacher = normalizeTeacherName(row[supplementalColumns.teacher]);
+    const rawSuggestion = String(row[supplementalColumns.suggestion] ?? "").trim();
+    if (!rawSuggestion) continue;
+    if (
+      !publicTeacherSet.has(teacher) ||
+      !/^(?:1|true)$/i.test(String(row[supplementalColumns.matched] ?? "").trim())
+    ) {
+      supplementalRejectedCount += 1;
+      continue;
+    }
+
+    const reviewerType = detectSupplementalReviewerType(
+      row[supplementalColumns.sourceIdentities],
+    );
+    const studentName = String(
+      row[supplementalColumns.studentRawName] ?? "",
+    ).trim();
+    const normalizedStudentName = String(
+      row[supplementalColumns.student] ?? "",
+    ).trim();
+    const submittedAt = String(
+      row[supplementalColumns.submittedAt] ?? "",
+    ).trim();
+    const content = redactStudentName(
+      normalizeSupplementalReview(rawSuggestion),
+      studentName,
+      normalizedStudentName,
+      reviewerType,
+    );
+    if (!isPublishableSupplementalReview(content)) {
+      supplementalRejectedCount += 1;
+      continue;
+    }
+
+    rawByTeacher.get(teacher).reviews.push({
+      id: stableHash(
+        `${teacher}|monthly|${submittedAt}|${normalizedStudentName}|${content}`,
+      ).slice(0, 12),
+      author:
+        reviewerType === "anonymous"
+          ? "匿名反馈"
+          : anonymizeReviewer(studentName || normalizedStudentName, reviewerType),
+      reviewerType,
+      date: formatMonth(submittedAt),
+      content,
+      avatar: avatarPath(studentName || normalizedStudentName),
+      sortTime: timestamp(submittedAt),
+    });
+    supplementalPublishedCount += 1;
+  }
 }
 
 function buildAxis(axis) {
@@ -343,3 +507,8 @@ const publishedReviews = Object.values(generatedData).reduce(
 console.log(
   `已生成 ${path.relative(projectRoot, outputPath)}：${teacherWithPreferences} 位老师有偏向数据，页面收录 ${publishedReviews} 条公开评价。`,
 );
+if (supplementalSourcePaths.length) {
+  console.log(
+    `月度补充反馈：收录 ${supplementalPublishedCount} 条，过滤 ${supplementalRejectedCount} 条。`,
+  );
+}

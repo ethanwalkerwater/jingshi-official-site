@@ -92,8 +92,16 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
       "position": 52,
       "responseCount": 46
     },
-    "reviewCount": 11,
+    "reviewCount": 12,
     "reviews": [
+      {
+        "id": "57c274c5b7ad",
+        "author": "牛同学家长",
+        "reviewerType": "parent",
+        "date": "2026年6月",
+        "content": "暂无 很满意",
+        "avatar": "/avatars/thumbs/07.svg"
+      },
       {
         "id": "2ff7b496ab55",
         "author": "D 同学",
@@ -262,8 +270,16 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
       "position": 79,
       "responseCount": 14
     },
-    "reviewCount": 3,
+    "reviewCount": 4,
     "reviews": [
+      {
+        "id": "9ad847b7db5e",
+        "author": "匿名反馈",
+        "reviewerType": "anonymous",
+        "date": "2026年6月",
+        "content": "更能激发孩子的学习主动性",
+        "avatar": "/avatars/thumbs/08.svg"
+      },
       {
         "id": "cb8f54f4c406",
         "author": "姚同学",
@@ -303,8 +319,16 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
       "position": 68,
       "responseCount": 31
     },
-    "reviewCount": 6,
+    "reviewCount": 7,
     "reviews": [
+      {
+        "id": "dda0a14e2801",
+        "author": "谢同学家长",
+        "reviewerType": "parent",
+        "date": "2026年7月",
+        "content": "一起找到最终提高成绩的方法",
+        "avatar": "/avatars/thumbs/14.svg"
+      },
       {
         "id": "788bfa79c826",
         "author": "G 同学家长",
@@ -368,8 +392,16 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
       "position": 61,
       "responseCount": 61
     },
-    "reviewCount": 5,
+    "reviewCount": 6,
     "reviews": [
+      {
+        "id": "c863bf22d9a0",
+        "author": "匿名反馈",
+        "reviewerType": "anonymous",
+        "date": "2026年8月",
+        "content": "没啥建议挺好的",
+        "avatar": "/avatars/thumbs/20.svg"
+      },
       {
         "id": "884daea149a7",
         "author": "D 同学",
@@ -593,8 +625,17 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
     "classStyle": null,
     "teachingPace": null,
     "classroomInteraction": null,
-    "reviewCount": 0,
-    "reviews": []
+    "reviewCount": 1,
+    "reviews": [
+      {
+        "id": "46996b4a78aa",
+        "author": "牛同学家长",
+        "reviewerType": "parent",
+        "date": "2026年6月",
+        "content": "暂无 都很满意",
+        "avatar": "/avatars/thumbs/07.svg"
+      }
+    ]
   },
   "李寅鑫": {
     "classStyle": {
@@ -609,8 +650,17 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
       "position": 50,
       "responseCount": 2
     },
-    "reviewCount": 0,
-    "reviews": []
+    "reviewCount": 1,
+    "reviews": [
+      {
+        "id": "38cfd3706673",
+        "author": "匿名反馈",
+        "reviewerType": "anonymous",
+        "date": "2026年8月",
+        "content": "老师课讲得很好，高水平下进一步提升很大，改进建议没有什么了",
+        "avatar": "/avatars/thumbs/24.svg"
+      }
+    ]
   },
   "朱毅博": {
     "classStyle": {
@@ -625,8 +675,16 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
       "position": 55,
       "responseCount": 73
     },
-    "reviewCount": 19,
+    "reviewCount": 20,
     "reviews": [
+      {
+        "id": "63f87fc8a5d9",
+        "author": "J 同学",
+        "reviewerType": "student",
+        "date": "2026年6月",
+        "content": "约课的时候问要上什么，老师至少备一点课",
+        "avatar": "/avatars/thumbs/12.svg"
+      },
       {
         "id": "84491c5dd2ed",
         "author": "L 同学",
@@ -865,8 +923,17 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
       "position": 0,
       "responseCount": 1
     },
-    "reviewCount": 0,
-    "reviews": []
+    "reviewCount": 1,
+    "reviews": [
+      {
+        "id": "079cb2553fbd",
+        "author": "匿名反馈",
+        "reviewerType": "anonymous",
+        "date": "2026年6月",
+        "content": "能在孩子课后多一些督促在",
+        "avatar": "/avatars/thumbs/08.svg"
+      }
+    ]
   },
   "黄钢": {
     "classStyle": {
@@ -978,8 +1045,24 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
       "position": 68,
       "responseCount": 47
     },
-    "reviewCount": 12,
+    "reviewCount": 14,
     "reviews": [
+      {
+        "id": "b3a48d125933",
+        "author": "S 同学家长",
+        "reviewerType": "parent",
+        "date": "2026年8月",
+        "content": "感觉孩子这个阶段比较难管，对于学习态度，自主性不是很高。我是希望通过假期不间断的学习，保持她的学习状态，也一样为11+做更充分的准备",
+        "avatar": "/avatars/thumbs/02.svg"
+      },
+      {
+        "id": "80e489d1bed8",
+        "author": "R 同学家长",
+        "reviewerType": "parent",
+        "date": "2026年6月",
+        "content": "整个时间安排 课件 考试时间轴安排",
+        "avatar": "/avatars/thumbs/09.svg"
+      },
       {
         "id": "83671eef3f82",
         "author": "E 同学家长",
@@ -1091,8 +1174,16 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
       "position": 56,
       "responseCount": 39
     },
-    "reviewCount": 3,
+    "reviewCount": 4,
     "reviews": [
+      {
+        "id": "71500a0ebb85",
+        "author": "C 同学家长",
+        "reviewerType": "parent",
+        "date": "2026年6月",
+        "content": "做好学科分步骤和整体提升的规划。",
+        "avatar": "/avatars/thumbs/21.svg"
+      },
       {
         "id": "ebcfad992a6d",
         "author": "B 同学家长",
