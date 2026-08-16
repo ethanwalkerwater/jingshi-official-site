@@ -1325,90 +1325,6 @@ button {
   color: var(--ink-dim);
   margin-top: 12px;
 }
-.monthly-feedback-grid {
-  display: grid;
-  gap: 12px;
-}
-.monthly-score-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  margin-bottom: 8px;
-}
-.monthly-score-item {
-  display: grid;
-  gap: 5px;
-  padding: 12px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-card);
-  background: var(--card);
-}
-.monthly-score-item span {
-  color: var(--ink-dim);
-  font-size: 10px;
-  line-height: 1.45;
-}
-.monthly-score-item strong {
-  color: var(--gold-dark);
-  font-size: 18px;
-  font-weight: 800;
-}
-.monthly-score-note {
-  margin-bottom: 12px;
-  color: var(--ink-dim) !important;
-  font-size: 11px !important;
-  line-height: 1.65 !important;
-}
-.monthly-feedback-group {
-  padding: 16px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-card);
-  background: var(--card);
-}
-.monthly-feedback-group header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-.monthly-feedback-group header strong {
-  color: var(--ink);
-  font-size: 13px;
-  font-weight: 800;
-}
-.monthly-feedback-group header span {
-  color: var(--ink-dim);
-  font-size: 10px;
-}
-.monthly-feedback-group ul {
-  display: grid;
-  gap: 7px;
-  list-style: none;
-}
-.monthly-feedback-group li {
-  position: relative;
-  padding-left: 14px;
-  color: var(--ink-soft);
-  font-size: 13px;
-  line-height: 1.65;
-}
-.monthly-feedback-group li::before {
-  position: absolute;
-  top: 0.65em;
-  left: 0;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--gold);
-  content: "";
-}
-.monthly-feedback-note {
-  margin-top: 9px;
-  color: var(--ink-dim) !important;
-  font-size: 11px !important;
-  line-height: 1.65 !important;
-}
 .preference-panel {
   padding: 0 16px;
   border: 1px solid var(--line);
@@ -1909,9 +1825,6 @@ button {
   .student-reviews {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: 26px;
-  }
-  .monthly-feedback-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .page-head h1 {
     font-size: 32px;

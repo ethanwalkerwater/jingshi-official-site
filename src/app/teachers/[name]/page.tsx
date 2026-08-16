@@ -267,72 +267,8 @@ export default async function TeacherDetail({
                     );
                   })}
                 </div>
-                <p className="rating-note">
-                  历史累计评分，采用 1-5 分制，综合自学员与家长反馈。
-                </p>
+                <p className="rating-note">评分为 1-5 分制，综合自学员与家长反馈。</p>
               </div>
-
-              {t.monthlyFeedbackHistory.map((monthlyFeedback) => (
-                <div className="detail-block" key={monthlyFeedback.period}>
-                  <div className="detail-section-heading">
-                    <h2>月度评分与反馈</h2>
-                    <span>{monthlyFeedback.period}</span>
-                  </div>
-                  <div className="monthly-score-grid">
-                    {ratingDims.map((dimension) => (
-                      <div className="monthly-score-item" key={dimension.key}>
-                        <span>{dimension.label}</span>
-                        <strong>
-                          {ratingScore(
-                            monthlyFeedback.ratings[dimension.key],
-                          )}
-                        </strong>
-                      </div>
-                    ))}
-                  </div>
-                  <p className="monthly-score-note">
-                    该月共 {monthlyFeedback.responseCount} 份有效评分；作为独立月度记录追加，不覆盖历史累计评分。
-                  </p>
-                  {(monthlyFeedback.studentThemes.length > 0 ||
-                    monthlyFeedback.parentThemes.length > 0) && (
-                    <div className="monthly-feedback-grid">
-                      {monthlyFeedback.studentThemes.length > 0 && (
-                        <section className="monthly-feedback-group">
-                          <header>
-                            <strong>学生反馈</strong>
-                            <span>
-                              {monthlyFeedback.studentFeedbackCount} 条
-                            </span>
-                          </header>
-                          <ul>
-                            {monthlyFeedback.studentThemes.map((theme) => (
-                              <li key={theme}>{theme}</li>
-                            ))}
-                          </ul>
-                        </section>
-                      )}
-                      {monthlyFeedback.parentThemes.length > 0 && (
-                        <section className="monthly-feedback-group">
-                          <header>
-                            <strong>家长反馈</strong>
-                            <span>
-                              {monthlyFeedback.parentFeedbackCount} 条
-                            </span>
-                          </header>
-                          <ul>
-                            {monthlyFeedback.parentThemes.map((theme) => (
-                              <li key={theme}>{theme}</li>
-                            ))}
-                          </ul>
-                        </section>
-                      )}
-                    </div>
-                  )}
-                  <p className="monthly-feedback-note">
-                    摘要来自匿名问卷中的结构化改进反馈；无效自由文本、玩笑内容与个人信息不会公开。
-                  </p>
-                </div>
-              ))}
 
               <div className="detail-block">
                 <div className="detail-section-heading">
