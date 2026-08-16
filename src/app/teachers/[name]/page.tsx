@@ -268,57 +268,71 @@ export default async function TeacherDetail({
                   })}
                 </div>
                 <p className="rating-note">
-                  评分为 1-5 分制，综合自学员与家长反馈
-                  {t.monthlyFeedback &&
-                    `；更新至 ${t.monthlyFeedback.period}，共 ${t.monthlyFeedback.responseCount} 份有效评分。`}
+                  历史累计评分，采用 1-5 分制，综合自学员与家长反馈。
                 </p>
               </div>
 
-              {t.monthlyFeedback &&
-                (t.monthlyFeedback.studentThemes.length > 0 ||
-                  t.monthlyFeedback.parentThemes.length > 0) && (
-                  <div className="detail-block">
-                    <div className="detail-section-heading">
-                      <h2>本月反馈摘要</h2>
-                      <span>{t.monthlyFeedback.period}</span>
-                    </div>
+              {t.monthlyFeedbackHistory.map((monthlyFeedback) => (
+                <div className="detail-block" key={monthlyFeedback.period}>
+                  <div className="detail-section-heading">
+                    <h2>月度评分与反馈</h2>
+                    <span>{monthlyFeedback.period}</span>
+                  </div>
+                  <div className="monthly-score-grid">
+                    {ratingDims.map((dimension) => (
+                      <div className="monthly-score-item" key={dimension.key}>
+                        <span>{dimension.label}</span>
+                        <strong>
+                          {ratingScore(
+                            monthlyFeedback.ratings[dimension.key],
+                          )}
+                        </strong>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="monthly-score-note">
+                    该月共 {monthlyFeedback.responseCount} 份有效评分；作为独立月度记录追加，不覆盖历史累计评分。
+                  </p>
+                  {(monthlyFeedback.studentThemes.length > 0 ||
+                    monthlyFeedback.parentThemes.length > 0) && (
                     <div className="monthly-feedback-grid">
-                      {t.monthlyFeedback.studentThemes.length > 0 && (
+                      {monthlyFeedback.studentThemes.length > 0 && (
                         <section className="monthly-feedback-group">
                           <header>
                             <strong>学生反馈</strong>
                             <span>
-                              {t.monthlyFeedback.studentFeedbackCount} 条
+                              {monthlyFeedback.studentFeedbackCount} 条
                             </span>
                           </header>
                           <ul>
-                            {t.monthlyFeedback.studentThemes.map((theme) => (
+                            {monthlyFeedback.studentThemes.map((theme) => (
                               <li key={theme}>{theme}</li>
                             ))}
                           </ul>
                         </section>
                       )}
-                      {t.monthlyFeedback.parentThemes.length > 0 && (
+                      {monthlyFeedback.parentThemes.length > 0 && (
                         <section className="monthly-feedback-group">
                           <header>
                             <strong>家长反馈</strong>
                             <span>
-                              {t.monthlyFeedback.parentFeedbackCount} 条
+                              {monthlyFeedback.parentFeedbackCount} 条
                             </span>
                           </header>
                           <ul>
-                            {t.monthlyFeedback.parentThemes.map((theme) => (
+                            {monthlyFeedback.parentThemes.map((theme) => (
                               <li key={theme}>{theme}</li>
                             ))}
                           </ul>
                         </section>
                       )}
                     </div>
-                    <p className="monthly-feedback-note">
-                      摘要来自匿名问卷中的结构化改进反馈；无效自由文本、玩笑内容与个人信息不会公开。
-                    </p>
-                  </div>
-                )}
+                  )}
+                  <p className="monthly-feedback-note">
+                    摘要来自匿名问卷中的结构化改进反馈；无效自由文本、玩笑内容与个人信息不会公开。
+                  </p>
+                </div>
+              ))}
 
               <div className="detail-block">
                 <div className="detail-section-heading">
