@@ -1,5 +1,5 @@
 import { teacherFeedbackByName } from "./teacher-feedback.generated";
-import { teacherMonthlyFeedbackByName } from "./teacher-monthly-feedback.generated";
+import { teacherMonthlyFeedbackHistoryByName } from "./teacher-monthly-feedback.generated";
 import type { TeacherPreferenceSignal } from "./teacher-feedback";
 
 export type Subject = "数学" | "物理" | "化学" | "经济" | "英语";
@@ -53,12 +53,12 @@ export interface Teacher {
   education: string;
   /** 教学特点（详情页） */
   style: string;
-  /** 三项学员评分 1-5，优先使用最新月度反馈数据。 */
+  /** 三项历史累计评分 1-5。 */
   ratings: TeacherRatings;
-  /** 三项评分的精确平均值，用于排序。 */
+  /** 历史累计评分的精确平均值，用于排序。 */
   overall: number;
-  /** 最新月度评分与结构化反馈摘要。 */
-  monthlyFeedback: TeacherMonthlyFeedback | null;
+  /** 按月份倒序排列的评分与结构化反馈记录，不覆盖历史累计评分。 */
+  monthlyFeedbackHistory: TeacherMonthlyFeedback[];
   /** 上课风格：0 偏风趣幽默，100 偏严肃认真。 */
   classStyle: TeacherPreferenceSignal | null;
   /** 教学节奏：0 偏高效紧凑，100 偏稳扎稳打。 */
@@ -74,7 +74,7 @@ type TeacherProfile = Omit<
   | "classStyle"
   | "teachingPace"
   | "classroomInteraction"
-  | "monthlyFeedback"
+  | "monthlyFeedbackHistory"
 >;
 
 /** 网站角标四舍五入至一位小数，排序仍使用精确总分。 */
@@ -82,7 +82,7 @@ export function avgScore(t: Teacher): string {
   return t.overall.toFixed(1);
 }
 
-/** 指标保留两位小数，避免抹去月度反馈中的有效差异。 */
+/** 指标保留两位小数，避免抹去反馈中的有效差异。 */
 export function ratingScore(value: number): string {
   return value.toFixed(2);
 }
@@ -97,7 +97,8 @@ export function compareTeachers(a: Teacher, b: Teacher): number {
 
 /**
  * 菁仕名师团队。数据来源于教研整理的「老师卡片」。
- * 评分优先使用最新月度汇总，静态评分仅作为数据缺失时的回退值。
+ * 历史累计评分来源：teacher_scores.csv。
+ * 月度评分以独立记录追加，仅用于详情展示，不覆盖累计评分或排序。
  */
 const teacherProfiles = [
   {
@@ -383,12 +384,11 @@ const teacherProfiles = [
 export const teachers: Teacher[] = teacherProfiles
   .map((teacher) => {
     const feedback = teacherFeedbackByName[teacher.name];
-    const monthlyFeedback = teacherMonthlyFeedbackByName[teacher.name] ?? null;
+    const monthlyFeedbackHistory =
+      teacherMonthlyFeedbackHistoryByName[teacher.name] ?? [];
     return {
       ...teacher,
-      ratings: monthlyFeedback?.ratings ?? teacher.ratings,
-      overall: monthlyFeedback?.overall ?? teacher.overall,
-      monthlyFeedback,
+      monthlyFeedbackHistory,
       classStyle: feedback?.classStyle ?? null,
       teachingPace: feedback?.teachingPace ?? null,
       classroomInteraction: feedback?.classroomInteraction ?? null,

@@ -149,7 +149,36 @@ const summaryRowsByTeacher = new Map(
   rows.map((row) => [normalizeTeacherName(row[columns.teacher]), row]),
 );
 
-const generatedData = Object.fromEntries(
+const outputPath = path.join(
+  projectRoot,
+  "src/data/teacher-monthly-feedback.generated.ts",
+);
+
+function readExistingHistory() {
+  if (!fs.existsSync(outputPath)) return {};
+  const source = fs.readFileSync(outputPath, "utf8");
+  const match = source.match(
+    /export const teacherMonthlyFeedback(?:History)?ByName[\s\S]*?=\s*(\{[\s\S]*\});\s*$/,
+  );
+  if (!match) {
+    throw new Error(`无法读取已有月度记录：${path.relative(projectRoot, outputPath)}`);
+  }
+  const parsed = JSON.parse(match[1]);
+  return Object.fromEntries(
+    Object.entries(parsed).map(([teacher, records]) => [
+      teacher,
+      Array.isArray(records) ? records : [records],
+    ]),
+  );
+}
+
+function periodSortValue(value) {
+  const match = String(value).match(/(\d{4})\D+(\d{1,2})/);
+  return match ? Number(match[1]) * 100 + Number(match[2]) : 0;
+}
+
+const existingHistory = readExistingHistory();
+const generatedPeriodData = Object.fromEntries(
   publicTeacherNames.map((teacher) => {
     const row = summaryRowsByTeacher.get(teacher);
     if (!row) throw new Error(`月度汇总中缺少官网老师：${teacher}`);
@@ -222,6 +251,18 @@ const generatedData = Object.fromEntries(
   }),
 );
 
+const generatedData = Object.fromEntries(
+  publicTeacherNames.map((teacher) => {
+    const records = [
+      ...(existingHistory[teacher] ?? []).filter(
+        (record) => record.period !== period,
+      ),
+      generatedPeriodData[teacher],
+    ].sort((a, b) => periodSortValue(b.period) - periodSortValue(a.period));
+    return [teacher, records];
+  }),
+);
+
 const output = `/**
  * 此文件由 scripts/generate-teacher-monthly-feedback.mjs 自动生成。
  * 数据源：${path.basename(sourcePath)}（${period}）。
@@ -229,16 +270,12 @@ const output = `/**
  */
 import type { TeacherMonthlyFeedback } from "./teachers";
 
-export const teacherMonthlyFeedbackByName: Record<string, TeacherMonthlyFeedback> =
+export const teacherMonthlyFeedbackHistoryByName: Record<string, TeacherMonthlyFeedback[]> =
   ${JSON.stringify(generatedData, null, 2)};
 `;
 
-const outputPath = path.join(
-  projectRoot,
-  "src/data/teacher-monthly-feedback.generated.ts",
-);
 fs.writeFileSync(outputPath, output);
 
 console.log(
-  `已生成 ${path.relative(projectRoot, outputPath)}：${publicTeacherNames.length} 位官网老师，数据期 ${period}。`,
+  `已生成 ${path.relative(projectRoot, outputPath)}：${publicTeacherNames.length} 位官网老师，追加数据期 ${period}。`,
 );

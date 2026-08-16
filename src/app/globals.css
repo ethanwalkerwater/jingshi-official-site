@@ -1329,6 +1329,36 @@ button {
   display: grid;
   gap: 12px;
 }
+.monthly-score-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.monthly-score-item {
+  display: grid;
+  gap: 5px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--card);
+}
+.monthly-score-item span {
+  color: var(--ink-dim);
+  font-size: 10px;
+  line-height: 1.45;
+}
+.monthly-score-item strong {
+  color: var(--gold-dark);
+  font-size: 18px;
+  font-weight: 800;
+}
+.monthly-score-note {
+  margin-bottom: 12px;
+  color: var(--ink-dim) !important;
+  font-size: 11px !important;
+  line-height: 1.65 !important;
+}
 .monthly-feedback-group {
   padding: 16px;
   border: 1px solid var(--line);
