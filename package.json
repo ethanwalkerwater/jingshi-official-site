@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "data:feedback": "node scripts/generate-teacher-feedback.mjs",
+    "data:monthly": "node scripts/generate-teacher-monthly-feedback.mjs",
     "data:avatars": "node scripts/download-review-avatars.mjs"
   },
   "dependencies": {

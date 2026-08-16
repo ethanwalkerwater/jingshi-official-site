@@ -1,4 +1,5 @@
 import { teacherFeedbackByName } from "./teacher-feedback.generated";
+import { teacherMonthlyFeedbackByName } from "./teacher-monthly-feedback.generated";
 import type { TeacherPreferenceSignal } from "./teacher-feedback";
 
 export type Subject = "数学" | "物理" | "化学" | "经济" | "英语";
@@ -10,6 +11,27 @@ export interface TeacherRatings {
   responsibility: number;
   /** 个人魅力 1-5 */
   charisma: number;
+}
+
+export interface TeacherMonthlyFeedback {
+  /** 数据所属月份。 */
+  period: string;
+  /** 三项评分共同使用的有效样本数。 */
+  responseCount: number;
+  /** 有效反馈覆盖率，范围 0-1。 */
+  coverageRate: number;
+  /** 匹配到该老师的学生文字反馈数。 */
+  studentFeedbackCount: number;
+  /** 匹配到该老师的家长文字反馈数。 */
+  parentFeedbackCount: number;
+  /** 本月三项评分。 */
+  ratings: TeacherRatings;
+  /** 本月三项评分的精确平均值。 */
+  overall: number;
+  /** 从结构化学生反馈中提炼的公开主题。 */
+  studentThemes: string[];
+  /** 从结构化家长反馈中提炼的公开主题。 */
+  parentThemes: string[];
 }
 
 export interface Teacher {
@@ -31,10 +53,12 @@ export interface Teacher {
   education: string;
   /** 教学特点（详情页） */
   style: string;
-  /** 三项学员评分 1-5，来自累计反馈数据 */
+  /** 三项学员评分 1-5，优先使用最新月度反馈数据。 */
   ratings: TeacherRatings;
-  /** 累计反馈总评分，保留 CSV 中的三位小数精度 */
+  /** 三项评分的精确平均值，用于排序。 */
   overall: number;
+  /** 最新月度评分与结构化反馈摘要。 */
+  monthlyFeedback: TeacherMonthlyFeedback | null;
   /** 上课风格：0 偏风趣幽默，100 偏严肃认真。 */
   classStyle: TeacherPreferenceSignal | null;
   /** 教学节奏：0 偏高效紧凑，100 偏稳扎稳打。 */
@@ -47,7 +71,10 @@ export interface Teacher {
 
 type TeacherProfile = Omit<
   Teacher,
-  "classStyle" | "teachingPace" | "classroomInteraction"
+  | "classStyle"
+  | "teachingPace"
+  | "classroomInteraction"
+  | "monthlyFeedback"
 >;
 
 /** 网站角标四舍五入至一位小数，排序仍使用精确总分。 */
@@ -55,7 +82,7 @@ export function avgScore(t: Teacher): string {
   return t.overall.toFixed(1);
 }
 
-/** 指标保留两位小数，避免抹去累计反馈中的有效差异。 */
+/** 指标保留两位小数，避免抹去月度反馈中的有效差异。 */
 export function ratingScore(value: number): string {
   return value.toFixed(2);
 }
@@ -70,7 +97,7 @@ export function compareTeachers(a: Teacher, b: Teacher): number {
 
 /**
  * 菁仕名师团队。数据来源于教研整理的「老师卡片」。
- * 评分来源：teacher_scores.csv 累计学员与家长反馈。
+ * 评分优先使用最新月度汇总，静态评分仅作为数据缺失时的回退值。
  */
 const teacherProfiles = [
   {
@@ -356,8 +383,12 @@ const teacherProfiles = [
 export const teachers: Teacher[] = teacherProfiles
   .map((teacher) => {
     const feedback = teacherFeedbackByName[teacher.name];
+    const monthlyFeedback = teacherMonthlyFeedbackByName[teacher.name] ?? null;
     return {
       ...teacher,
+      ratings: monthlyFeedback?.ratings ?? teacher.ratings,
+      overall: monthlyFeedback?.overall ?? teacher.overall,
+      monthlyFeedback,
       classStyle: feedback?.classStyle ?? null,
       teachingPace: feedback?.teachingPace ?? null,
       classroomInteraction: feedback?.classroomInteraction ?? null,
