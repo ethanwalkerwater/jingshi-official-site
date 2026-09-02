@@ -637,6 +637,13 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
       }
     ]
   },
+  "高志勇": {
+    "classStyle": null,
+    "teachingPace": null,
+    "classroomInteraction": null,
+    "reviewCount": 0,
+    "reviews": []
+  },
   "李寅鑫": {
     "classStyle": {
       "position": 100,
@@ -1209,6 +1216,13 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
         "avatar": "/avatars/thumbs/16.svg"
       }
     ]
+  },
+  "刘峥": {
+    "classStyle": null,
+    "teachingPace": null,
+    "classroomInteraction": null,
+    "reviewCount": 0,
+    "reviews": []
   },
   "王储君": {
     "classStyle": {

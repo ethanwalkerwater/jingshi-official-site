@@ -5,11 +5,11 @@ export type Subject = "数学" | "物理" | "化学" | "经济" | "英语";
 
 export interface TeacherRatings {
   /** 学习提升效果 1-5 */
-  improvement: number;
+  improvement: number | null;
   /** 责任心与服务态度 1-5 */
-  responsibility: number;
+  responsibility: number | null;
   /** 个人魅力 1-5 */
-  charisma: number;
+  charisma: number | null;
 }
 
 export interface Teacher {
@@ -33,8 +33,8 @@ export interface Teacher {
   style: string;
   /** 三项学员评分 1-5，来自累计反馈数据 */
   ratings: TeacherRatings;
-  /** 累计反馈总评分，保留 CSV 中的三位小数精度 */
-  overall: number;
+  /** 累计反馈总评分，保留 CSV 中的三位小数精度；样本不足时为空 */
+  overall: number | null;
   /** 上课风格：0 偏风趣幽默，100 偏严肃认真。 */
   classStyle: TeacherPreferenceSignal | null;
   /** 教学节奏：0 偏高效紧凑，100 偏稳扎稳打。 */
@@ -51,19 +51,21 @@ type TeacherProfile = Omit<
 >;
 
 /** 网站角标四舍五入至一位小数，排序仍使用精确总分。 */
-export function avgScore(t: Teacher): string {
-  return t.overall.toFixed(1);
+export function avgScore(t: Teacher): string | null {
+  return t.overall === null ? null : t.overall.toFixed(1);
 }
 
 /** 指标保留两位小数，避免抹去累计反馈中的有效差异。 */
-export function ratingScore(value: number): string {
-  return value.toFixed(2);
+export function ratingScore(value: number | null): string {
+  return value === null ? "—" : value.toFixed(2);
 }
 
-/** 教师展示顺序：精确总分降序；同分按姓名升序。 */
+/** 教师展示顺序：有评分者按精确总分降序；暂无评分者置后；同分按姓名升序。 */
 export function compareTeachers(a: Teacher, b: Teacher): number {
+  if (a.overall === null && b.overall !== null) return 1;
+  if (a.overall !== null && b.overall === null) return -1;
   return (
-    b.overall - a.overall ||
+    (b.overall ?? 0) - (a.overall ?? 0) ||
     a.name.localeCompare(b.name, "zh-CN", { sensitivity: "base" })
   );
 }
@@ -189,6 +191,20 @@ const teacherProfiles = [
       "从实证主义与物理本质规律出发讲解，帮助学生理解原理、避免机械刷题；强调「理解 + 方法」，以高效路径实现成绩与能力双提升；因材施教，激发自主学习与内驱力；紧贴考纲，系统梳理考点与得分关键。逻辑严谨、体系清晰。",
     ratings: { improvement: 4.767, responsibility: 4.985, charisma: 4.731 },
     overall: 4.828,
+  },
+  {
+    name: "高志勇",
+    gender: "男",
+    subject: "物理",
+    photo: "/teachers/物理-高志勇.webp",
+    degree: "上海交通大学物理学硕士",
+    hours: "十年国际课程教学经验",
+    courses: "IGCSE · A-Level · AP · 竞赛物理 · ESAT",
+    education: "上海交通大学物理学硕士，持高中物理教师资格证。",
+    style:
+      "十年国际课程教学经验，授课风格逻辑严谨、亲切耐心，注重因材施教和探究式学习；B 站知识点视频讲解深受欢迎，并制作物理知识点模拟程序网站辅助学生学习；曾任职上海赫贤、万科双语学校。",
+    ratings: { improvement: null, responsibility: null, charisma: null },
+    overall: null,
   },
   {
     name: "李寅鑫",
@@ -322,6 +338,22 @@ const teacherProfiles = [
     ratings: { improvement: 4.821, responsibility: 4.898, charisma: 4.875 },
     overall: 4.865,
     featured: true,
+  },
+  {
+    name: "刘峥",
+    gender: "男",
+    subject: "英语",
+    photo: "/teachers/英语-刘峥.webp",
+    degree: "加拿大女王大学 MBA",
+    hours: "8 年英语全赛道教学",
+    courses:
+      "雅思全科 · 托福 · 学术英语 EAP · 商务英语 · 高阶演讲辩论 · 海外院校升学综合备考",
+    education:
+      "加拿大女王大学工商管理加速硕士（MBA）、生命科学理学学士（辅修心理学），持剑桥大学官方英语教学资质 CELTA、DELTA（模块 1、3）。",
+    style:
+      "深耕英语教学 8 年，覆盖学术英语、国际标准化考试、青少年英语及商务英语；曾任雅思官方主考官、高校专任讲师与教学学术总监，并长期负责国际生入学面试与综合能力测评。中英双语流利，熟悉中西思维差异，能够针对不同年龄和基础分层定制教学方案；结合官方阅卷评审和招生测评经验拆解评分标准，并通过自研「价值棱镜」思维训练体系，培养批判性思考及高阶书面与口头表达能力。适合青少年、15–18 岁国际学校学生及成年商务从业者。",
+    ratings: { improvement: null, responsibility: null, charisma: null },
+    overall: null,
   },
   {
     name: "王储君",
