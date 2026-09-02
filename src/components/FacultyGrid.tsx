@@ -39,8 +39,23 @@ const sortLabels: Record<
 function sortScore(
   teacher: (typeof teachers)[number],
   sortBy: SortKey
-): number {
+): number | null {
   return sortBy === "overall" ? teacher.overall : teacher.ratings[sortBy];
+}
+
+function compareByScore(
+  a: (typeof teachers)[number],
+  b: (typeof teachers)[number],
+  sortBy: SortKey
+): number {
+  const aScore = sortScore(a, sortBy);
+  const bScore = sortScore(b, sortBy);
+  if (aScore === null && bScore !== null) return 1;
+  if (aScore !== null && bScore === null) return -1;
+  if (aScore !== null && bScore !== null && aScore !== bScore) {
+    return bScore - aScore;
+  }
+  return compareTeachers(a, b);
 }
 
 interface Group {
@@ -83,11 +98,7 @@ export default function FacultyGrid() {
         (gender === "全部" || teacher.gender === gender)
     );
 
-    return [...filtered].sort(
-      (a, b) =>
-        sortScore(b, sortBy) - sortScore(a, sortBy) ||
-        compareTeachers(a, b)
-    );
+    return [...filtered].sort((a, b) => compareByScore(a, b, sortBy));
   }, [subject, sortBy, gender]);
 
   const groups: Group[] = [

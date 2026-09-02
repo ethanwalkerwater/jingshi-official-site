@@ -121,6 +121,8 @@ export default async function TeacherDetail({
   const feedback = teacherFeedbackByName[t.name];
   const reviews = feedback?.reviews ?? [];
   const reviewCount = feedback?.reviewCount ?? 0;
+  const overallScore = avgScore(t);
+  const hasRatings = Object.values(t.ratings).some((value) => value !== null);
   const preferenceCount = preferenceAxes.filter(
     (axis) => t[axis.key] !== null,
   ).length;
@@ -143,8 +145,8 @@ export default async function TeacherDetail({
                   role="img"
                   aria-label={`${t.name}老师`}
                 >
-                  <span className="detail-score">
-                    <span className="s">{avgScore(t)}</span>
+                  <span className={`detail-score${overallScore === null ? " no-score" : ""}`}>
+                    <span className="s">{overallScore ?? "暂无"}</span>
                     <span className="l">综合评分</span>
                   </span>
                 </div>
@@ -261,13 +263,17 @@ export default async function TeacherDetail({
                         <span className="rl">{d.label}</span>
                         <span className="rv">{ratingScore(v)}</span>
                         <div className="rating-bar">
-                          <span style={{ width: `${(v / 5) * 100}%` }} />
+                          <span style={{ width: `${v === null ? 0 : (v / 5) * 100}%` }} />
                         </div>
                       </div>
                     );
                   })}
                 </div>
-                <p className="rating-note">评分为 1-5 分制，综合自学员与家长反馈。</p>
+                <p className="rating-note">
+                  {hasRatings
+                    ? "评分为 1-5 分制，综合自学员与家长反馈。"
+                    : "当前有效样本不足，积累更多学员与家长反馈后展示评分。"}
+                </p>
               </div>
 
               <div className="detail-block">
@@ -285,7 +291,9 @@ export default async function TeacherDetail({
       <div className="detail-mobile-booking">
         <div>
           <strong>{t.name}老师</strong>
-          <span>{t.subject} · {avgScore(t)} 综合评分</span>
+          <span>
+            {t.subject} · {overallScore === null ? "暂无评分" : `${overallScore} 综合评分`}
+          </span>
         </div>
         <BookingButton className="btn btn-gold">预约试听</BookingButton>
       </div>

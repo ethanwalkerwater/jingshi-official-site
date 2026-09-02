@@ -25,10 +25,10 @@ PATH=/opt/homebrew/bin:$PATH npm run dev      # http://localhost:3000
  ├─ ⑤ 预约转化区
  └─ 页脚（校区低调收纳 + 联系方式）
 
-名师团队 /faculty
+名师团队 /teachers
  ├─ 头图 + 简介
  ├─ 学科筛选（全部 / 数学 / 物理 / 化学 / 经济 / 英语）
- └─ 全部 20 位老师卡片
+ └─ 教师卡片与详情页（由教师数据自动生成）
 
 全站常驻：顶栏「预约试听」高亮按钮 → 任意位置弹出预约表单。
 ```
@@ -41,11 +41,11 @@ PATH=/opt/homebrew/bin:$PATH npm run dev      # http://localhost:3000
 | --- | --- |
 | [`src/data/site.ts`](src/data/site.ts) | 品牌名/标语、关键数据、教育理念四支柱、校区、联系方式、**全站配图地址** |
 | [`src/data/courses.ts`](src/data/courses.ts) | 四大课程板块及其课程清单 |
-| [`src/data/teachers.ts`](src/data/teachers.ts) | 20 位老师资料；加 `featured: true` 即在首页精选展示 |
+| [`src/data/teachers.ts`](src/data/teachers.ts) | 教师资料；加 `featured: true` 即参与首页精选展示 |
 
 - **换图片**：把图片放到 `public/images/` 下，再到 `site.ts` 的 `images` 里改对应 url（如 `"/images/hero.jpg"`）。当前用的是 Unsplash 占位图。
 - **换 logo**：`public/logo.png` 目前是品牌规范图，未直接使用；顶栏现用「KA」文字标识。有干净 logo 后可替换并在 Header 启用。
-- **老师头像**：放在 `public/teachers/`，命名「学科-姓名.png」，与 `teachers.ts` 里的 `photo` 字段对应。
+- **新增老师**：资料、评分、头像、分享图、反馈生成和发布步骤见 [`docs/新增教师上官网-SOP.md`](docs/新增教师上官网-SOP.md)。
 
 ## 待补充的信息（TODO）
 

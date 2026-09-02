@@ -44,7 +44,7 @@ export default function TeacherCard({
   const metricScore =
     scoreMetric === "overall"
       ? null
-      : teacher.ratings[scoreMetric].toFixed(1);
+      : teacher.ratings[scoreMetric]?.toFixed(1) ?? "暂无";
   const courses = teacher.courses
     .split(/\s*[·/]\s*/)
     .map((course) => course.trim())
@@ -70,12 +70,12 @@ export default function TeacherCard({
           height={827}
         />
         <span
-          className="teacher-badge"
-          aria-label={`综合评分 ${overallScore}`}
-          title={`综合评分 ${overallScore}`}
+          className={`teacher-badge${overallScore === null ? " no-score" : ""}`}
+          aria-label={overallScore === null ? "暂无综合评分" : `综合评分 ${overallScore}`}
+          title={overallScore === null ? "暂无综合评分" : `综合评分 ${overallScore}`}
         >
-          <IconStar />
-          {overallScore}
+          {overallScore !== null && <IconStar />}
+          {overallScore ?? "暂无评分"}
         </span>
         {scoreMetric !== "overall" && metricScore && (
           <span

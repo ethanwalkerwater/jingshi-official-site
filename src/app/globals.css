@@ -393,6 +393,11 @@ button {
   height: 12px;
   color: var(--gold);
 }
+.teacher-badge.no-score {
+  color: var(--ink-dim);
+  background: rgba(255, 255, 255, 0.9);
+  font-weight: 650;
+}
 .teacher-metric-badge {
   position: absolute;
   bottom: 10px;
@@ -1221,6 +1226,11 @@ button {
   font-size: 9px;
   letter-spacing: 0.06em;
   opacity: 0.9;
+}
+.detail-photo .detail-score.no-score {
+  background: rgba(24, 39, 65, 0.72);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  backdrop-filter: blur(10px) saturate(120%);
 }
 .detail-photo-booking {
   display: none;
