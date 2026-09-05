@@ -1224,6 +1224,13 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
     "reviewCount": 0,
     "reviews": []
   },
+  "Jack Hou（侯东淳）": {
+    "classStyle": null,
+    "teachingPace": null,
+    "classroomInteraction": null,
+    "reviewCount": 0,
+    "reviews": []
+  },
   "王储君": {
     "classStyle": {
       "position": 5,
