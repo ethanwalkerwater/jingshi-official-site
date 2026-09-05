@@ -41,6 +41,21 @@ const teacherAliases = new Map([
   ["ValentinaLin", "Valentina Lin"],
 ]);
 
+// 经人工审核不适合公开的历史文字评价；对应评分与偏向数据仍参与统计。
+const excludedHistoricalReviewIds = new Set([
+  "612",
+  "613",
+  "615",
+  "616",
+  "617",
+  "618",
+  "619",
+  "978",
+  "979",
+  "980",
+  "983",
+]);
+
 const axisDefinitions = {
   classStyle: {
     header: "【学生】上课风格",
@@ -337,7 +352,10 @@ for (const row of rows) {
   }
 
   const content = redactReview(row[columns.review]);
-  if (content.length < 4) continue;
+  const sourceReviewId = String(row[columns.id] ?? "").trim();
+  if (content.length < 4 || excludedHistoricalReviewIds.has(sourceReviewId)) {
+    continue;
+  }
 
   const studentName = String(row[columns.student] ?? "").trim();
   const submittedAt = String(row[columns.submittedAt] ?? "").trim();

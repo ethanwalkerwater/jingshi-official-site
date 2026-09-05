@@ -205,7 +205,7 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
       "position": 68,
       "responseCount": 28
     },
-    "reviewCount": 6,
+    "reviewCount": 5,
     "reviews": [
       {
         "id": "6a736fd76f6d",
@@ -230,14 +230,6 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
         "date": "2026年4月",
         "content": "张老师上课严肃认真，对于我懒散不专注粗心的坏毛病都有在督促我改正，讲课也非常生动有趣，很好的诠释每一个知识点，让我对数学也多了一些兴趣。虽然上课严肃脸真的给我吓得不行……但还是很喜欢张老师的课",
         "avatar": "/avatars/thumbs/14.svg"
-      },
-      {
-        "id": "e6569aa0b5bb",
-        "author": "L 同学",
-        "reviewerType": "student",
-        "date": "2026年3月",
-        "content": "zsj什么是后回来带我quq 课这么多吗？zsj zsj zsj zsj zsj zsj zsj zsj zsj zsj zsj zsj zsj",
-        "avatar": "/avatars/thumbs/05.svg"
       },
       {
         "id": "7d7e1a8e77a1",
@@ -457,7 +449,7 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
       "position": 51,
       "responseCount": 45
     },
-    "reviewCount": 20,
+    "reviewCount": 18,
     "reviews": [
       {
         "id": "4539975b9dfc",
@@ -466,14 +458,6 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
         "date": "2026年5月",
         "content": "老师很会根据孩子的兴趣点来引导孩子，至少孩子会和老师有沟通，愿意表达自己的想法，老师也很耐心",
         "avatar": "/avatars/thumbs/06.svg"
-      },
-      {
-        "id": "1f561c6812a8",
-        "author": "L 同学",
-        "reviewerType": "student",
-        "date": "2026年5月",
-        "content": "曦曦 超爱叔你 爸爸你猜曦曦在干什么 吃吃吃",
-        "avatar": "/avatars/thumbs/05.svg"
       },
       {
         "id": "9ce908349241",
@@ -530,14 +514,6 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
         "date": "2026年4月",
         "content": "讲课很认真",
         "avatar": "/avatars/thumbs/22.svg"
-      },
-      {
-        "id": "937425a233d8",
-        "author": "L 同学",
-        "reviewerType": "student",
-        "date": "2026年3月",
-        "content": "350234 350235 汤朔牛福 真的汤某的牢十照真的想被入打了 建议重拍",
-        "avatar": "/avatars/thumbs/05.svg"
       },
       {
         "id": "2c813bee84fc",
@@ -682,7 +658,7 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
       "position": 55,
       "responseCount": 73
     },
-    "reviewCount": 20,
+    "reviewCount": 18,
     "reviews": [
       {
         "id": "63f87fc8a5d9",
@@ -691,14 +667,6 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
         "date": "2026年6月",
         "content": "约课的时候问要上什么，老师至少备一点课",
         "avatar": "/avatars/thumbs/12.svg"
-      },
-      {
-        "id": "84491c5dd2ed",
-        "author": "L 同学",
-        "reviewerType": "student",
-        "date": "2026年5月",
-        "content": "朱老师nb 崔牢🔟 18码了trim 臭neck hert 碧池",
-        "avatar": "/avatars/thumbs/05.svg"
       },
       {
         "id": "8f87f851c4fa",
@@ -739,14 +707,6 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
         "date": "2026年4月",
         "content": "给我写很多笔记教课认真",
         "avatar": "/avatars/thumbs/22.svg"
-      },
-      {
-        "id": "65b7e008cd20",
-        "author": "L 同学",
-        "reviewerType": "student",
-        "date": "2026年3月",
-        "content": "sm宝上海😡",
-        "avatar": "/avatars/thumbs/05.svg"
       },
       {
         "id": "7abef9c0f222",
@@ -955,16 +915,8 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
       "position": 56,
       "responseCount": 43
     },
-    "reviewCount": 10,
+    "reviewCount": 7,
     "reviews": [
-      {
-        "id": "f735585fae16",
-        "author": "L 同学",
-        "reviewerType": "student",
-        "date": "2026年5月",
-        "content": "yellow 黄sir",
-        "avatar": "/avatars/thumbs/05.svg"
-      },
       {
         "id": "f67ab19a485c",
         "author": "S 同学",
@@ -972,22 +924,6 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
         "date": "2026年4月",
         "content": "都很满意",
         "avatar": "/avatars/thumbs/08.svg"
-      },
-      {
-        "id": "5d8643209cd2",
-        "author": "L 同学",
-        "reviewerType": "student",
-        "date": "2026年3月",
-        "content": "黄sir",
-        "avatar": "/avatars/thumbs/05.svg"
-      },
-      {
-        "id": "0679eaa2ba35",
-        "author": "L 同学",
-        "reviewerType": "student",
-        "date": "2026年3月",
-        "content": "黄sir666",
-        "avatar": "/avatars/thumbs/05.svg"
       },
       {
         "id": "84bafc7a3d17",
@@ -1052,7 +988,7 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
       "position": 68,
       "responseCount": 47
     },
-    "reviewCount": 14,
+    "reviewCount": 12,
     "reviews": [
       {
         "id": "b3a48d125933",
@@ -1087,28 +1023,12 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
         "avatar": "/avatars/thumbs/20.svg"
       },
       {
-        "id": "c21391d41b4d",
-        "author": "L 同学",
-        "reviewerType": "student",
-        "date": "2026年5月",
-        "content": "trim 4️⃣牢冯了",
-        "avatar": "/avatars/thumbs/05.svg"
-      },
-      {
         "id": "8ef7887f7e0b",
         "author": "G 同学",
         "reviewerType": "student",
         "date": "2026年4月",
         "content": "想办法激励我们",
         "avatar": "/avatars/thumbs/23.svg"
-      },
-      {
-        "id": "472dfadaada5",
-        "author": "L 同学",
-        "reviewerType": "student",
-        "date": "2026年3月",
-        "content": "two lucas",
-        "avatar": "/avatars/thumbs/05.svg"
       },
       {
         "id": "f78c203484d9",
@@ -1325,7 +1245,7 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
       "position": 77,
       "responseCount": 22
     },
-    "reviewCount": 5,
+    "reviewCount": 4,
     "reviews": [
       {
         "id": "a85516e7cdcb",
@@ -1342,14 +1262,6 @@ export const teacherFeedbackByName: Record<string, TeacherFeedbackProfile> =
         "date": "2026年4月",
         "content": "反馈及时详细且能抓住重点。后续也可以给雨桐更多可以回溯的要求，让她执行得更有力度",
         "avatar": "/avatars/thumbs/10.svg"
-      },
-      {
-        "id": "071e1d0e2130",
-        "author": "L 同学",
-        "reviewerType": "student",
-        "date": "2026年3月",
-        "content": "阿巴阿巴",
-        "avatar": "/avatars/thumbs/05.svg"
       },
       {
         "id": "556d61af2f03",
