@@ -4,18 +4,44 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const sourcePath = path.resolve(process.argv[2] ?? process.env.FEEDBACK_CSV ?? "");
-const supplementalSourcePaths = process.argv.slice(3).map((value) => path.resolve(value));
+const cliArgs = process.argv.slice(2);
+const useExistingGenerated = cliArgs.includes("--from-generated");
+const replaceMonthsArgument = cliArgs.find((value) =>
+  value.startsWith("--replace-months="),
+);
+const positionalArgs = cliArgs.filter(
+  (value) =>
+    value !== "--from-generated" && !value.startsWith("--replace-months="),
+);
+const sourcePath = useExistingGenerated
+  ? null
+  : path.resolve(positionalArgs[0] ?? process.env.FEEDBACK_CSV ?? "");
+const supplementalSourcePaths = (useExistingGenerated
+  ? positionalArgs
+  : positionalArgs.slice(1)
+).map((value) => path.resolve(value));
+const replaceDisplayMonths = new Set(
+  (replaceMonthsArgument?.split("=")[1] ?? "")
+    .split(",")
+    .map((value) => formatMonth(value))
+    .filter(Boolean),
+);
 
-if (!process.argv[2] && !process.env.FEEDBACK_CSV) {
+if (!useExistingGenerated && !positionalArgs[0] && !process.env.FEEDBACK_CSV) {
   console.error(
-    '用法：node scripts/generate-teacher-feedback.mjs "/absolute/path/to/feedback.csv" ["/absolute/path/to/respondent_detail.csv" ...]',
+    '用法：node scripts/generate-teacher-feedback.mjs "/absolute/path/to/feedback.csv" ["/absolute/path/to/respondent_detail.csv" ...]\n' +
+      '  或：node scripts/generate-teacher-feedback.mjs --from-generated --replace-months=YYYY-MM[,YYYY-MM] "/absolute/path/to/respondent_detail.csv" ...',
   );
   process.exit(1);
 }
 
-if (!fs.existsSync(sourcePath)) {
+if (sourcePath && !fs.existsSync(sourcePath)) {
   console.error(`找不到问卷文件：${sourcePath}`);
+  process.exit(1);
+}
+
+if (useExistingGenerated && replaceDisplayMonths.size === 0) {
+  console.error("--from-generated 模式必须用 --replace-months=YYYY-MM 指定要重建的月份。");
   process.exit(1);
 }
 
@@ -39,6 +65,7 @@ const teacherAliases = new Map([
   ["Valentina 林", "Valentina Lin"],
   ["Valentina林", "Valentina Lin"],
   ["ValentinaLin", "Valentina Lin"],
+  ["KevinLiu", "刘峥"],
 ]);
 
 // 经人工审核不适合公开的历史文字评价；对应评分与偏向数据仍参与统计。
@@ -174,7 +201,9 @@ const emptyFeedbackPattern =
 function normalizeSupplementalReview(value) {
   return String(value ?? "")
     .split(/\s*\|\s*/)
-    .map(redactReview)
+    .map((part) =>
+      redactReview(part).replace(/^(?:跟|和).{1,20}老师一样[，,]\s*/, ""),
+    )
     .filter((part) => part && !emptyFeedbackPattern.test(part))
     .join("；");
 }
@@ -187,6 +216,16 @@ function isPublishableSupplementalReview(content) {
   if (content.length < 6 || content.length > 280) return false;
   if (emptyFeedbackPattern.test(content)) return false;
   if (
+    /^(?:没啥建议)?挺好的[。！!？?]*$|^(?:已经)?很好了(?:，?没有需要提升的)?[。！!？?]*$/.test(
+      content,
+    )
+  ) {
+    return false;
+  }
+  if (/(?:问题主要在|最需要改进的是).*(?:本人|自己|学习态度)/.test(content)) {
+    return false;
+  }
+  if (
     /(?:1111|nigger|bitch|cnm|nbkls|sigma|CASN|生日快乐|橙汁|毯子|空调太冷|请我吃饭|维尼the pooh|夸爆|夸完|累死了|少给他排点课)/i.test(
       content,
     )
@@ -196,7 +235,7 @@ function isPublishableSupplementalReview(content) {
   const emojiCount = [...content].filter((char) => /\p{Extended_Pictographic}/u.test(char))
     .length;
   if (emojiCount > 4) return false;
-  return /(?:老师|教学|课程|课后|备课|课件|学习|提升|提高|成绩|规划|节奏|主动性|督促|考试|满意|讲得|挺好)/.test(
+  return /(?:老师|教学|课程|课后|备课|课件|学习|提升|提高|成绩|规划|节奏|主动性|督促|考试|满意|讲得|挺好|口语|训练|练习|专注|知识点|反馈|辅导|跟进|目标)/.test(
     content,
   );
 }
@@ -247,6 +286,13 @@ function timestamp(value) {
   return Number.isNaN(parsed) ? 0 : parsed;
 }
 
+function displayMonthTimestamp(value) {
+  const match = String(value ?? "").match(/(\d{4})年(\d{1,2})月/);
+  return match
+    ? Date.parse(`${match[1]}-${String(match[2]).padStart(2, "0")}-01`)
+    : 0;
+}
+
 function stableHash(value) {
   return createHash("sha256").update(value).digest("hex");
 }
@@ -259,7 +305,7 @@ function avatarPath(studentName) {
   return `/avatars/thumbs/${String(avatarNumber).padStart(2, "0")}.svg`;
 }
 
-const rows = parseCsv(fs.readFileSync(sourcePath, "utf8"));
+const rows = sourcePath ? parseCsv(fs.readFileSync(sourcePath, "utf8")) : [[]];
 const headers = rows.shift().map((value) =>
   String(value ?? "").replace(/^\uFEFF/, "").trim(),
 );
@@ -273,19 +319,21 @@ function requireColumn(header) {
   return index;
 }
 
-const columns = {
-  id: requireColumn("自动编号"),
-  submittedAt: requireColumn("提交时间"),
-  teacher: requireColumn("您本次评价的老师姓名："),
-  student: requireColumn("您的姓名："),
-  review: requireColumn("【推荐度】推荐原因"),
-  ...Object.fromEntries(
-    Object.entries(axisDefinitions).map(([key, definition]) => [
-      key,
-      requireColumn(definition.header),
-    ]),
-  ),
-};
+const columns = sourcePath
+  ? {
+      id: requireColumn("自动编号"),
+      submittedAt: requireColumn("提交时间"),
+      teacher: requireColumn("您本次评价的老师姓名："),
+      student: requireColumn("您的姓名："),
+      review: requireColumn("【推荐度】推荐原因"),
+      ...Object.fromEntries(
+        Object.entries(axisDefinitions).map(([key, definition]) => [
+          key,
+          requireColumn(definition.header),
+        ]),
+      ),
+    }
+  : {};
 
 const reviewerTypeColumn = columnIndex.get("你的身份");
 const reviewerSignalColumns = {
@@ -325,6 +373,18 @@ function detectSupplementalReviewerType(value) {
   return "anonymous";
 }
 
+const existingGeneratedPath = path.join(
+  projectRoot,
+  "src/data/teacher-feedback.generated.ts",
+);
+const existingGeneratedData = useExistingGenerated
+  ? JSON.parse(
+      fs
+        .readFileSync(existingGeneratedPath, "utf8")
+        .match(/=\s*(\{[\s\S]*\});\s*$/)?.[1] ?? "{}",
+    )
+  : {};
+
 const rawByTeacher = new Map(
   publicTeacherNames.map((teacher) => [
     teacher,
@@ -335,7 +395,20 @@ const rawByTeacher = new Map(
           { left: 0, right: 0 },
         ]),
       ),
-      reviews: [],
+      preservedAxes: existingGeneratedData[teacher]
+        ? {
+            classStyle: existingGeneratedData[teacher].classStyle,
+            teachingPace: existingGeneratedData[teacher].teachingPace,
+            classroomInteraction:
+              existingGeneratedData[teacher].classroomInteraction,
+          }
+        : null,
+      reviews: (existingGeneratedData[teacher]?.reviews ?? [])
+        .filter((review) => !replaceDisplayMonths.has(review.date))
+        .map((review) => ({
+          ...review,
+          sortTime: displayMonthTimestamp(review.date),
+        })),
     },
   ]),
 );
@@ -434,7 +507,14 @@ for (const supplementalSourcePath of supplementalSourcePaths) {
       studentName,
       normalizedStudentName,
       reviewerType,
-    );
+    )
+      .replace(
+        /^感觉孩子这个阶段比较难管，对于学习态度，自主性不是很高。/,
+        "",
+      )
+      .replace(/^我是希望/, "希望")
+      .replace(/(?:在)?这个难管的阶段，?/, "")
+      .replace(/保持她的学习状态/, "帮助孩子保持学习状态");
     if (!isPublishableSupplementalReview(content)) {
       supplementalRejectedCount += 1;
       continue;
@@ -445,13 +525,15 @@ for (const supplementalSourcePath of supplementalSourcePaths) {
         `${teacher}|monthly|${submittedAt}|${normalizedStudentName}|${content}`,
       ).slice(0, 12),
       author:
-        reviewerType === "anonymous"
-          ? "匿名反馈"
-          : anonymizeReviewer(studentName || normalizedStudentName, reviewerType),
+        reviewerType === "parent"
+          ? "学生家长"
+          : reviewerType === "student"
+            ? "匿名同学"
+            : "匿名反馈",
       reviewerType,
       date: formatMonth(submittedAt),
       content,
-      avatar: avatarPath(studentName || normalizedStudentName),
+      avatar: avatarPath(`${teacher}|${reviewerType}`),
       sortTime: timestamp(submittedAt),
     });
     supplementalPublishedCount += 1;
@@ -485,9 +567,13 @@ const generatedData = Object.fromEntries(
     return [
       teacher,
       {
-        classStyle: buildAxis(raw.axes.classStyle),
-        teachingPace: buildAxis(raw.axes.teachingPace),
-        classroomInteraction: buildAxis(raw.axes.classroomInteraction),
+        classStyle:
+          raw.preservedAxes?.classStyle ?? buildAxis(raw.axes.classStyle),
+        teachingPace:
+          raw.preservedAxes?.teachingPace ?? buildAxis(raw.axes.teachingPace),
+        classroomInteraction:
+          raw.preservedAxes?.classroomInteraction ??
+          buildAxis(raw.axes.classroomInteraction),
         reviewCount: reviews.length,
         reviews: reviews.map(({ sortTime: _, ...review }) => review),
       },

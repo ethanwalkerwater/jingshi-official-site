@@ -35,6 +35,8 @@ export interface Teacher {
   ratings: TeacherRatings;
   /** 累计反馈总评分，保留 CSV 中的三位小数精度；样本不足时为空 */
   overall: number | null;
+  /** 仅用于标记临时人工展示分；真实数据出现后必须连同此标记一起删除 */
+  ratingSource?: "temporary";
   /** 上课风格：0 偏风趣幽默，100 偏严肃认真。 */
   classStyle: TeacherPreferenceSignal | null;
   /** 教学节奏：0 偏高效紧凑，100 偏稳扎稳打。 */
@@ -86,8 +88,8 @@ const teacherProfiles = [
     education: "伦敦大学学院（UCL）以全 A* 成绩录取。",
     style:
       "因材施教，按学生基础制定个性化方案；循循善诱，激发数学兴趣与长期目标；紧贴最新大纲、真题与评分标准，注重细节与规范表达，擅长梳理知识体系与逻辑框架，实现稳定提分。IGCSE / A-Level 高比例 A / A*，竞赛获奖率 90%+。",
-    ratings: { improvement: 4.984, responsibility: 4.997, charisma: 4.993 },
-    overall: 4.992,
+    ratings: { improvement: 4.943, responsibility: 4.99, charisma: 4.938 },
+    overall: 4.957,
     featured: true,
   },
   {
@@ -101,8 +103,8 @@ const teacherProfiles = [
     education: "帝国理工学院数学系本科，英国留学生活 7 年。",
     style:
       "因材施教、寓教于乐，针对薄弱模块集中强化，对优势部分拓展提升；注重学习习惯与方法，引导建立长期稳定的学习体系；强调「理解 + 应用」，重视书面表达规范与多方法验算。熟悉英国数学体系与考试风格，可分享英国学习生活经验。",
-    ratings: { improvement: 4.884, responsibility: 4.935, charisma: 4.876 },
-    overall: 4.898,
+    ratings: { improvement: 4.882, responsibility: 4.92, charisma: 4.879 },
+    overall: 4.894,
   },
   {
     name: "张劭景",
@@ -115,8 +117,8 @@ const teacherProfiles = [
     education: "诺丁汉大学数学与应用数学本科、帝国理工学院应用数学硕士。",
     style:
       "课堂幽默生动、互动性强，善于激发兴趣，让学生在轻松氛围中理解数学逻辑与内在规律；注重基础能力与学习习惯培养，为高阶学习打牢地基；教学紧贴大纲，帮助形成标准化解题与满分答题习惯，强调「理解数学之美」，引导主动探索。",
-    ratings: { improvement: 4.911, responsibility: 4.962, charisma: 4.957 },
-    overall: 4.943,
+    ratings: { improvement: 4.891, responsibility: 4.968, charisma: 4.932 },
+    overall: 4.93,
     featured: true,
   },
   {
@@ -130,8 +132,8 @@ const teacherProfiles = [
     education: "牛津大学生物化学研究生、牛津大学工程系本科。",
     style:
       "从底层原理出发讲解推演，帮助学生建立完整的知识逻辑体系；注重知识点归纳与结构化整理，强化系统理解能力；因材施教，秉持「全人教育」理念，兼顾学习与长期发展，并提供学业规划与升学路径建议。学生录取覆盖世界顶尖高校。",
-    ratings: { improvement: 4.909, responsibility: 4.996, charisma: 4.987 },
-    overall: 4.964,
+    ratings: { improvement: 4.885, responsibility: 4.995, charisma: 4.982 },
+    overall: 4.954,
     featured: true,
   },
   {
@@ -145,8 +147,8 @@ const teacherProfiles = [
     education: "北京大学理论与应用力学学士、经济学学士（双学位），持教师资格证。",
     style:
       "强调理科知识体系构建，帮助学生形成完整逻辑框架与思维模型；注重启发式引导，提升思考力与主动性；因材施教、以点带面引导知识拓展；注重得分能力提升，能在短期内显著提高得分率。理工 + 经济双背景。",
-    ratings: { improvement: 4.781, responsibility: 4.974, charisma: 4.922 },
-    overall: 4.892,
+    ratings: { improvement: 4.758, responsibility: 4.97, charisma: 4.901 },
+    overall: 4.876,
   },
   {
     name: "李品轩",
@@ -159,7 +161,7 @@ const teacherProfiles = [
     education: "西交利物浦大学国际教育专业硕士、生物科学本科，持高中生物与英语教师资格证。",
     style:
       "逻辑清晰、富有亲和力，善于引导学生建立结构化思维；注重兴趣培养，激发主动学习；8 年以上一线国际课程教学，熟悉 IGCSE 与 A-Level 科学体系，擅长课程规划与学习路径设计、精准定位痛点。曾任教上海惠立、协和双语。",
-    ratings: { improvement: 4.992, responsibility: 5, charisma: 4.994 },
+    ratings: { improvement: 4.992, responsibility: 5, charisma: 4.995 },
     overall: 4.995,
     featured: true,
   },
@@ -174,8 +176,8 @@ const teacherProfiles = [
     education: "UCL 巴特莱特建筑学院理学硕士、东南大学建筑学学士（高考理科省前 0.43%）。",
     style:
       "强调体系化教学，依托系统思维帮助学生建立完整物理知识结构；独创「金字塔教学法」，以力学、电磁学、热力学三维网络构建可迁移认知；注重模型与原理理解，建立物理直觉，课堂兼具深度与启发，培养竞赛级解题能力。",
-    ratings: { improvement: 4.935, responsibility: 4.963, charisma: 4.954 },
-    overall: 4.951,
+    ratings: { improvement: 4.916, responsibility: 4.965, charisma: 4.935 },
+    overall: 4.939,
     featured: true,
   },
   {
@@ -189,8 +191,8 @@ const teacherProfiles = [
     education: "清华大学物理学学士、加州大学戴维斯分校（UC Davis）传播学博士、统计学硕士。",
     style:
       "从实证主义与物理本质规律出发讲解，帮助学生理解原理、避免机械刷题；强调「理解 + 方法」，以高效路径实现成绩与能力双提升；因材施教，激发自主学习与内驱力；紧贴考纲，系统梳理考点与得分关键。逻辑严谨、体系清晰。",
-    ratings: { improvement: 4.767, responsibility: 4.985, charisma: 4.731 },
-    overall: 4.828,
+    ratings: { improvement: 4.785, responsibility: 4.979, charisma: 4.766 },
+    overall: 4.844,
   },
   {
     name: "高志勇",
@@ -203,8 +205,8 @@ const teacherProfiles = [
     education: "上海交通大学物理学硕士，持高中物理教师资格证。",
     style:
       "十年国际课程教学经验，授课风格逻辑严谨、亲切耐心，注重因材施教和探究式学习；B 站知识点视频讲解深受欢迎，并制作物理知识点模拟程序网站辅助学生学习；曾任职上海赫贤、万科双语学校。",
-    ratings: { improvement: null, responsibility: null, charisma: null },
-    overall: null,
+    ratings: { improvement: 4.865, responsibility: 4.977, charisma: 4.913 },
+    overall: 4.918,
   },
   {
     name: "李寅鑫",
@@ -217,8 +219,8 @@ const teacherProfiles = [
     education: "宾夕法尼亚大学化学硕士、帝国理工学院流行病学硕士。",
     style:
       "多年海外留学与科研经历，专业基础扎实，擅长系统性构建化学知识体系，强化逻辑推导与本质理解；授课严谨清晰、条理分明，善用实例与类比拆解复杂概念；兼具课内提升与国际竞赛培优经验。College Board AP 认证教师。",
-    ratings: { improvement: 4.677, responsibility: 4.906, charisma: 4.793 },
-    overall: 4.792,
+    ratings: { improvement: 4.718, responsibility: 4.943, charisma: 4.871 },
+    overall: 4.844,
     featured: true,
   },
   {
@@ -232,8 +234,8 @@ const teacherProfiles = [
     education: "西北大学化学工程 / 生物科技硕士、加州大学戴维斯分校（UC Davis）本科。",
     style:
       "熟悉各类国际课程考试；注重理论 + 题型结合，系统梳理考点与易错点；性格温和耐心，尤擅低龄段理科思维培养与学习习惯建立；拥有 10 年留美与科研背景，可为学生提供学术规划与升学策略指导。",
-    ratings: { improvement: 4.821, responsibility: 4.974, charisma: 4.903 },
-    overall: 4.899,
+    ratings: { improvement: 4.795, responsibility: 4.962, charisma: 4.878 },
+    overall: 4.878,
   },
   {
     name: "刘艳阳",
@@ -246,8 +248,8 @@ const teacherProfiles = [
     education: "麦考瑞大学会计学本科、堪培拉大学工商管理硕士（MBA）。",
     style:
       "10 年海外留学 + 3 年海外工作，具备国际化视野；授课逻辑清晰、紧贴考纲，擅长梳理高频考点与得分逻辑；熟悉 CIE / Edexcel / AP 出题特点，擅长短期冲刺并帮助基础薄弱学生跨等级提升（U→A）。培养多名剑桥、牛津、LSE / UCL 录取学生。",
-    ratings: { improvement: 4.757, responsibility: 4.836, charisma: 4.81 },
-    overall: 4.801,
+    ratings: { improvement: 4.765, responsibility: 4.849, charisma: 4.811 },
+    overall: 4.808,
     featured: true,
   },
   {
@@ -262,8 +264,8 @@ const teacherProfiles = [
       "University of Wisconsin-Madison 本科、华盛顿大学圣路易斯分校（Washington University in St. Louis）商业分析（Business Analytics）硕士。",
     style:
       "长期担任 A-Level、AP 与 IB 经济及商务课程导师，累计教学 300+ 人；擅长整理历年高频考点，帮助学生高效建立知识框架与答题逻辑；熟悉 CIE、Edexcel 评分标准，风格务实清晰，注重提分路径规划。多名学生 U→A 提升并录取 LSE、UCL。",
-    ratings: { improvement: 4.912, responsibility: 4.978, charisma: 4.941 },
-    overall: 4.944,
+    ratings: { improvement: 4.695, responsibility: 4.985, charisma: 4.858 },
+    overall: 4.846,
   },
   {
     name: "唐择运",
@@ -278,8 +280,8 @@ const teacherProfiles = [
       "美国宾夕法尼亚大学（University of Pennsylvania）TESOL 硕士。研究聚焦英语词汇习得与口语表达发展，持续将前沿研究转化为教学实践。",
     style:
       "独创「语块输入-输出闭环」教学体系，帮助学生快速建立英语表达自动化能力；深入研究雅思口语高分考生与母语者语言特征，帮助学生摆脱中式英语表达；兼具国际课程教学经验与学术研究背景，系统提升英语综合能力；重视长期英语竞争力而非短期应试技巧，善于激发兴趣，让英语真正成为沟通工具。",
-    ratings: { improvement: 4.813, responsibility: 4.823, charisma: 4.82 },
-    overall: 4.819,
+    ratings: { improvement: 4.752, responsibility: 4.882, charisma: 4.877 },
+    overall: 4.837,
   },
   {
     name: "陈依依",
@@ -292,8 +294,8 @@ const teacherProfiles = [
     education: "伯明翰大学 TESOL（对外英语教育）硕士、上海外国语大学本科，持高级中学英语教师资格证。",
     style:
       "语言教学理论扎实、一线实践丰富；熟悉体制内学生痛点，能因材施教助其快速适应国际考试体系；精准把握雅思阅读与写作出题逻辑与评分标准，注重高效应试；擅长「方法论 + 题型拆解 + 词汇体系」结合，提升做题效率与稳定性。",
-    ratings: { improvement: 4.782, responsibility: 4.98, charisma: 4.89 },
-    overall: 4.884,
+    ratings: { improvement: 4.741, responsibility: 4.93, charisma: 4.855 },
+    overall: 4.842,
     featured: true,
   },
   {
@@ -307,8 +309,8 @@ const teacherProfiles = [
     education: "香港中文大学翻译学硕士，持 CATTI 笔译二级、英语专业八级。",
     style:
       "强调英语知识体系的结构化与互联，帮助学生建立完整语言网络；从「语言使用目的」出发教学，注重实际应用与考试提分结合；纯正英音沉浸式教学。IGCSE 第一语言英语平均提分约 2 分，标化（雅思 / 托福 / SAT / ACT）提分能力突出。",
-    ratings: { improvement: 4.984, responsibility: 4.997, charisma: 4.983 },
-    overall: 4.988,
+    ratings: { improvement: 4.982, responsibility: 4.997, charisma: 4.982 },
+    overall: 4.987,
   },
   {
     name: "蓝浪",
@@ -321,8 +323,8 @@ const teacherProfiles = [
     education: "伦敦国王学院教育政策硕士、四川大学英语语言文学本科。",
     style:
       "强调英文思维方式建立，注重解题方法与语言逻辑的系统训练；注重知识框架搭建与语感培养，帮助学生从「会做题」转向「用英语思考」；引导式教学串联已知与考点；纯正英音、课堂沉浸感强，接近真实雅思听力环境。擅长中短期冲刺。",
-    ratings: { improvement: 4.74, responsibility: 4.922, charisma: 4.819 },
-    overall: 4.827,
+    ratings: { improvement: 4.695, responsibility: 4.931, charisma: 4.792 },
+    overall: 4.806,
   },
   {
     name: "Valentina Lin",
@@ -352,8 +354,8 @@ const teacherProfiles = [
       "加拿大女王大学工商管理加速硕士（MBA）、生命科学理学学士（辅修心理学），持剑桥大学官方英语教学资质 CELTA、DELTA（模块 1、3）。",
     style:
       "深耕英语教学 8 年，覆盖学术英语、国际标准化考试、青少年英语及商务英语；曾任雅思官方主考官、高校专任讲师与教学学术总监，并长期负责国际生入学面试与综合能力测评。中英双语流利，熟悉中西思维差异，能够针对不同年龄和基础分层定制教学方案；结合官方阅卷评审和招生测评经验拆解评分标准，并通过自研「价值棱镜」思维训练体系，培养批判性思考及高阶书面与口头表达能力。适合青少年、15–18 岁国际学校学生及成年商务从业者。",
-    ratings: { improvement: null, responsibility: null, charisma: null },
-    overall: null,
+    ratings: { improvement: 4.789, responsibility: 4.932, charisma: 4.746 },
+    overall: 4.822,
   },
   {
     name: "Jack Hou（侯东淳）",
@@ -368,8 +370,10 @@ const teacherProfiles = [
       "英国格林威治大学酒店管理理学学士（二等一荣誉学位），持伦敦三一学院 CertTESOL 国际教师证。雅思总分 8.5（阅读 9.0、听力 8.5、口语 8.5、写作 7.0）。",
     style:
       "中英双语教学，拥有多年英语教学、课程设计与学生能力评估经验，曾任新东方英语教师并参与课程研发、教学内容设计和英语直播教学。英国中学及大学教育经历使其熟悉中西表达逻辑差异，能准确识别语法、用词与篇章组织问题；通过前期课堂观察和能力测评定位词汇、语法、听力、阅读及口语短板，动态调整教材、难度与教学节奏。教学兼顾校内成绩与长期语言能力，强调语境运用、知识迁移、观点构建、论证与批判性思考，适合小学高年级、初高中及国际学校学生和雅思备考学生。",
-    ratings: { improvement: null, responsibility: null, charisma: null },
-    overall: null,
+    // 临时展示分：禁止写入月度/累计统计；一旦 Jack 出现真实有效评分，立即替换数值并删除 ratingSource。
+    ratings: { improvement: 4.9, responsibility: 4.9, charisma: 4.9 },
+    overall: 4.9,
+    ratingSource: "temporary",
   },
   {
     name: "王储君",
@@ -382,8 +386,8 @@ const teacherProfiles = [
     education: "曼彻斯特大学本科，持高中英语教师资格证、TESOL 国际高级英语教师资格证、初级心理咨询师证书。",
     style:
       "专注青少年英语，覆盖 0-20 岁全阶段；具备丰富「体制内转国际」辅导经验，学生多来自上海顶尖学校；强调「系统性语言输入构建」，从语言学、教育学、心理学多维出发，注重学习习惯与语言环境，而非短期刷题。",
-    ratings: { improvement: 4.917, responsibility: 4.97, charisma: 4.938 },
-    overall: 4.942,
+    ratings: { improvement: 4.798, responsibility: 4.975, charisma: 4.926 },
+    overall: 4.9,
   },
   {
     name: "罗健文",
@@ -396,8 +400,8 @@ const teacherProfiles = [
     education: "曼彻斯特大学会计与金融文学士（全额奖学金），英国英格兰及威尔士特许会计师协会（ICAEW）成员。",
     style:
       "实务导向教学，结合跨国企业工作经验，将会计理论与真实商业场景结合；基于 ICAEW 全科一次通过经验，强调细节与逻辑推导；鼓励建立规范化、结构化的解题与分析习惯，并结合 IFRS 拓展全球化理解。可帮助学生打通「从考试到职业」。",
-    ratings: { improvement: 4.926, responsibility: 4.989, charisma: 4.959 },
-    overall: 4.958,
+    ratings: { improvement: 4.911, responsibility: 4.989, charisma: 4.943 },
+    overall: 4.948,
   },
 ] satisfies TeacherProfile[];
 
