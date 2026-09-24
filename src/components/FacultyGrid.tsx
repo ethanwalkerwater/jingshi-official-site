@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   compareTeachers,
   teachers,
   subjectOrder,
   type Subject,
 } from "@/data/teachers";
+import { preferenceCategory } from "@/data/teacher-feedback";
 import { IconChevronDown } from "./icons";
 import TeacherCard, {
   type TeacherCardScoreMetric,
@@ -15,6 +16,15 @@ import TeacherCard, {
 type SubjectFilter = "全部" | Subject;
 type GenderFilter = "全部" | "男" | "女";
 type SortKey = TeacherCardScoreMetric;
+type PreferenceFilter = "全部" | "left" | "center" | "right";
+
+const preferenceAxes = [
+  { key: "classStyle", label: "上课风格", left: "偏风趣幽默", right: "偏严肃认真" },
+  { key: "teachingPace", label: "教学节奏", left: "偏高效紧凑", right: "偏稳扎稳打" },
+  { key: "classroomInteraction", label: "课堂互动", left: "偏讲授主导型", right: "偏互动引导型" },
+] as const;
+type PreferenceKey = (typeof preferenceAxes)[number]["key"];
+const preferenceOptions: PreferenceFilter[] = ["全部", "left", "center", "right"];
 
 const sortKeys: SortKey[] = [
   "overall",
@@ -73,6 +83,11 @@ export default function FacultyGrid() {
   const [subject, setSubject] = useState<SubjectFilter>("全部");
   const [sortBy, setSortBy] = useState<SortKey>("overall");
   const [gender, setGender] = useState<GenderFilter>("全部");
+  const [preferences, setPreferences] = useState<Record<PreferenceKey, PreferenceFilter>>({
+    classStyle: "全部",
+    teachingPace: "全部",
+    classroomInteraction: "全部",
+  });
   const [openLabel, setOpenLabel] = useState<string | null>(null);
   const barRef = useRef<HTMLDivElement>(null);
 
@@ -91,15 +106,25 @@ export default function FacultyGrid() {
     };
   }, [openLabel]);
 
-  const list = useMemo(() => {
-    const filtered = teachers.filter(
-      (teacher) =>
-        (subject === "全部" || teacher.subject === subject) &&
-        (gender === "全部" || teacher.gender === gender)
-    );
+  const matchesFilters = (
+    teacher: (typeof teachers)[number],
+    ignoredAxis?: PreferenceKey,
+  ) =>
+    (subject === "全部" || teacher.subject === subject) &&
+    (gender === "全部" || teacher.gender === gender) &&
+    preferenceAxes.every(({ key }) => {
+      if (key === ignoredAxis || preferences[key] === "全部") return true;
+      const signal = teacher[key];
+      return signal !== null && preferenceCategory(signal.position) === preferences[key];
+    });
 
-    return [...filtered].sort((a, b) => compareByScore(a, b, sortBy));
-  }, [subject, sortBy, gender]);
+  const list = teachers
+    .filter((teacher) => matchesFilters(teacher))
+    .sort((a, b) => compareByScore(a, b, sortBy));
+  const activeFilterCount =
+    Number(subject !== "全部") +
+    Number(gender !== "全部") +
+    preferenceAxes.filter(({ key }) => preferences[key] !== "全部").length;
 
   const groups: Group[] = [
     {
@@ -131,13 +156,37 @@ export default function FacultyGrid() {
           ? teachers.length
           : teachers.filter((t) => t.gender === v).length,
     },
+    ...preferenceAxes.map((axis) => ({
+      label: axis.label,
+      options: preferenceOptions,
+      value: preferences[axis.key],
+      valueLabel:
+        preferences[axis.key] === "left"
+          ? axis.left
+          : preferences[axis.key] === "right"
+            ? axis.right
+            : preferences[axis.key] === "center"
+              ? "相对均衡"
+              : "全部",
+      optionLabel: (v: string) =>
+        v === "left" ? axis.left : v === "right" ? axis.right : v === "center" ? "相对均衡" : "全部",
+      onPick: (v: string) =>
+        setPreferences((current) => ({ ...current, [axis.key]: v as PreferenceFilter })),
+      count: (v: string) =>
+        teachers.filter((teacher) => {
+          if (!matchesFilters(teacher, axis.key)) return false;
+          if (v === "全部") return true;
+          const signal = teacher[axis.key];
+          return signal !== null && preferenceCategory(signal.position) === v;
+        }).length,
+    })),
   ];
 
   return (
     <>
-      <div className="filter-bar" ref={barRef}>
+      <div className={`filter-bar${openLabel === "筛选" ? " mobile-open" : ""}`} ref={barRef}>
         {groups.map((g) => (
-          <div className="fdrop" key={g.label}>
+          <div className={`fdrop${g.label === "排序" ? "" : " desktop-filter"}`} key={g.label}>
             <button
               type="button"
               className={`fdrop-btn${openLabel === g.label ? " open" : ""}${
@@ -160,6 +209,7 @@ export default function FacultyGrid() {
                     type="button"
                     role="menuitemradio"
                     aria-checked={g.value === o}
+                    disabled={o !== "全部" && g.count?.(o) === 0}
                     className={`fdrop-item${g.value === o ? " active" : ""}`}
                     onClick={() => {
                       g.onPick(o);
@@ -174,6 +224,72 @@ export default function FacultyGrid() {
             )}
           </div>
         ))}
+        <button
+          type="button"
+          className={`mobile-filter-trigger${activeFilterCount > 0 ? " active" : ""}`}
+          aria-expanded={openLabel === "筛选"}
+          aria-controls="mobile-filter-panel"
+          onClick={() => setOpenLabel(openLabel === "筛选" ? null : "筛选")}
+        >
+          筛选
+          {activeFilterCount > 0 && <span>{activeFilterCount}</span>}
+          <IconChevronDown />
+        </button>
+        {openLabel === "筛选" && (
+          <div className="mobile-filter-panel" id="mobile-filter-panel" role="region" aria-label="筛选老师">
+            <div className="mobile-filter-content">
+              <div className="mobile-filter-heading">
+                <strong>筛选老师</strong>
+                <div>
+                  {activeFilterCount > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSubject("全部");
+                        setGender("全部");
+                        setPreferences({
+                          classStyle: "全部",
+                          teachingPace: "全部",
+                          classroomInteraction: "全部",
+                        });
+                      }}
+                    >
+                      重置
+                    </button>
+                  )}
+                  <button type="button" onClick={() => setOpenLabel(null)}>
+                    关闭
+                  </button>
+                </div>
+              </div>
+              {groups.slice(1).map((g) => (
+                <div className="mobile-filter-group" key={g.label}>
+                  <strong>{g.label}</strong>
+                  <div className="mobile-filter-options" role="group" aria-label={g.label}>
+                    {g.options.map((o) => (
+                      <button
+                        key={o}
+                        type="button"
+                        className={`mobile-filter-option${g.value === o ? " active" : ""}`}
+                        aria-pressed={g.value === o}
+                        disabled={o !== "全部" && g.count?.(o) === 0}
+                        onClick={() => g.onPick(o)}
+                      >
+                        {g.optionLabel?.(o) ?? o}
+                        {g.count && <span>{g.count(o)}</span>}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mobile-filter-actions">
+              <button type="button" onClick={() => setOpenLabel(null)}>
+                查看 {list.length} 位老师
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {list.length > 0 ? (
