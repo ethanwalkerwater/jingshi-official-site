@@ -8,6 +8,7 @@ import {
   type Teacher,
 } from "@/data/teachers";
 import { teacherFeedbackByName } from "@/data/teacher-feedback.generated";
+import { preferenceCategory } from "@/data/teacher-feedback";
 import { site } from "@/data/site";
 import { BookingButton } from "@/components/booking";
 import { IconArrowLeft } from "@/components/icons";
@@ -89,14 +90,15 @@ const preferenceAxes = [
 ] as const;
 
 function preferenceDisplay(position: number, left: string, right: string) {
-  if (position <= 40) {
+  const category = preferenceCategory(position);
+  if (category === "left") {
     return {
       label: `偏${left}`,
       tone: "left",
       activeStep: Math.round((position / 100) * 4),
     };
   }
-  if (position >= 60) {
+  if (category === "right") {
     return {
       label: `偏${right}`,
       tone: "right",

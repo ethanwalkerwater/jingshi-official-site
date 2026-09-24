@@ -1024,7 +1024,7 @@ button {
   padding-top: 16px;
 }
 
-/* 筛选栏：单行下拉（排序/学科/性别）；移动端吸顶 */
+/* 筛选栏：排序、学科、性别与三项课堂体验；移动端吸顶 */
 .filter-bar {
   position: sticky;
   top: 64px;
@@ -1035,6 +1035,7 @@ button {
   padding: 10px 20px;
   border-bottom: 1px solid var(--line);
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
   margin-bottom: 20px;
@@ -1111,6 +1112,13 @@ button {
 .fdrop-item:hover {
   background: var(--alt);
 }
+.fdrop-item:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.fdrop-item:disabled:hover {
+  background: none;
+}
 .fdrop-item.active {
   color: var(--ink);
   font-weight: 700;
@@ -1119,6 +1127,10 @@ button {
 .fdrop-item .n {
   opacity: 0.55;
   font-size: 12px;
+}
+.mobile-filter-trigger,
+.mobile-filter-panel {
+  display: none;
 }
 .filter-count {
   margin: 0 0 0 auto;
@@ -1843,6 +1855,143 @@ button {
 
 /* 吸底条占位：移动端给 body 底部留白，避免遮挡页脚 */
 @media (max-width: 860px) {
+  .filter-bar {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+  .filter-bar.mobile-open {
+    z-index: 85;
+  }
+  .filter-bar .desktop-filter {
+    display: none;
+  }
+  .mobile-filter-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    background: var(--card);
+    color: var(--ink-soft);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .mobile-filter-trigger.active {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .mobile-filter-trigger span {
+    display: grid;
+    min-width: 18px;
+    height: 18px;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--ink);
+    color: white;
+    font-size: 10px;
+  }
+  .mobile-filter-trigger svg {
+    width: 13px;
+    height: 13px;
+  }
+  .mobile-filter-trigger[aria-expanded="true"] svg {
+    transform: rotate(180deg);
+  }
+  .mobile-filter-panel {
+    position: fixed;
+    top: 64px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--line);
+    background: var(--card);
+    box-shadow: 0 18px 36px -20px rgba(24, 39, 65, 0.35);
+  }
+  .mobile-filter-content {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 16px 20px 0;
+  }
+  .mobile-filter-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--ink);
+    font-size: 15px;
+  }
+  .mobile-filter-heading button {
+    border: 0;
+    background: none;
+    color: var(--ink-soft);
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .mobile-filter-heading > div {
+    display: flex;
+    gap: 14px;
+  }
+  .mobile-filter-group {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .mobile-filter-group > strong {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--ink);
+    font-size: 13px;
+  }
+  .mobile-filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .mobile-filter-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    background: var(--card);
+    color: var(--ink-soft);
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .mobile-filter-option.active {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: white;
+  }
+  .mobile-filter-option:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .mobile-filter-option span {
+    opacity: 0.65;
+  }
+  .mobile-filter-actions {
+    flex: none;
+    padding: 12px 20px calc(16px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line);
+    background: var(--card);
+  }
+  .mobile-filter-actions button {
+    width: 100%;
+    padding: 10px 16px;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: var(--ink);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
   body {
     padding-bottom: 82px;
   }

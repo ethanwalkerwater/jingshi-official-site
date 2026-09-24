@@ -5,6 +5,13 @@ export interface TeacherPreferenceSignal {
   responseCount: number;
 }
 
+/** 与教师详情页课堂体验标签共用的倾向分段。 */
+export function preferenceCategory(position: number): "left" | "center" | "right" {
+  if (position <= 40) return "left";
+  if (position >= 60) return "right";
+  return "center";
+}
+
 export type ReviewerType = "student" | "parent" | "anonymous";
 
 export interface TeacherReview {
