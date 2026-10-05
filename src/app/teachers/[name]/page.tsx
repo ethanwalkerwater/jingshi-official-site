@@ -3,8 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   teachers,
+  selectedTeachers,
   avgScore,
   ratingScore,
+  type SelectedTeacher,
   type Teacher,
 } from "@/data/teachers";
 import { teacherFeedbackByName } from "@/data/teacher-feedback.generated";
@@ -13,14 +15,20 @@ import { site } from "@/data/site";
 import { BookingButton } from "@/components/booking";
 import { IconArrowLeft } from "@/components/icons";
 import { TeacherReviews } from "@/components/TeacherReviews";
+import { PhotoPending } from "@/components/TeacherCard";
 
 export function generateStaticParams() {
-  return teachers.map((t) => ({ name: t.name }));
+  return [...teachers, ...selectedTeachers].map((t) => ({ name: t.name }));
 }
 
 function findTeacher(nameParam: string): Teacher | undefined {
   const name = decodeURIComponent(nameParam);
   return teachers.find((t) => t.name === name);
+}
+
+function findSelectedTeacher(nameParam: string): SelectedTeacher | undefined {
+  const name = decodeURIComponent(nameParam);
+  return selectedTeachers.find((t) => t.name === name);
 }
 
 export async function generateMetadata({
@@ -30,6 +38,17 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { name } = await params;
   const t = findTeacher(name);
+  const selected = findSelectedTeacher(name);
+  if (selected) {
+    return {
+      title: `${selected.name} · ${selected.subject} · ${site.name}`,
+      description: `${selected.name}，${selected.degree}。${selected.style.slice(0, 60)}`,
+      openGraph: {
+        title: `${selected.name}｜${site.name}`,
+        description: `${selected.degree}。`,
+      },
+    };
+  }
   if (!t) return { title: `名师 · ${site.name}` };
   const title = `${t.name}老师 · ${t.subject} · ${site.name}`;
   const description = `${t.name}，${t.degree}。${t.style.slice(0, 60)}`;
@@ -118,16 +137,21 @@ export default async function TeacherDetail({
   params: Promise<{ name: string }>;
 }) {
   const { name } = await params;
-  const t = findTeacher(name);
+  // full：全职名师（含评分与反馈）；严选老师只展示师资信息
+  const full = findTeacher(name);
+  const t = full ?? findSelectedTeacher(name);
   if (!t) notFound();
+  const displayName = full ? `${t.name}老师` : t.name;
   const feedback = teacherFeedbackByName[t.name];
   const reviews = feedback?.reviews ?? [];
   const reviewCount = feedback?.reviewCount ?? 0;
-  const overallScore = avgScore(t);
-  const hasRatings = Object.values(t.ratings).some((value) => value !== null);
-  const preferenceCount = preferenceAxes.filter(
-    (axis) => t[axis.key] !== null,
-  ).length;
+  const overallScore = full ? avgScore(full) : null;
+  const hasRatings = full
+    ? Object.values(full.ratings).some((value) => value !== null)
+    : false;
+  const preferenceCount = full
+    ? preferenceAxes.filter((axis) => full[axis.key] !== null).length
+    : 0;
 
   return (
     <>
@@ -141,17 +165,23 @@ export default async function TeacherDetail({
           <div className="detail-grid">
             <aside className="detail-aside">
               <div className="detail-photo-shell">
-                <div
-                  className="detail-photo"
-                  style={{ backgroundImage: `url("${t.photo}")` }}
-                  role="img"
-                  aria-label={`${t.name}老师`}
-                >
-                  <span className={`detail-score${overallScore === null ? " no-score" : ""}`}>
-                    <span className="s">{overallScore ?? "暂无"}</span>
-                    <span className="l">综合评分</span>
-                  </span>
-                </div>
+                {full ? (
+                  <div
+                    className="detail-photo"
+                    style={{ backgroundImage: `url("${full.photo}")` }}
+                    role="img"
+                    aria-label={displayName}
+                  >
+                    <span className={`detail-score${overallScore === null ? " no-score" : ""}`}>
+                      <span className="s">{overallScore ?? "暂无"}</span>
+                      <span className="l">综合评分</span>
+                    </span>
+                  </div>
+                ) : (
+                  <div className="detail-photo">
+                    <PhotoPending name={t.name} />
+                  </div>
+                )}
                 <BookingButton className="detail-photo-booking">
                   预约试听
                 </BookingButton>
@@ -193,98 +223,109 @@ export default async function TeacherDetail({
                 <p>{t.style}</p>
               </div>
 
-              <div className="detail-block">
-                <h2>课堂体验</h2>
-                {preferenceCount > 0 ? (
-                  <>
-                    <div className="preference-panel">
-                      {preferenceAxes.map((axis) => {
-                        const signal = t[axis.key];
-                        if (!signal) return null;
-                        const display = preferenceDisplay(
-                          signal.position,
-                          axis.left,
-                          axis.right,
-                        );
-                        return (
-                          <div
-                            className="preference-row"
-                            key={axis.key}
-                            aria-label={`${axis.label}：${axis.description}`}
-                          >
-                            <div className="preference-meta">
-                              <strong>{axis.label}</strong>
-                              <span>{signal.responseCount} 份反馈</span>
-                            </div>
-                            <div className="preference-spectrum">
-                              <span>{axis.left}</span>
+              {"ages" in t && (
+                <div className="detail-block">
+                  <h2>适合年龄段</h2>
+                  <p>{t.ages} 岁</p>
+                </div>
+              )}
+
+              {full && (
+                <>
+                  <div className="detail-block">
+                    <h2>课堂体验</h2>
+                    {preferenceCount > 0 ? (
+                      <>
+                        <div className="preference-panel">
+                          {preferenceAxes.map((axis) => {
+                            const signal = full[axis.key];
+                            if (!signal) return null;
+                            const display = preferenceDisplay(
+                              signal.position,
+                              axis.left,
+                              axis.right,
+                            );
+                            return (
                               <div
-                                className="preference-steps"
-                                aria-hidden="true"
+                                className="preference-row"
+                                key={axis.key}
+                                aria-label={`${axis.label}：${axis.description}`}
                               >
-                                {[0, 1, 2, 3, 4].map((step) => (
-                                  <span
-                                    className={`preference-step${
-                                      step === display.activeStep
-                                        ? ` active ${display.tone}`
-                                        : ""
-                                    }`}
-                                    key={step}
-                                  />
-                                ))}
+                                <div className="preference-meta">
+                                  <strong>{axis.label}</strong>
+                                  <span>{signal.responseCount} 份反馈</span>
+                                </div>
+                                <div className="preference-spectrum">
+                                  <span>{axis.left}</span>
+                                  <div
+                                    className="preference-steps"
+                                    aria-hidden="true"
+                                  >
+                                    {[0, 1, 2, 3, 4].map((step) => (
+                                      <span
+                                        className={`preference-step${
+                                          step === display.activeStep
+                                            ? ` active ${display.tone}`
+                                            : ""
+                                        }`}
+                                        key={step}
+                                      />
+                                    ))}
+                                  </div>
+                                  <span>{axis.right}</span>
+                                </div>
+                                <span
+                                  className={`preference-result ${display.tone}`}
+                                >
+                                  {display.label}
+                                </span>
                               </div>
-                              <span>{axis.right}</span>
+                            );
+                          })}
+                        </div>
+                        <p className="preference-note">
+                          位置来自学员问卷中的有效选择，表示整体倾向，不代表每节课采用固定模式。
+                        </p>
+                      </>
+                    ) : (
+                      <p className="detail-empty">
+                        当前有效样本不足，积累更多学员反馈后展示。
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="detail-block">
+                    <h2>学员评分</h2>
+                    <div className="ratings">
+                      {ratingDims.map((d) => {
+                        const v = full.ratings[d.key];
+                        return (
+                          <div className="rating-row" key={d.key}>
+                            <span className="rl">{d.label}</span>
+                            <span className="rv">{ratingScore(v)}</span>
+                            <div className="rating-bar">
+                              <span style={{ width: `${v === null ? 0 : (v / 5) * 100}%` }} />
                             </div>
-                            <span
-                              className={`preference-result ${display.tone}`}
-                            >
-                              {display.label}
-                            </span>
                           </div>
                         );
                       })}
                     </div>
-                    <p className="preference-note">
-                      位置来自学员问卷中的有效选择，表示整体倾向，不代表每节课采用固定模式。
+                    <p className="rating-note">
+                      {hasRatings
+                        ? "评分为 1-5 分制，综合自学员与家长反馈。"
+                        : "当前有效样本不足，积累更多学员与家长反馈后展示评分。"}
                     </p>
-                  </>
-                ) : (
-                  <p className="detail-empty">
-                    当前有效样本不足，积累更多学员反馈后展示。
-                  </p>
-                )}
-              </div>
+                  </div>
 
-              <div className="detail-block">
-                <h2>学员评分</h2>
-                <div className="ratings">
-                  {ratingDims.map((d) => {
-                    const v = t.ratings[d.key];
-                    return (
-                      <div className="rating-row" key={d.key}>
-                        <span className="rl">{d.label}</span>
-                        <span className="rv">{ratingScore(v)}</span>
-                        <div className="rating-bar">
-                          <span style={{ width: `${v === null ? 0 : (v / 5) * 100}%` }} />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-                <p className="rating-note">
-                  {hasRatings
-                    ? "评分为 1-5 分制，综合自学员与家长反馈。"
-                    : "当前有效样本不足，积累更多学员与家长反馈后展示评分。"}
-                </p>
-              </div>
-
-              <div className="detail-block">
-                <div className="detail-section-heading">
-                  <h2>学生与家长真实评价</h2>
-                  {reviewCount > 0 && <span>共 {reviewCount} 条</span>}
-                </div>
-                <TeacherReviews teacherName={t.name} reviews={reviews} />
-              </div>
+                  <div className="detail-block">
+                    <div className="detail-section-heading">
+                      <h2>学生与家长真实评价</h2>
+                      {reviewCount > 0 && <span>共 {reviewCount} 条</span>}
+                    </div>
+                    <TeacherReviews teacherName={t.name} reviews={reviews} />
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -292,9 +333,10 @@ export default async function TeacherDetail({
 
       <div className="detail-mobile-booking">
         <div>
-          <strong>{t.name}老师</strong>
+          <strong>{displayName}</strong>
           <span>
-            {t.subject} · {overallScore === null ? "暂无评分" : `${overallScore} 综合评分`}
+            {t.subject} ·{" "}
+            {!full ? "菁仕严选" : overallScore === null ? "暂无评分" : `${overallScore} 综合评分`}
           </span>
         </div>
         <BookingButton className="btn btn-gold">预约试听</BookingButton>

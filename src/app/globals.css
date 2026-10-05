@@ -398,6 +398,47 @@ button {
   background: rgba(255, 255, 255, 0.9);
   font-weight: 650;
 }
+.teacher-badge.selected {
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+/* 暂无可公开照片时的品牌占位头像：姓氏印章 + 说明 */
+.photo-pending {
+  position: absolute;
+  inset: 0;
+  container-type: size;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: max(10px, 4%);
+  padding-top: 12%; /* 为右上角「菁仕严选」角标留出空间 */
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.9), transparent 62%),
+    linear-gradient(160deg, #eef0f4, var(--alt));
+}
+.photo-pending-mark {
+  width: 40cqw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--card);
+  border: 1px solid rgba(176, 141, 70, 0.55);
+  box-shadow:
+    0 0 0 6px rgba(255, 255, 255, 0.6),
+    0 14px 30px -18px rgba(24, 39, 65, 0.45);
+  color: var(--ink);
+  font-size: 17cqw;
+  font-weight: 700;
+  line-height: 1;
+}
+.photo-pending-note {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-dim);
+  letter-spacing: 0.12em;
+}
 .teacher-metric-badge {
   position: absolute;
   bottom: 10px;
