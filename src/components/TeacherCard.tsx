@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { avgScore, type Teacher } from "@/data/teachers";
+import { avgScore, type SelectedTeacher, type Teacher } from "@/data/teachers";
 import { IconStar, IconBolt } from "./icons";
 
 export type TeacherCardScoreMetric =
@@ -28,6 +28,13 @@ const metricBadgeLabels: Record<
   charisma: "个人魅力",
 };
 
+function openOnDesktop(e: React.MouseEvent<HTMLAnchorElement>) {
+  if (window.matchMedia("(min-width: 861px)").matches) {
+    e.preventDefault();
+    window.open(e.currentTarget.href, "_blank", "noopener");
+  }
+}
+
 /**
  * 名师卡片：综合评分显示在照片右上角；其他排序指标显示在照片左下角。
  * 桌面端点击新标签页打开详情，移动端当前页跳转（详情页有返回按钮）。
@@ -51,15 +58,8 @@ export default function TeacherCard({
     .filter(Boolean)
     .slice(0, 2);
 
-  function onClick(e: React.MouseEvent<HTMLAnchorElement>) {
-    if (window.matchMedia("(min-width: 861px)").matches) {
-      e.preventDefault();
-      window.open(href, "_blank", "noopener");
-    }
-  }
-
   return (
-    <Link href={href} className="teacher" onClick={onClick}>
+    <Link href={href} className="teacher" onClick={openOnDesktop}>
       <div className="teacher-photo">
         <img
           src={teacher.photo}
@@ -86,6 +86,56 @@ export default function TeacherCard({
             {metricBadgeLabels[scoreMetric]}：{metricScore}
           </span>
         )}
+      </div>
+      <div className="teacher-body">
+        <h3 className="teacher-name">{teacher.name}</h3>
+        <p className="teacher-degree">{teacher.degree}</p>
+        <p className="teacher-highlight">
+          <IconBolt />
+          <span>{teacher.hours}</span>
+        </p>
+        <div className="teacher-tags" aria-label={`所授课程：${teacher.courses}`}>
+          {courses.map((course) => (
+            <span className="tag" key={course}>
+              {course}
+            </span>
+          ))}
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+/** 暂无可公开照片时的品牌占位头像（菁仕严选老师使用）。 */
+export function PhotoPending({ name }: { name: string }) {
+  return (
+    <div className="photo-pending" role="img" aria-label={`${name}，形象照准备中`}>
+      <span className="photo-pending-mark" aria-hidden="true">
+        {name.charAt(0)}
+      </span>
+      <span className="photo-pending-note" aria-hidden="true">
+        形象照准备中
+      </span>
+    </div>
+  );
+}
+
+/** 菁仕严选老师卡片：与名师卡片同一版式，不显示评分。 */
+export function SelectedTeacherCard({ teacher }: { teacher: SelectedTeacher }) {
+  const courses = teacher.courses
+    .split("·")
+    .map((course) => course.trim())
+    .slice(0, 2);
+
+  return (
+    <Link
+      href={`/teachers/${encodeURIComponent(teacher.name)}`}
+      className="teacher"
+      onClick={openOnDesktop}
+    >
+      <div className="teacher-photo">
+        <PhotoPending name={teacher.name} />
+        <span className="teacher-badge selected">菁仕严选</span>
       </div>
       <div className="teacher-body">
         <h3 className="teacher-name">{teacher.name}</h3>

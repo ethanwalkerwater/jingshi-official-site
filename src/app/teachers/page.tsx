@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/data/site";
-import { teachers } from "@/data/teachers";
+import { selectedTeachers, teachers } from "@/data/teachers";
 import FacultyGrid from "@/components/FacultyGrid";
+import { SelectedTeacherCard } from "@/components/TeacherCard";
 
 export const metadata: Metadata = {
   title: `名师团队 · ${site.name}`,
@@ -33,6 +34,20 @@ export default function FacultyPage() {
       <section className="section faculty-list">
         <div className="wrap">
           <FacultyGrid />
+        </div>
+      </section>
+
+      <section className="section sec-alt" id="selected">
+        <div className="wrap">
+          <div className="sec-head">
+            <h2>菁仕严选老师</h2>
+            <p>与名师团队执行同一套教研标准与课堂质量要求，覆盖更多学科与课程方向。</p>
+          </div>
+          <div className="fac-grid">
+            {selectedTeachers.map((t) => (
+              <SelectedTeacherCard key={t.name} teacher={t} />
+            ))}
+          </div>
         </div>
       </section>
 
