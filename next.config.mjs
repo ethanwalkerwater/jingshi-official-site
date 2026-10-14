@@ -13,6 +13,7 @@ const nextConfig = {
   // 旧链接 /faculty 永久重定向到 /teachers，避免已分享的链接失效
   async redirects() {
     return [
+      { source: `/teachers/${encodeURIComponent("秦老师")}`, destination: "/teachers/Justin", permanent: true },
       { source: "/faculty", destination: "/teachers", permanent: true },
       { source: "/faculty/:path*", destination: "/teachers/:path*", permanent: true },
     ];
