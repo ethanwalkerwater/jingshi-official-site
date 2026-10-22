@@ -15,8 +15,8 @@ export const metadata: Metadata = {
   },
 };
 
-// 名师评分每小时从内部系统刷新一次（同 TEACHER_STATS_REVALIDATE）
-export const revalidate = 3600;
+// 名师评分每 7 天从内部系统刷新一次（同 TEACHER_STATS_REVALIDATE）
+export const revalidate = 604800;
 
 export default async function FacultyPage() {
   const teachers = await getTeachers();
