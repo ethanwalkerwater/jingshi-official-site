@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/data/site";
-import { selectedTeachers, teachers } from "@/data/teachers";
+import { getTeachers, selectedTeachers } from "@/data/teachers";
 import FacultyGrid from "@/components/FacultyGrid";
 import { SelectedTeacherCard } from "@/components/TeacherCard";
 
@@ -15,7 +15,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default function FacultyPage() {
+// 名师评分每小时从内部系统刷新一次（同 TEACHER_STATS_REVALIDATE）
+export const revalidate = 3600;
+
+export default async function FacultyPage() {
+  const teachers = await getTeachers();
   return (
     <>
       {/* 浅色紧凑页头 */}
@@ -33,7 +37,7 @@ export default function FacultyPage() {
 
       <section className="section faculty-list">
         <div className="wrap">
-          <FacultyGrid />
+          <FacultyGrid teachers={teachers} />
         </div>
       </section>
 

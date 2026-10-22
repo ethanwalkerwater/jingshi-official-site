@@ -8,6 +8,8 @@ const nextConfig = {
   reactStrictMode: true,
   // 仓库目录名为中文，显式锁定根目录避免 Next 误判工作区根
   outputFileTracingRoot: __dirname,
+  // 服务器自动部署先构建到 .next-build，成功后再换成 .next（scripts/auto-deploy.sh），构建失败不影响线上
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   // public 静态资源默认只有 max-age=60，服务器带宽仅 4Mbps，
   // 必须为图片配置长缓存，否则每次访问都重新下载全部图片
   // 旧链接 /faculty 永久重定向到 /teachers，避免已分享的链接失效

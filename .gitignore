@@ -30,3 +30,8 @@ next-env.d.ts
 # 历史探索目录（不进仓库）
 /kings-academy-redesign/
 /design-demos/
+
+# 服务器自动部署（scripts/auto-deploy.sh）
+/.next-build/
+/.next-old/
+.deploy.env

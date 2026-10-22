@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-  teachers,
+  getTeachers,
+  staticTeachers,
   selectedTeachers,
   avgScore,
   ratingScore,
@@ -17,13 +18,17 @@ import { IconArrowLeft } from "@/components/icons";
 import { TeacherReviews } from "@/components/TeacherReviews";
 import { PhotoPending } from "@/components/TeacherCard";
 
+// 评分和课堂体验每小时从内部系统刷新一次（同 TEACHER_STATS_REVALIDATE）
+export const revalidate = 3600;
+
 export function generateStaticParams() {
-  return [...teachers, ...selectedTeachers].map((t) => ({ name: t.name }));
+  return [...staticTeachers, ...selectedTeachers].map((t) => ({ name: t.name }));
 }
 
-function findTeacher(nameParam: string): Teacher | undefined {
+/** 分享卡片只用资料，不用分数，所以 list 默认用手写数据 */
+function findTeacher(nameParam: string, list: Teacher[] = staticTeachers): Teacher | undefined {
   const name = decodeURIComponent(nameParam);
-  return teachers.find((t) => t.name === name);
+  return list.find((t) => t.name === name);
 }
 
 function findSelectedTeacher(nameParam: string): SelectedTeacher | undefined {
@@ -138,7 +143,7 @@ export default async function TeacherDetail({
 }) {
   const { name } = await params;
   // full：全职名师（含评分与反馈）；严选老师只展示师资信息
-  const full = findTeacher(name);
+  const full = findTeacher(name, await getTeachers());
   const t = full ?? findSelectedTeacher(name);
   if (!t) notFound();
   const displayName = full ? `${t.name}老师` : t.name;
