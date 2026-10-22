@@ -18,8 +18,8 @@ import { IconArrowLeft } from "@/components/icons";
 import { TeacherReviews } from "@/components/TeacherReviews";
 import { PhotoPending } from "@/components/TeacherCard";
 
-// 评分和课堂体验每 7 天从内部系统刷新一次（同 TEACHER_STATS_REVALIDATE）
-export const revalidate = 604800;
+// 评分和课堂体验每天从内部系统刷新一次（同 TEACHER_STATS_REVALIDATE）
+export const revalidate = 86400;
 
 export function generateStaticParams() {
   return [...staticTeachers, ...selectedTeachers].map((t) => ({ name: t.name }));

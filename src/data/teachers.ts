@@ -74,7 +74,7 @@ export function compareTeachers(a: Teacher, b: Teacher): number {
 
 /**
  * 菁仕名师团队。数据来源于教研整理的「老师卡片」。
- * 这里手写的 ratings / overall 只是兜底：线上评分和课堂体验由 getTeachers() 每 7 天从内部系统取一次。
+ * 这里手写的 ratings / overall 只是兜底：线上评分和课堂体验由 getTeachers() 每天从内部系统取一次。
  */
 const teacherProfiles = [
   {
@@ -434,8 +434,8 @@ interface StatsTeacher {
   preferences: Record<"classStyle" | "teachingPace" | "classroomInteraction", TeacherPreferenceSignal | null>;
 }
 
-/** 官网只显示已定稿月份，每月 1 号才多一个月，所以 7 天取一次（604800 秒）；急着更新就重新部署。 */
-export const TEACHER_STATS_REVALIDATE = 604800;
+/** 官网只显示已定稿月份，每月 1 号才多一个月，每天取一次（86400 秒）就够；各页面共用同一份缓存，一天约调用一次接口。 */
+export const TEACHER_STATS_REVALIDATE = 86400;
 
 async function loadTeacherStats(): Promise<Map<string, StatsTeacher> | null> {
   const url = process.env.TEACHER_STATS_URL;
