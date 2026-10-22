@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { site, images, pillars, campuses, stats } from "@/data/site";
-import { teachers } from "@/data/teachers";
+import { getTeachers } from "@/data/teachers";
 import { customCourseNote } from "@/data/courses";
 import { BookingButton } from "@/components/booking";
 import CourseExplorer from "@/components/CourseExplorer";
@@ -11,10 +11,13 @@ import {
   IconMapPin,
 } from "@/components/icons";
 
-/** 首页 featured 名师：教师数据已按精确总分排序。 */
-const featured = teachers.filter((t) => t.featured).slice(0, 8);
+// 名师评分每小时从内部系统刷新一次（值要和 TEACHER_STATS_REVALIDATE 一致，Next 要求这里写字面量）
+export const revalidate = 3600;
 
-export default function Home() {
+export default async function Home() {
+  const teachers = await getTeachers();
+  /** 首页 featured 名师：教师数据已按精确总分排序。 */
+  const featured = teachers.filter((t) => t.featured).slice(0, 8);
   return (
     <>
       {/* ① Hero（浅色，上文下图 / 桌面左文右图） */}

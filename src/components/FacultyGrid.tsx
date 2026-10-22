@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import {
   compareTeachers,
-  teachers,
   subjectOrder,
   type Subject,
+  type Teacher,
 } from "@/data/teachers";
 import { preferenceCategory } from "@/data/teacher-feedback";
 import { IconChevronDown } from "./icons";
@@ -47,15 +47,15 @@ const sortLabels: Record<
 };
 
 function sortScore(
-  teacher: (typeof teachers)[number],
+  teacher: Teacher,
   sortBy: SortKey
 ): number | null {
   return sortBy === "overall" ? teacher.overall : teacher.ratings[sortBy];
 }
 
 function compareByScore(
-  a: (typeof teachers)[number],
-  b: (typeof teachers)[number],
+  a: Teacher,
+  b: Teacher,
   sortBy: SortKey
 ): number {
   const aScore = sortScore(a, sortBy);
@@ -79,7 +79,7 @@ interface Group {
   count?: (v: string) => number;
 }
 
-export default function FacultyGrid() {
+export default function FacultyGrid({ teachers }: { teachers: Teacher[] }) {
   const [subject, setSubject] = useState<SubjectFilter>("全部");
   const [sortBy, setSortBy] = useState<SortKey>("overall");
   const [gender, setGender] = useState<GenderFilter>("全部");
@@ -107,7 +107,7 @@ export default function FacultyGrid() {
   }, [openLabel]);
 
   const matchesFilters = (
-    teacher: (typeof teachers)[number],
+    teacher: Teacher,
     ignoredAxis?: PreferenceKey,
   ) =>
     (subject === "全部" || teacher.subject === subject) &&

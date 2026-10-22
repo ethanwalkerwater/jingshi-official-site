@@ -74,7 +74,7 @@ export function compareTeachers(a: Teacher, b: Teacher): number {
 
 /**
  * 菁仕名师团队。数据来源于教研整理的「老师卡片」。
- * 评分来源：teacher_scores.csv 累计学员与家长反馈。
+ * 这里手写的 ratings / overall 只是兜底：线上评分和课堂体验由 getTeachers() 每小时从内部系统取。
  */
 const teacherProfiles = [
   {
@@ -205,8 +205,8 @@ const teacherProfiles = [
     education: "上海交通大学物理学硕士，持高中物理教师资格证。",
     style:
       "十年国际课程教学经验，授课风格逻辑严谨、亲切耐心，注重因材施教和探究式学习；B 站知识点视频讲解深受欢迎，并制作物理知识点模拟程序网站辅助学生学习；曾任职上海赫贤、万科双语学校。",
-    ratings: { improvement: 4.865, responsibility: 4.977, charisma: 4.913 },
-    overall: 4.918,
+    ratings: { improvement: 4.974, responsibility: 4.996, charisma: 4.987 },
+    overall: 4.986,
   },
   {
     name: "李寅鑫",
@@ -405,7 +405,11 @@ const teacherProfiles = [
   },
 ] satisfies TeacherProfile[];
 
-export const teachers: Teacher[] = teacherProfiles
+/**
+ * 手写资料 + 兜底评分 + 脚本生成的课堂体验。只用在和分数无关的地方（路由、分享卡片），
+ * 以及构建时内部系统连不上的兜底；页面展示分数一律用 getTeachers()。
+ */
+export const staticTeachers: Teacher[] = teacherProfiles
   .map((teacher) => {
     const feedback = teacherFeedbackByName[teacher.name];
     return {
@@ -416,6 +420,73 @@ export const teachers: Teacher[] = teacherProfiles
     };
   })
   .sort(compareTeachers);
+
+/** 内部系统里的老师名和官网写法不同的，左边官网、右边内部系统 */
+const STATS_NAMES: Record<string, string> = {
+  刘峥: "Kevin Liu",
+  "Jack Hou（侯东淳）": "Jack Hou",
+};
+
+interface StatsTeacher {
+  name: string;
+  scores: { learning_effect: number | null; responsibility: number | null; charisma: number | null };
+  overall: number | null;
+  preferences: Record<"classStyle" | "teachingPace" | "classroomInteraction", TeacherPreferenceSignal | null>;
+}
+
+/** 内部系统每天凌晨对账、每月 1 号定稿一个月；官网每小时取一次就够。 */
+export const TEACHER_STATS_REVALIDATE = 3600;
+
+async function loadTeacherStats(): Promise<Map<string, StatsTeacher> | null> {
+  const url = process.env.TEACHER_STATS_URL;
+  const key = process.env.TEACHER_STATS_KEY;
+  if (!url || !key) return null;
+  try {
+    const response = await fetch(url, { headers: { "x-site-key": key }, next: { revalidate: TEACHER_STATS_REVALIDATE } });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = (await response.json()) as { teachers: StatsTeacher[] };
+    return new Map(data.teachers.map((teacher) => [teacher.name, teacher]));
+  } catch (error) {
+    // 构建时连不上：先用兜底数据上线。运行中定时刷新连不上：抛错，Next 继续显示上一次的页面，不会退回兜底的旧分数。
+    if (process.env.NEXT_PHASE === "phase-production-build") {
+      console.warn(`[teachers] 取老师数据失败，使用兜底数据：${error instanceof Error ? error.message : error}`);
+      return null;
+    }
+    throw error;
+  }
+}
+
+/** 名师列表：评分和课堂体验来自内部系统（已定稿月份，按课时加权），资料来自上面的手写数据。 */
+export async function getTeachers(): Promise<Teacher[]> {
+  const stats = await loadTeacherStats();
+  if (!stats) return staticTeachers;
+  return staticTeachers
+    .map((teacher) => {
+      const live = stats.get(STATS_NAMES[teacher.name] ?? teacher.name);
+      const prefs = live?.preferences;
+      // 还没有已定稿真实分的老师（新老师、Jack 的临时分）沿用手写数据
+      const ratings =
+        live && live.overall !== null
+          ? {
+              ratings: {
+                improvement: live.scores.learning_effect,
+                responsibility: live.scores.responsibility,
+                charisma: live.scores.charisma,
+              },
+              overall: live.overall,
+              ratingSource: undefined,
+            }
+          : {};
+      return {
+        ...teacher,
+        ...ratings,
+        classStyle: prefs?.classStyle ?? null,
+        teachingPace: prefs?.teachingPace ?? null,
+        classroomInteraction: prefs?.classroomInteraction ?? null,
+      };
+    })
+    .sort(compareTeachers);
+}
 
 /** 学科顺序（用于名师页筛选与分组展示） */
 export const subjectOrder: Subject[] = ["数学", "物理", "化学", "经济", "英语"];
