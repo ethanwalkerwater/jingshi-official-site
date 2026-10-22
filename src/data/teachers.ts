@@ -434,15 +434,17 @@ interface StatsTeacher {
   preferences: Record<"classStyle" | "teachingPace" | "classroomInteraction", TeacherPreferenceSignal | null>;
 }
 
-/** 官网只显示已定稿月份，每月 1 号才多一个月，每天取一次（86400 秒）就够；各页面共用同一份缓存，一天约调用一次接口。 */
+/** 官网只显示已定稿月份，一个月最多变一次：每天取一次（86400 秒）兜底，定稿时内部系统会通知 /api/revalidate 马上更新。各页面共用同一份缓存。 */
 export const TEACHER_STATS_REVALIDATE = 86400;
+/** 内部系统定稿后调 /api/revalidate 按这个标签作废缓存，官网马上更新 */
+export const TEACHER_STATS_TAG = "teacher-stats";
 
 async function loadTeacherStats(): Promise<Map<string, StatsTeacher> | null> {
   const url = process.env.TEACHER_STATS_URL;
   const key = process.env.TEACHER_STATS_KEY;
   if (!url || !key) return null;
   try {
-    const response = await fetch(url, { headers: { "x-site-key": key }, next: { revalidate: TEACHER_STATS_REVALIDATE } });
+    const response = await fetch(url, { headers: { "x-site-key": key }, next: { revalidate: TEACHER_STATS_REVALIDATE, tags: [TEACHER_STATS_TAG] } });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const data = (await response.json()) as { teachers: StatsTeacher[] };
     return new Map(data.teachers.map((teacher) => [teacher.name, teacher]));
