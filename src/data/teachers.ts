@@ -93,6 +93,20 @@ const teacherProfiles = [
     featured: true,
   },
   {
+    name: "包天翊",
+    gender: "男",
+    subject: "数学",
+    photo: "/teachers/数学-包天翊.webp",
+    degree: "香港中文大学金融数学硕士",
+    hours: "累计教学 500+ 人",
+    courses: "IGCSE · A-Level · IB 数学",
+    education: "香港中文大学金融数学硕士、曼彻斯特大学数学系本科。",
+    style:
+      "深度讲解数学逻辑推导与实际应用，帮助学生建立严谨的数学思维体系；注重「理解 + 应用」结合，提升解决复杂问题的能力；关注学生身心发展，正向引导激发内驱力，风格稳定扎实，适合长期体系化提升。IB 数学 HL 7 分案例。",
+    ratings: { improvement: 4.96, responsibility: 4.995, charisma: 4.984 },
+    overall: 4.98,
+  },
+  {
     name: "张劭景",
     gender: "男",
     subject: "数学",
