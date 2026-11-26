@@ -124,6 +124,7 @@ magick "public/teachers/<学科>-<姓名>.webp" -quality 85 \
 | 问卷姓名与官网姓名不同 | `scripts/generate-teacher-feedback.mjs` | 在 `teacherAliases` 中加入精确别名映射 |
 | 新增学科 | `src/data/teachers.ts` | 扩展 `Subject` 和 `subjectOrder` |
 | 首页精选 | `src/data/teachers.ts` | 经业务确认后添加 `featured: true`；确认是否挤出原前 8 位 |
+| 老师有雅思成绩单要展示 | `src/data/teachers.ts` | 填 `ielts`：总分、四项小分、`issued`（成绩单签发日，页面显示为「出分」）、`city`（考点城市）；构建会校验总分与小分；只公开分数，成绩单图片有证件号不入库 |
 | 新老师无权威评分但要立即上线 | `src/data/teachers.ts` | 三项评分与总分填写 `null`，不临时填假数据 |
 
 `public/teachers/老师卡片.txt` 和 `public/teachers/老师介绍.md` 可以作为内部素材同步更新，但修改它们不会更改网站。
