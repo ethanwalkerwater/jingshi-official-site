@@ -86,6 +86,13 @@ const ratingDims = [
   { key: "charisma", label: "个人魅力" },
 ] as const;
 
+const ieltsBands = [
+  { key: "listening", label: "听力" },
+  { key: "reading", label: "阅读" },
+  { key: "writing", label: "写作" },
+  { key: "speaking", label: "口语" },
+] as const;
+
 const preferenceAxes = [
   {
     key: "classStyle",
@@ -151,6 +158,7 @@ export default async function TeacherDetail({
   const reviews = feedback?.reviews ?? [];
   const reviewCount = feedback?.reviewCount ?? 0;
   const overallScore = full ? avgScore(full) : null;
+  const ielts = full?.ielts;
   const hasRatings = full
     ? Object.values(full.ratings).some((value) => value !== null)
     : false;
@@ -206,6 +214,34 @@ export default async function TeacherDetail({
             <div className="detail-content">
               <h1 className="detail-name">{t.name}</h1>
               <p className="detail-degree">{t.degree}</p>
+
+              {ielts && (
+                <div className="detail-block">
+                  <div className="detail-section-heading">
+                    <h2>雅思成绩</h2>
+                    <span className="ielts-meta">
+                      <time dateTime={ielts.issued}>
+                        {ielts.issued.replaceAll("-", ".")}
+                      </time>{" "}
+                      出分 · {ielts.city}考点
+                    </span>
+                  </div>
+                  <div className="ielts">
+                    <p className="ielts-overall">
+                      <strong>{ielts.overall.toFixed(1)}</strong>
+                      <span>总分</span>
+                    </p>
+                    <dl className="ielts-bands">
+                      {ieltsBands.map((band) => (
+                        <div key={band.key}>
+                          <dt>{band.label}</dt>
+                          <dd>{ielts[band.key].toFixed(1)}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+                </div>
+              )}
 
               <div className="detail-courses detail-courses-mobile">
                 <p className="lab">所授课程</p>

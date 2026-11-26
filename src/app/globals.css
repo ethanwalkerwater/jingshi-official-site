@@ -1504,6 +1504,54 @@ button {
   font-size: 11px;
   text-align: right;
 }
+.detail-section-heading > .ielts-meta {
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+.ielts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 20px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+}
+.detail-block .ielts-overall {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-right: 20px;
+  border-right: 1px solid var(--line);
+  line-height: 1.1;
+}
+.ielts-overall strong {
+  color: var(--gold);
+  font-size: 34px;
+  font-weight: 800;
+}
+.ielts-overall span {
+  margin-top: 4px;
+  font-size: 12px;
+}
+.ielts-bands {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 0;
+  text-align: center;
+}
+.ielts-bands dt {
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+.ielts-bands dd {
+  margin: 0;
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 750;
+  line-height: 1.4;
+}
 .student-reviews {
   display: grid;
   border-top: 1px solid var(--line);

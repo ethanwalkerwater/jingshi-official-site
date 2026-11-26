@@ -12,6 +12,17 @@ export interface TeacherRatings {
   charisma: number | null;
 }
 
+/** 雅思成绩单（学术类）上的分数；issued 为成绩单签发日期 */
+export interface IeltsScore {
+  overall: number;
+  listening: number;
+  reading: number;
+  writing: number;
+  speaking: number;
+  issued: string;
+  city: string;
+}
+
 export interface Teacher {
   /** 姓名（同时作为详情页路由标识） */
   name: string;
@@ -43,6 +54,8 @@ export interface Teacher {
   teachingPace: TeacherPreferenceSignal | null;
   /** 课堂互动：0 偏讲授主导，100 偏互动引导。 */
   classroomInteraction: TeacherPreferenceSignal | null;
+  /** 雅思成绩（详情页单独板块） */
+  ielts?: IeltsScore;
   /** 是否在首页「名师精选」中展示 */
   featured?: boolean;
 }
@@ -282,6 +295,7 @@ const teacherProfiles = [
       "独创「语块输入-输出闭环」教学体系，帮助学生快速建立英语表达自动化能力；深入研究雅思口语高分考生与母语者语言特征，帮助学生摆脱中式英语表达；兼具国际课程教学经验与学术研究背景，系统提升英语综合能力；重视长期英语竞争力而非短期应试技巧，善于激发兴趣，让英语真正成为沟通工具。",
     ratings: { improvement: 4.752, responsibility: 4.882, charisma: 4.877 },
     overall: 4.837,
+    ielts: { overall: 8.5, listening: 9, reading: 9, writing: 7.5, speaking: 8.5, issued: "2026-08-31", city: "上海" },
   },
   {
     name: "陈依依",
@@ -325,6 +339,7 @@ const teacherProfiles = [
       "强调英文思维方式建立，注重解题方法与语言逻辑的系统训练；注重知识框架搭建与语感培养，帮助学生从「会做题」转向「用英语思考」；引导式教学串联已知与考点；纯正英音、课堂沉浸感强，接近真实雅思听力环境。擅长中短期冲刺。",
     ratings: { improvement: 4.695, responsibility: 4.931, charisma: 4.792 },
     overall: 4.806,
+    ielts: { overall: 8.5, listening: 9, reading: 8.5, writing: 7.5, speaking: 8.5, issued: "2026-07-11", city: "上海" },
   },
   {
     name: "Valentina Lin",
@@ -339,6 +354,7 @@ const teacherProfiles = [
       "课堂开放启发，强调语言与文学基础的系统训练，兼顾学术表达的逻辑与准确；通过精读文学作品与课堂讨论培养批判性思维与深度分析；融合欧美文化拓展国际视野。学生 EPQ 项目 100% 获 A。",
     ratings: { improvement: 4.821, responsibility: 4.898, charisma: 4.875 },
     overall: 4.865,
+    ielts: { overall: 8.5, listening: 9, reading: 9, writing: 7.5, speaking: 8, issued: "2026-04-02", city: "上海" },
     featured: true,
   },
   {
@@ -356,6 +372,7 @@ const teacherProfiles = [
       "深耕英语教学 8 年，覆盖学术英语、国际标准化考试、青少年英语及商务英语；曾任雅思官方主考官、高校专任讲师与教学学术总监，并长期负责国际生入学面试与综合能力测评。中英双语流利，熟悉中西思维差异，能够针对不同年龄和基础分层定制教学方案；结合官方阅卷评审和招生测评经验拆解评分标准，并通过自研「价值棱镜」思维训练体系，培养批判性思考及高阶书面与口头表达能力。适合青少年、15–18 岁国际学校学生及成年商务从业者。",
     ratings: { improvement: 4.789, responsibility: 4.932, charisma: 4.746 },
     overall: 4.822,
+    ielts: { overall: 9, listening: 9, reading: 9, writing: 8.5, speaking: 9, issued: "2026-08-16", city: "上海" },
   },
   {
     name: "Jack Hou（侯东淳）",
@@ -411,6 +428,17 @@ const teacherProfiles = [
  */
 export const staticTeachers: Teacher[] = teacherProfiles
   .map((teacher) => {
+    if (teacher.ielts) {
+      const { overall, listening, reading, writing, speaking } = teacher.ielts;
+      const bands = [listening, reading, writing, speaking];
+      // 小分须是 0–9 的 0.5 档，总分 = 四项平均四舍五入到 0.5；对不上就让构建失败，防止抄错分
+      if (
+        bands.some((band) => band < 0 || band > 9 || band * 2 !== Math.round(band * 2)) ||
+        Math.round(((listening + reading + writing + speaking) / 4) * 2) / 2 !== overall
+      ) {
+        throw new Error(`${teacher.name} 的雅思总分和四项小分对不上`);
+      }
+    }
     const feedback = teacherFeedbackByName[teacher.name];
     return {
       ...teacher,
