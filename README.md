@@ -47,6 +47,14 @@ PATH=/opt/homebrew/bin:$PATH npm run dev      # http://localhost:3000
 - **换 logo**：`public/logo.png` 目前是品牌规范图，未直接使用；顶栏现用「KA」文字标识。有干净 logo 后可替换并在 Header 启用。
 - **新增老师**：资料、评分、头像、分享图、反馈生成和发布步骤见 [`docs/新增教师上官网-SOP.md`](docs/新增教师上官网-SOP.md)。
 
+## 教务分享页 /s/编号
+
+教务在内部系统 <https://app.jsjy.asia/share/> 挑几位老师、写标题和介绍，生成 `jsjy.asia/s/<8 位编号>` 发给家长（内部仓库 `apps/teacher-share`）。
+
+- 页面 `src/app/s/[code]/page.tsx`，数据 `src/data/shares.ts`：一次取回全部有效分享页（`SHARE_LIST_URL`，默认 `https://app.jsjy.asia/share-api/site/shares`，请求头 `x-site-key` 用 `TEACHER_STATS_KEY`），缓存到内部系统通知作废为止（`/api/revalidate` 带 `{"target":"shares"}`），不定时刷新。家长打开、乱试编号都不会访问内部系统。
+- 不进搜索引擎（noindex），不在导航里。官网删掉的老师在分享页里自动不显示。
+- `/api/share-teachers`：给内部后台挑老师用的名单（名师 + 严选，公开资料，允许跨域）。
+
 ## 待补充的信息（TODO）
 
 详见 [`CONTENT-TODO.md`](CONTENT-TODO.md)。主要缺口：真实 logo 文件、联系方式与备案号、2 个校区地址、成绩与案例、预约表单的后端对接、品牌实拍图。

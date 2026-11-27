@@ -2208,3 +2208,19 @@ button {
     flex: none;
   }
 }
+
+/* ---------------- 教务分享页 /s/编号 ---------------- */
+.share-cta {
+  text-align: center;
+}
+.share-gone {
+  padding: 96px 0 120px;
+  text-align: center;
+}
+.share-gone p {
+  margin-left: auto;
+  margin-right: auto;
+}
+.share-gone .btn {
+  margin-top: 16px;
+}
